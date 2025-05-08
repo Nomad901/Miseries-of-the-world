@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Sound">
+      <UniqueIdentifier>{7f99ac2b-9c06-41c7-824e-ff3b6393dfe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Objects">
+      <UniqueIdentifier>{c39d1d11-637b-4c06-bae7-e2b4214fdf2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{7d32cf6f-8d92-4d34-be00-f92cb9a381e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sound">
+      <UniqueIdentifier>{b2902a17-c4a1-432c-b335-ee1a0b5b4dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{9ac4f927-e84c-4af4-8563-93f536c6c3ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{124269ac-c0af-49b5-a728-bb2f88d3a68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{0ef1c54d-8a43-4087-a106-5dca999ff805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Objects">
+      <UniqueIdentifier>{e3805b4a-feba-47e2-9196-035a44548d69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Actions">
+      <UniqueIdentifier>{0fd6e667-5049-4663-b16f-23aacd1cb1ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Actions">
+      <UniqueIdentifier>{353648f5-9502-44b4-a191-5339f75bf08c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Collision">
+      <UniqueIdentifier>{e90d240d-f32d-484a-bf62-c3e7f4650d1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Collision">
+      <UniqueIdentifier>{fb43a977-9c27-4ed5-940a-10ee218243b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Interface">
+      <UniqueIdentifier>{4480cb28-057d-4afa-bdee-c710e253b909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Interface">
+      <UniqueIdentifier>{905ca82d-b5d2-4c57-974a-aa28f1d6ddf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Time">
+      <UniqueIdentifier>{ab74f888-dade-4188-931b-0a44dfb59207}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Time">
+      <UniqueIdentifier>{079911ea-9035-40d2-86a3-ae3209eadc80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World">
+      <UniqueIdentifier>{32f06501-fb93-48a4-b2ce-b332e7f96dfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering">
+      <UniqueIdentifier>{492fa18d-6f71-40a4-8c07-c13b924c2fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering">
+      <UniqueIdentifier>{e253ddf5-9d82-4dca-9583-be2b0e3aa56a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Math">
+      <UniqueIdentifier>{ad0d5f2b-8ec9-4452-adb7-b4392e1d63eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{d239e376-f7b4-477a-8b1b-24b05c81fb2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Loger">
+      <UniqueIdentifier>{a52c3aa1-91f5-4845-bf4b-88ef07ffa28d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Loger">
+      <UniqueIdentifier>{b3a36293-9a84-45fd-bfaa-aa8474b6904a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Objects\Entities">
+      <UniqueIdentifier>{d4bac204-fa18-4eee-b950-3a9e3f4ca7b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Objects\Entities">
+      <UniqueIdentifier>{6c54e20a-b478-4e11-b2e0-e211827abdd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Objects\Fonts">
+      <UniqueIdentifier>{a0723b41-6ae1-4593-8d49-f33258c6e8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scenes">
+      <UniqueIdentifier>{cbc04452-06b9-43be-8c26-1ed29547d5eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scenes">
+      <UniqueIdentifier>{b52f765e-6d75-4722-8b57-98df9614ff31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Objects\Fonts">
+      <UniqueIdentifier>{4f336fee-5452-4919-b530-cafcdb8945ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\World">
+      <UniqueIdentifier>{cb6576d7-9b51-421f-9245-268f4b26b21a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Inventory">
+      <UniqueIdentifier>{cfd3961b-587a-434c-983a-ac48dd7d5ee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inventory">
+      <UniqueIdentifier>{9d68c857-1096-484e-adf3-71d1655a3582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Enemies">
+      <UniqueIdentifier>{c93e23b3-9703-41dd-98b4-254eb047ea0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Enemies">
+      <UniqueIdentifier>{4bd148d5-00e0-4b28-b182-0c82ce72029a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Main character">
+      <UniqueIdentifier>{fede0517-8789-445b-bb0c-581a2f90086a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Main character">
+      <UniqueIdentifier>{a2b55f56-0a40-4af7-aef3-0ccdb4cc7238}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Miseries of the world.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Loging.cpp">
+      <Filter>Source Files\Loger</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem.cpp">
+      <Filter>Source Files\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullets.cpp">
+      <Filter>Source Files\Game Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="TouchableObjects.cpp">
+      <Filter>Source Files\Game Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="UsualRects.cpp">
+      <Filter>Source Files\Game Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapons.cpp">
+      <Filter>Source Files\Game Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Handler.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryOfFonts.cpp">
+      <Filter>Source Files\Game Objects\Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionsWithRects.cpp">
+      <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Source Files\Main character</Filter>
+    </ClCompile>
+    <ClCompile Include="Stats.cpp">
+      <Filter>Source Files\Main character</Filter>
+    </ClCompile>
+    <ClCompile Include="Moving.cpp">
+      <Filter>Source Files\Main character</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Source Files\Main character</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2f.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Loging.h">
+      <Filter>Header Files\Loger</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem.h">
+      <Filter>Header Files\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullets.h">
+      <Filter>Header Files\Game Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="TouchableObjects.h">
+      <Filter>Header Files\Game Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="UsualRects.h">
+      <Filter>Header Files\Game Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapons.h">
+      <Filter>Header Files\Game Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Handler.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="FactoryOfFonts.h">
+      <Filter>Header Files\Game Objects\Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionsWithRects.h">
+      <Filter>Header Files\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Header Files\Main character</Filter>
+    </ClInclude>
+    <ClInclude Include="Stats.h">
+      <Filter>Header Files\Main character</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Header Files\Main character</Filter>
+    </ClInclude>
+    <ClInclude Include="Moving.h">
+      <Filter>Header Files\Main character</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2f.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
