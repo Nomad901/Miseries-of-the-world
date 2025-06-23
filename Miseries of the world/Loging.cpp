@@ -1,8 +1,6 @@
 #include "Loging.h"
 
-void Loging::log(const std::string& message,
-				 const std::filesystem::path& file, 
-				 const int& line)
+void Loging::log(std::string_view pMessage, const std::filesystem::path& pFile, const int& pLine)
 {
 	std::lock_guard<std::mutex> guard(mutex);
 
@@ -11,16 +9,29 @@ void Loging::log(const std::string& message,
 
 	std::tm vTm;
 	localtime_s(&vTm, &nowTime);
-	
+
 	std::ostringstream timeStamp;
 	std::cout << std::put_time(&vTm, "%Y-%m-%d %H:%M:%S");
-	
-	std::cerr << "[ERROR][" << timeStamp.str() << ']'<<"[SDL_ERROR: "<<SDL_GetError()<<']';
-	if (!file.empty())
+
+	std::cerr << "[ERROR][" << timeStamp.str() << ']' << "[SDL_ERROR: " << SDL_GetError() << ']';
+	if (!pFile.empty())
 	{
-		std::cerr << '[' << file.string() << ']';
-		if (line > 0) 
-			std::cerr << "[LINE: " << line << ']';
+		std::cerr << '[' << pFile.string() << ']';
+		if (pLine > 0)
+			std::cerr << "[LINE: " << pLine << ']';
 	}
 	std::cout << "[MESSAGE]" << '[' << message << ']' << '\n';
+}
+
+void Loging::message(std::string_view pMessage)
+{
+	std::lock_guard<std::mutex> lg(mutex);
+
+	auto time = std::chrono::system_clock::now();
+	auto nowTime = std::chrono::system_clock::to_time_t(time);
+
+	std::tm vTm;
+	localtime_s(&vTm, &nowTime);
+
+	std::cout << "[TIME: " << std::put_time(&vTm, "%Y-%m-%d %H:%M:%S") << ']' << "[MESSAGE]" << '[' << pMessage << "]\n";
 }

@@ -7,14 +7,27 @@
 
 #include "Loging.h"
 
-#define LOG(msg) Loging::log(msg, __FILE__, __LINE__)
-#define PATH std::filesystem::path
+using PATH = std::filesystem::path;
 
 // extensible. in the future i can implement factory pattern, if i need
 // but rn this is an usual audio-system, i dont need to make this overwhelming
 
-enum class Sounds {WALKING, SHOT, TALK, HIT};
-enum class Music  {MAIN_MENU,GAME,BOSSFIGHT};
+enum class Sounds
+{
+	WALKING = 0,
+	SHOT = 1,
+	TALK = 2,
+	HIT = 3,
+	BUTTONS = 4
+};
+enum class Music 
+{
+	MAIN_MENU = 0,
+	GAME = 1,
+	BOSSFIGHT = 2
+};
+
+class Assets;
 
 class AudioSystem
 {
@@ -34,18 +47,20 @@ public:
 	//it can be no less than 0 and no more than 128
 	void setVolumeMusic(const Music& pType, int pVolume);
 	void setVolumeSound(const Sounds& pType, int pVolume);
-	void setVolumeForAll(int pVolume);
+	void setVolumeForAll(const int pVolume);
 
 	void playSound(const Sounds& pType) const;
-	void playMusic(const Music& pType) const;
+	void playMusic(const Music& pType);
 
-	void stopMusic(const Music& pType) const;
+	void stopMusic(const Music& pType);
 	//1 - pause, 0 - resume
-	void stopForAll(int pNumber) const;
+	void stopForAll(int pNumber);
+
+	bool isPlaying() const noexcept { return mPlaying; }
 
 private:
+	bool mPlaying{ false };
+
 	std::unordered_map<Music, Mix_Music*> mMusic;
 	std::unordered_map<Sounds, Mix_Chunk*> mChunk;
 };
-
-

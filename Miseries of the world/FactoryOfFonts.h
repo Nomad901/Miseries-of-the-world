@@ -7,36 +7,45 @@
 #include <SDL_ttf.h>
 
 #include "Loging.h"
+#include "Assets.h"
+#include "InputManager.h"
 
-#define LOG(msg) Loging::log(msg, __FILE__, __LINE__)
-
-using PATH = std::filesystem::path;
-
-class FactoryOfFonts
+class FactoryOfFonts : protected Assets
 {
 public:
-	FactoryOfFonts(SDL_Renderer* pRenderer);
-	FactoryOfFonts(SDL_Renderer* pRenderer, std::string_view pText, const SDL_Color& pColor, const int pSize, const PATH& pPath);
-	~FactoryOfFonts();
+	static void init();
+	static FactoryOfFonts& getInstance();
+	static void shutDown();
 
-	void setNewFont(std::string_view pText, const SDL_Color& pColor, const int pSize, const PATH& pPath);
-	void changeText(std::string_view pText, const SDL_Color& pColor, const int pSize);
-	void fontIntoRect(const SDL_Rect pRect);
+	void appendNewFont(SDL_Renderer* pRenderer, const PATH& pPath, std::string_view pText, 
+					   const SDL_Color& pColor, const int pSize);
+	void appendNewFonts(SDL_Renderer* pRenderer, const PATH& pPath, std::initializer_list<std::string> pTexts,
+						const SDL_Color& pColor, const int pSize);
+	void changeText(SDL_Renderer* pRenderer, std::string_view pOrigText, std::string_view pText, SDL_Color pColor);
+	void deleteFont(std::string_view pAlias);
 
-	void render() {
-		SDL_RenderCopy(mRenderer, mTexture, nullptr, &mRect);
-	}
-	void update() {}
+	void fontIntoRect(std::string_view pText, SDL_Rect& pRect);
+
+	TTF_Font* getFont(std::string_view pAlias);
+	SDL_Texture* getTexture(std::string_view pAlias);
+	
+	void render(std::string_view pName, SDL_Renderer* pRenderer, SDL_Rect pRect);
 
 private:
-	TTF_Font* mFont{ nullptr };
-	SDL_Renderer* mRenderer{ nullptr };
-	SDL_Texture* mTexture{ nullptr };
+	FactoryOfFonts() = default;
+	~FactoryOfFonts() = default;
+	FactoryOfFonts(const FactoryOfFonts&) = delete;
+	FactoryOfFonts& operator=(const FactoryOfFonts&) = delete;
+	FactoryOfFonts(FactoryOfFonts&&) = delete;
+	FactoryOfFonts& operator=(FactoryOfFonts&&) = delete;
+
+private:
 	SDL_Color mColor;
-	SDL_Rect mRect;
-
-	std::string mText;
 	int mSize;
+	std::vector<std::string> mText;
 
+	PATH mPath{ std::filesystem::current_path() };
+
+	static FactoryOfFonts* mInstance;
 };
 

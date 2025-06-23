@@ -4,14 +4,22 @@
 
 #include <SDL.h>
 
-#include "UsualRects.h"
-#include "Bullets.h"
-#include "Weapons.h"
-#include "TouchableObjects.h"
-#include "Moving.h"
-#include "Textures.h"
-
 #include "Game.h"
+#include "Character.h"
+#include "../FactoryObjects.h"
+#include "Irregular.h"
+
+class Bullets;
+class BulletsPool;
+class Timer;
+class InputManager;
+class AnimatedTexture;
+class GameStates;
+class Menu;
+class InGame;
+class Pistol;
+class Knife;
+class Boulder;
 
 using PATH = std::filesystem::path;
 
@@ -24,25 +32,43 @@ public:
 	void loopBack();
 	void actions();
 	void outro();
+	
+	//void popState(GameStates* pGameState);
+	//void pushState(GameStates* pGameState);
+	//void changeCurState(GameStates* pGameState);
+
 	void updateAll() {}
 
 private:
-	Game* mGame;
-	std::unique_ptr<Textures> mTextures;
-	Moving* mMoving;
-
-	
-	int iterate = 0;
-
-	PATH mCurrentPath{std::filesystem::current_path()};
-
-	Uint32 lastUpdate;
-	Uint32 currentTime;
-
-	//update stuff
+	bool mShouldUpdate{ false };
+	float mInterpolation{0.0f};
 	const int TICKS_PER_SECOND = 60;
 	const int MS_PER_SEC = 1000 / TICKS_PER_SECOND;
-	float mInterpolation;
-	bool shouldUpdate{ false };
+	
+	std::unique_ptr<Randomizer> mRandomizerX;
+	std::unique_ptr<Randomizer> mRandomizerY;
+	
+	std::unique_ptr<FactoryObjects> mEnemy;
+
+	AnimatedTexture mAnimated;
+	AnimatedTexture mZombie;
+	std::unique_ptr<FactoryObjects> mFactoryObjects;
+	std::unique_ptr<Character> mCharacter;
+	std::unique_ptr<Menu> mMenu;
+	std::unique_ptr<InGame> mInGame;
+	std::vector<std::unique_ptr<GameStates>> mGameStates;
+	std::shared_ptr<Game> mGame;
+	Timer mTimer;
+	Timer mTimerForBullets;
+
+	std::unique_ptr<Bullets> mBullets;
+	std::unique_ptr<BulletsPool> mBulletsPool;
+
+	//std::unique_ptr<Boulder> mBoulder;
+	std::unique_ptr<Irregular> mSequence;
+
+
+	bool mLost{ false };
+
 };
 

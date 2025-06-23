@@ -1,0 +1,65 @@
+#pragma once
+#include "Weapon.h"
+#include "Timer.h"
+#include "Bullets.h"
+#include "BulletsPool.h"
+#include "RotateMachine.h"
+
+class FireMode
+{
+private:
+	struct FireStat;
+public:
+	FireMode() = default;
+	virtual ~FireMode() = default;
+
+	void init(SDL_Renderer* pRenderer, int32_t pCapacity, const PATH& pPath,
+			  int32_t pDelay, int32_t pQuantityBullets, int32_t pQuantitySets,
+			  const Vector2f& pPos, int32_t pW, int32_t pH, int32_t pSpeed);
+	
+	void setDelay(int32_t pDelay);
+	void setQuantityBullets(int32_t pQuantity);
+	void setOrigQuantityBullets(int32_t pQuantity);
+	void setQuantitySets(int32_t pQuantity);
+	void setShouldBreakWeapon(bool pShould);
+	void setWasDamage(bool pWas);
+
+	bool shouldBreakWeapon();
+	bool wasDamage();
+	int32_t getQuantityBullets();
+	int32_t getOrigQuantityBullets();
+	int32_t getQuantitySets();
+
+	std::vector<int> isShot(const std::vector<SDL_Rect>& pRects);
+	void render();
+
+	virtual void shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload) = 0;
+	virtual void update(SDL_Renderer* pRenderer, const Vector2f& pPos) = 0;
+protected:
+	virtual bool manageDelay() = 0;
+	virtual void setAsSpecial() = 0;
+	
+	FireStat getFireStat();
+
+protected:
+	std::unique_ptr<BulletsPool> mBulletsPool;
+private:
+	bool mShouldBreakWeapon{ false };
+	bool mWasDamage{ false };
+
+	struct FireStat {
+		int32_t mDelay{ 0 };
+		int32_t mQuantityBullets{ 0 };
+		int32_t mOriginalQuantityBullets{ 0 };
+		int32_t mQuantitySets{ 0 };
+		int32_t mSpeed{ 0 };
+		int32_t mW{ 0 }, mH{ 0 };
+		int32_t mCapacity{ 0 };
+
+		PATH mPath{ std::filesystem::current_path() };
+
+		Vector2f mPos{ 0.0f,0.0f };
+	} mFireStat;
+
+};
+

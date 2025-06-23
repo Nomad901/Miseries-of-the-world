@@ -1,4 +1,6 @@
-#include <iostream>
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 #include <filesystem>
 
 #include "Game.h"
@@ -9,8 +11,8 @@ int main(int argc, char* argv[])
 	static_cast<void>(argc);
 	static_cast<void>(argv);
 	
-	Game* game = new Game (SDL_WINDOW_SHOWN, "Miseries of the world", 100, 100, 1280, 720);
-	Handler handler(game);
+	std::unique_ptr<Game> game = std::make_unique<Game>(SDL_WINDOW_SHOWN, "Miseries of the world", 100, 100);
+	Handler handler(game.get());
 	game->setRgbOfWindow(0, 150, 150, SDL_ALPHA_OPAQUE);
 
 	game->setFps(60);
@@ -26,14 +28,24 @@ int main(int argc, char* argv[])
 
 
 /*	
-	Today i wanna implement:
-	1. adjast bullets(append flyweight design pattern for this)
-	2. finish implementing character folder
-	3. adjust all of this(like moving properly and also shooting)
+	// plan:
+	
+	somehow i need to merge an edge of the weapon with spawning of bullets
+
+
+
+
+
 
 	when i will create the character i can create a function which will be observing the character 
 
 	PS at the end i can make a system of inventory, like if inventory is hard my character will be moving slower
+
+
+
+	// This is a personal academic project. Dear PVS-Studio, please check it.
+
+	// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
 
 
 */

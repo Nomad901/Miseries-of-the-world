@@ -5,8 +5,6 @@
 #include "SDL.h"
 #include "Loging.h"
 
-#define LOG(msg) Loging::log(msg, __FILE__, __LINE__)
-
 enum class Dimension{MILISECONDS, SECONDS, MINUTES};
 
 class Timer
@@ -15,22 +13,31 @@ public:
 	Timer() = default;
 	
 	void startTimer();
+	void startTimerFromEnd(uint32_t pEnd);
 	void stopTimer();
-	void setProperFPS(const float pDelay);
+	void resetTimer();
 	
+	void setProperFPS(const Uint32 pDelay);
+	void setLimit(const float pLimit);
 	// MILISECONDS, SECONDS, MINUTES
 	void setDimensionOfTime(const Dimension pType);
 
-	inline bool isRunning() const;
-	
-	float getDeltaTime() const;
+	bool isRunning() const;
+	bool isLimit();
+
+	float getLimit();
+	float getDeltaTime(bool pFromEnd);
 	std::chrono::time_point<std::chrono::high_resolution_clock> getCurrentTimeOfTimer() const;
 
 private:
 	bool mRunning { false };
+	bool mTimerFromEnd{ false };
+	float mLimit;
+
+	Dimension mDimension{ Dimension::MILISECONDS };
 	std::chrono::time_point<std::chrono::high_resolution_clock> mStartTime, mEndTime;
+	
 	std::mutex mMtx;
 	
-	Dimension mDimension{ Dimension::MILISECONDS };
 };
 

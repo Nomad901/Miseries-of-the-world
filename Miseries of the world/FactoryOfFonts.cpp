@@ -1,82 +1,125 @@
 #include "FactoryOfFonts.h"
 
-FactoryOfFonts::FactoryOfFonts(SDL_Renderer* pRenderer)
-{
-	mRenderer = pRenderer;
-	if (TTF_Init() == -1)
-		LOG("Couldnt initialize TTF: " + std::string(TTF_GetError()));
-}
+FactoryOfFonts* FactoryOfFonts::mInstance = nullptr;
 
-FactoryOfFonts::FactoryOfFonts(SDL_Renderer* pRenderer, std::string_view pText, const SDL_Color& pColor, const int pSize, const PATH& pPath)
+void FactoryOfFonts::init()
 {
 	if (TTF_Init() == -1)
-		LOG("Couldnt initialize TTF: " + std::string(TTF_GetError()));
+		LOG("couldnt initilize the ttf!");
 
-	mFont = TTF_OpenFont(pPath.string().c_str(), pSize);
-	if (!mFont)
-		LOG("Couldnt itialize the path or the font: " + std::string(TTF_GetError()));
+	if (mInstance != nullptr)
+		shutDown();
+	mInstance = new FactoryOfFonts();
+}
 
-	mText = pText;
+FactoryOfFonts& FactoryOfFonts::getInstance()
+{
+	return *mInstance;
+}
+
+void FactoryOfFonts::shutDown()
+{
+	delete mInstance;
+	mInstance = nullptr;
+}
+
+void FactoryOfFonts::appendNewFont(SDL_Renderer* pRenderer, const PATH& pPath, std::string_view pText,
+								   const SDL_Color& pColor, const int pSize)
+{
+	mColor = pColor;
+	mText.push_back(std::string(pText));
+	mSize = pSize;
+	mPath = pPath;
+
+	TTF_Font* tmpFont = TTF_OpenFont(pPath.string().c_str(), pSize);
+	if (!tmpFont)
+		LOG("Couldnt download the font!");
+	SDL_Surface* tmpSurface = TTF_RenderText_Solid(tmpFont, std::string(pText).c_str(), pColor);
+	if (!tmpSurface)
+		LOG("Couldnt download the surface!");
+	SDL_Texture* tmpTexture = SDL_CreateTextureFromSurface(pRenderer, tmpSurface);
+	if (!tmpTexture)
+		LOG("Couldnt download the texture!");
+	mFonts.emplace(std::string(pText), std::make_pair(tmpFont, tmpTexture));
+	SDL_FreeSurface(tmpSurface);
+}
+
+void FactoryOfFonts::appendNewFonts(SDL_Renderer* pRenderer, const PATH& pPath, std::initializer_list<std::string> pTexts, const SDL_Color& pColor, const int pSize)
+{
 	mColor = pColor;
 	mSize = pSize;
+	mPath = pPath;
+	for (auto& i : pTexts)
+	{
+		mText.push_back(i);
 
-	SDL_Surface* surface = TTF_RenderText_Solid(mFont, mText.c_str(), mColor);
-	if (!surface)
-		LOG("Couldnt initialize the surface: " + std::string(TTF_GetError()));
-	mTexture= SDL_CreateTextureFromSurface(pRenderer, surface);
-	if (!mTexture)
-		LOG("Problem is texture: " + std::string(SDL_GetError()));
-	SDL_FreeSurface(surface);
+		TTF_Font* tmpFont = TTF_OpenFont(pPath.string().c_str(), pSize);
+		if (!tmpFont)
+			LOG("Couldnt download the font!");
+		SDL_Surface* tmpSurface = TTF_RenderText_Solid(tmpFont, i.c_str(), pColor);
+		if (!tmpSurface)
+			LOG("Couldnt download the surface!");
+		SDL_Texture* tmpTexture = SDL_CreateTextureFromSurface(pRenderer, tmpSurface);
+		if (!tmpTexture)
+			LOG("Couldnt download the texture!");
+		mFonts.emplace(i, std::make_pair(tmpFont, tmpTexture));
+		SDL_FreeSurface(tmpSurface);
+	}
 }
 
-FactoryOfFonts::~FactoryOfFonts()
+void FactoryOfFonts::changeText(SDL_Renderer* pRenderer, std::string_view pOrigText, std::string_view pText, SDL_Color pColor)
 {
-	if (mFont)
-		TTF_CloseFont(mFont);
-	if (mRenderer)
-		SDL_DestroyRenderer(mRenderer);
-	if (mTexture)
-		SDL_DestroyTexture(mTexture);
-	TTF_Quit();
+	if (mFonts.contains(std::string(pOrigText)))
+	{
+		SDL_Surface * tmpSurface = TTF_RenderText_Solid(getFonts(std::string(pOrigText)), std::string(pText).c_str(), pColor);
+		if (!tmpSurface)
+			LOG("Couldnt download the surface!");
+		SDL_Texture* tmpTexture = SDL_CreateTextureFromSurface(pRenderer, tmpSurface);
+		if (!tmpTexture)
+			LOG("Couldnt download the texture!");
+		mFonts.emplace(std::string(pText), std::make_pair(getFonts(std::string(pOrigText)), tmpTexture));
+		SDL_FreeSurface(tmpSurface);
+	}
+	else
+		LOG("There is no such a OrigText!");
 }
-
-void FactoryOfFonts::setNewFont(std::string_view pText, const SDL_Color& pColor, const int pSize, const PATH& pPath)
+void FactoryOfFonts::deleteFont(std::string_view pAlias)
 {
-	mFont = TTF_OpenFont(pPath.string().c_str(), pSize);
-	if (!mFont)
-		LOG("Couldnt itialize the path or the font: " + std::string(TTF_GetError()));
-
-	mText = pText;
-	mColor = pColor;
-	mSize = pSize;
-
-	SDL_Surface* surface = TTF_RenderText_Solid(mFont, mText.c_str(), mColor);
-	if (!surface)
-		LOG("Couldnt initialize the surface: " + std::string(TTF_GetError()));
-	mTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
-	if (!mTexture)
-		LOG("Problem is texture: " + std::string(SDL_GetError()));
-	SDL_FreeSurface(surface);
+	auto it = mFonts.find(std::string(pAlias));
+	if (it != mFonts.end())
+	{
+		TTF_CloseFont(it->second.first);
+		SDL_DestroyTexture(it->second.second);
+	}
+	else
+		LOG("there is no such an alias!");
 }
 
-void FactoryOfFonts::changeText(std::string_view pText, const SDL_Color& pColor, const int pSize)
+void FactoryOfFonts::fontIntoRect(std::string_view pText, SDL_Rect& pRect)
 {
-	mText = pText;
-	mColor = pColor;
-	mSize = pSize;
-
-	SDL_Surface* surface = TTF_RenderText_Solid(mFont, mText.c_str(), mColor);
-	if (!surface)
-		LOG("Couldnt initialize the surface: " + std::string(TTF_GetError()));
-	mTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
-	if (!mTexture)
-		LOG("Problem is texture: " + std::string(SDL_GetError()));
-	SDL_FreeSurface(surface);
-}
-
-void FactoryOfFonts::fontIntoRect(const SDL_Rect pRect)
-{	
 	int tmpWidth, tmpHeight;
-	TTF_SizeText(mFont, mText.c_str(), &tmpWidth, &tmpHeight);
-	mRect = { pRect.x + (pRect.w - tmpWidth) / 2, pRect.y + (pRect.h - tmpHeight) / 2, tmpWidth, tmpHeight };
+	TTF_SizeText(getFonts(pText), std::string(pText).c_str(), &tmpWidth, &tmpHeight);
+	pRect = { pRect.x + (pRect.w - tmpWidth) / 2, pRect.y + (pRect.h - tmpHeight) / 2, tmpWidth, tmpHeight };
 }
+
+TTF_Font* FactoryOfFonts::getFont(std::string_view pAlias)
+{
+	return getFonts(pAlias);
+}
+
+SDL_Texture* FactoryOfFonts::getTexture(std::string_view pAlias)
+{
+	return getTextureFont(pAlias);
+}
+
+void FactoryOfFonts::render(std::string_view pName, SDL_Renderer* pRenderer, SDL_Rect pRect)
+{
+	if (mFonts.contains(std::string(pName)))
+		SDL_RenderCopy(pRenderer, mFonts[std::string(pName)].second, nullptr, &pRect);
+	else
+		LOG("There is no such a name!");
+}
+
+
+
+

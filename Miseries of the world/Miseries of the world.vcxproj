@@ -44,6 +44,8 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableFuzzer>true</EnableFuzzer>
+    <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -71,7 +73,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\nomad\source\repos\Miseries of the world\Miseries of the world;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -109,7 +111,8 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\tools\glad\include;C:\Users\nomad\source\repos\Miseries of the world\Miseries of the world\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\nomad\source\repos\Miseries of the world\Miseries of the world\include\json;C:\tools\glad\include;C:\Users\nomad\source\repos\Miseries of the world\Miseries of the world\include\SDL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,43 +137,109 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ActionsWithRects.cpp" />
+    <ClCompile Include="AnimatedTexture.cpp" />
+    <ClCompile Include="AnimateStateMachine.cpp" />
+    <ClCompile Include="Assets.cpp" />
     <ClCompile Include="AudioSystem.cpp" />
+    <ClCompile Include="Boulder.cpp" />
     <ClCompile Include="Bullets.cpp" />
+    <ClCompile Include="BulletsPool.cpp" />
+    <ClCompile Include="BurstMode.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="FactoryOfEntities.cpp" />
     <ClCompile Include="FactoryOfFonts.cpp" />
+    <ClCompile Include="FactoryObjects.cpp" />
+    <ClCompile Include="FactoryScenes.cpp" />
+    <ClCompile Include="FireMode.cpp" />
+    <ClCompile Include="FireModeFactory.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="GameStates.cpp" />
+    <ClCompile Include="Gun.cpp" />
     <ClCompile Include="Handler.cpp" />
+    <ClCompile Include="InGame.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="IntroScene.cpp" />
+    <ClCompile Include="Irregular.cpp" />
+    <ClCompile Include="JSONSystem.cpp" />
+    <ClCompile Include="Knife.cpp" />
+    <ClCompile Include="LevelsScenes.cpp" />
     <ClCompile Include="Loging.cpp" />
+    <ClCompile Include="Melee.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Miseries of the world.cpp" />
-    <ClCompile Include="Moving.cpp" />
-    <ClCompile Include="Stats.cpp" />
+    <ClCompile Include="Pause.cpp" />
+    <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="Pistol.cpp" />
+    <ClCompile Include="Randomizer.cpp" />
+    <ClCompile Include="Remedy.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Rifle.cpp" />
+    <ClCompile Include="RotateMachine.cpp" />
+    <ClCompile Include="RPG.cpp" />
+    <ClCompile Include="SingleOrSequence.cpp" />
+    <ClCompile Include="Singleton.cpp" />
+    <ClCompile Include="SmoothMoving.cpp" />
+    <ClCompile Include="SpreadMode.cpp" />
+    <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="TouchableObjects.cpp" />
-    <ClCompile Include="UsualRects.cpp" />
     <ClCompile Include="Vector2f.cpp" />
-    <ClCompile Include="Weapons.cpp" />
+    <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="WeaponManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ActionsWithRects.h" />
+    <ClInclude Include="AnimatedTexture.h" />
+    <ClInclude Include="AnimateStateMachine.h" />
+    <ClInclude Include="Assets.h" />
     <ClInclude Include="AudioSystem.h" />
+    <ClInclude Include="AutomaticlyBenchmarker.h" />
+    <ClInclude Include="Boulder.h" />
     <ClInclude Include="Bullets.h" />
+    <ClInclude Include="BulletsPool.h" />
+    <ClInclude Include="BurstMode.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="FactoryOfEntities.h" />
     <ClInclude Include="FactoryOfFonts.h" />
+    <ClInclude Include="FactoryObjects.h" />
+    <ClInclude Include="FactoryScenes.h" />
+    <ClInclude Include="FireMode.h" />
+    <ClInclude Include="FireModeFactory.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="GameStates.h" />
+    <ClInclude Include="Gun.h" />
     <ClInclude Include="Handler.h" />
+    <ClInclude Include="InGame.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="IntroScene.h" />
+    <ClInclude Include="Irregular.h" />
+    <ClInclude Include="JSONSystem.h" />
+    <ClInclude Include="Knife.h" />
+    <ClInclude Include="LevelsScenes.h" />
     <ClInclude Include="Loging.h" />
-    <ClInclude Include="Moving.h" />
-    <ClInclude Include="Stats.h" />
+    <ClInclude Include="Melee.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="Pause.h" />
+    <ClInclude Include="Physics.h" />
+    <ClInclude Include="Pistol.h" />
+    <ClInclude Include="Randomizer.h" />
+    <ClInclude Include="Remedy.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Rifle.h" />
+    <ClInclude Include="RotateMachine.h" />
+    <ClInclude Include="RPG.h" />
+    <ClInclude Include="ReloadLogic.h" />
+    <ClInclude Include="SingleOrSequence.h" />
+    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SmoothMoving.h" />
+    <ClInclude Include="SpreadMode.h" />
+    <ClInclude Include="StateMachine.h" />
     <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="Textures.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="TouchableObjects.h" />
-    <ClInclude Include="UsualRects.h" />
     <ClInclude Include="Vector2f.h" />
-    <ClInclude Include="Weapons.h" />
+    <ClInclude Include="Weapon.h" />
+    <ClInclude Include="WeaponManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

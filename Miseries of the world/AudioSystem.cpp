@@ -1,33 +1,38 @@
 #include "AudioSystem.h"
+#include "Assets.h"
 
 AudioSystem::AudioSystem()
 {
-	Mix_OpenAudio(44100, MIX_DEFAULT_CHANNELS, 2, 2048);
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048) < 0)
+		LOG("Audio wasnt initilized!");
+	if(!Mix_Init(MIX_INIT_FLAC|MIX_INIT_OGG|MIX_INIT_MP3))
+		LOG("Audio wasnt initilized!");
+
 }
 
 AudioSystem::~AudioSystem()
 {
 	for (auto& i : mMusic)
 	{
-		if (i.second)
-			Mix_FreeMusic(i.second);
+		Mix_FreeMusic(i.second);
 	}
 	mMusic.clear();
 	for (auto& i : mChunk)
 	{
-		if (i.second)
-			Mix_FreeChunk(i.second);
+		Mix_FreeChunk(i.second);
 	}
 	mChunk.clear();
 	Mix_CloseAudio();
 }
 
 void AudioSystem::setSound(const Sounds& pType, const PATH& pPathSound)
+{	
+	mChunk.insert_or_assign(pType, Assets::getInstance().getSound(pPathSound));
+}
+
+void AudioSystem::setMusic(const Music& pType, const PATH& pPathMusic)
 {
-	auto it = mChunk.find(pType);
-	if (it == mChunk.end())
-		mChunk[pType] = nullptr;
-	mChunk[pType] = Mix_LoadWAV(pPathSound.string().c_str());
+	mMusic.insert_or_assign(pType, Assets::getInstance().getMusic(pPathMusic));
 }
 
 void AudioSystem::setSound(const std::vector<Sounds>& pTypes, const std::vector<PATH>& pPathSounds)
@@ -39,19 +44,8 @@ void AudioSystem::setSound(const std::vector<Sounds>& pTypes, const std::vector<
 	}
 	for (size_t i = 0; i < pTypes.size()-1 ; i++)
 	{
-		auto it = mChunk.find(pTypes[i]);
-		if (it == mChunk.end())
-			mChunk[pTypes[i]] = nullptr;
-		mChunk[pTypes[i]] = Mix_LoadWAV(pPathSounds[i].string().c_str());
+		mChunk.insert_or_assign(pTypes[i], Assets::getInstance().getSound(pPathSounds[i]));
 	}
-}
-
-void AudioSystem::setMusic(const Music& pType, const PATH& pPathMusic)
-{
-	auto it = mMusic.find(pType);
-	if (it == mMusic.end())
-		mMusic[pType] = nullptr;
-	mMusic[pType] = Mix_LoadMUS(pPathMusic.string().c_str());
 }
 
 void AudioSystem::setMusic(const std::vector<Music>& pTypes, const std::vector<PATH>& pPathMusic)
@@ -63,10 +57,7 @@ void AudioSystem::setMusic(const std::vector<Music>& pTypes, const std::vector<P
 	}
 	for (size_t i = 0; i < pTypes.size() - 1; i++)
 	{
-		auto it = mMusic.find(pTypes[i]);
-		if (it == mMusic.end())
-			mMusic[pTypes[i]] = nullptr;
-		mMusic[pTypes[i]] = Mix_LoadMUS(pPathMusic[i].string().c_str());
+		mMusic.insert_or_assign(pTypes[i], Assets::getInstance().getMusic(pPathMusic[i]));
 	}
 }
 
@@ -94,9 +85,14 @@ void AudioSystem::setVolumeSound(const Sounds& pType, int pVolume)
 		Mix_VolumeChunk(mChunk[pType], std::clamp(pVolume, 0, 128));
 }
 
-void AudioSystem::setVolumeForAll(int pVolume)
+void AudioSystem::setVolumeForAll(const int pVolume)
 {
-	Mix_Volume(-1, std::clamp(pVolume, 0, 128));
+	Mix_VolumeMusic(std::clamp(pVolume, 0, 128));
+
+	for (auto& i : mChunk)
+	{
+		Mix_VolumeChunk(i.second, std::clamp(pVolume, 0, 128));
+	}
 }
 
 void AudioSystem::playSound(const Sounds& pType) const
@@ -111,7 +107,7 @@ void AudioSystem::playSound(const Sounds& pType) const
 		Mix_PlayChannel(-1, it->second, 0);
 }
 
-void AudioSystem::playMusic(const Music& pType) const
+void AudioSystem::playMusic(const Music& pType)
 {
 	auto it = mMusic.find(pType);
 	if (it == mMusic.end())
@@ -120,10 +116,13 @@ void AudioSystem::playMusic(const Music& pType) const
 		return;
 	}
 	else
+	{
+		mPlaying = true;
 		Mix_PlayMusic(it->second, -1);
+	}
 }
 
-void AudioSystem::stopMusic(const Music& pType) const
+void AudioSystem::stopMusic(const Music& pType)
 {
 	auto it = mMusic.find(pType);
 	if (it == mMusic.end())
@@ -132,10 +131,12 @@ void AudioSystem::stopMusic(const Music& pType) const
 		return;
 	}
 	else
+	{
+		mPlaying = false;
 		Mix_PauseMusic();
+	}
 }
-
-void AudioSystem::stopForAll(int pNumber) const
+void AudioSystem::stopForAll(int pNumber) 
 {
 	Mix_PauseAudio(std::clamp(pNumber,0,1));
 }

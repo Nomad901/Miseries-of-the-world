@@ -49,9 +49,6 @@
     <Filter Include="Source Files\Collision">
       <UniqueIdentifier>{fb43a977-9c27-4ed5-940a-10ee218243b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Interface">
-      <UniqueIdentifier>{4480cb28-057d-4afa-bdee-c710e253b909}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Interface">
       <UniqueIdentifier>{905ca82d-b5d2-4c57-974a-aa28f1d6ddf3}</UniqueIdentifier>
     </Filter>
@@ -60,9 +57,6 @@
     </Filter>
     <Filter Include="Source Files\Time">
       <UniqueIdentifier>{079911ea-9035-40d2-86a3-ae3209eadc80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\World">
-      <UniqueIdentifier>{32f06501-fb93-48a4-b2ce-b332e7f96dfc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Rendering">
       <UniqueIdentifier>{492fa18d-6f71-40a4-8c07-c13b924c2fe2}</UniqueIdentifier>
@@ -82,35 +76,17 @@
     <Filter Include="Source Files\Loger">
       <UniqueIdentifier>{b3a36293-9a84-45fd-bfaa-aa8474b6904a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Game Objects\Entities">
-      <UniqueIdentifier>{d4bac204-fa18-4eee-b950-3a9e3f4ca7b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Game Objects\Entities">
-      <UniqueIdentifier>{6c54e20a-b478-4e11-b2e0-e211827abdd8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Game Objects\Fonts">
-      <UniqueIdentifier>{a0723b41-6ae1-4593-8d49-f33258c6e8eb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Scenes">
       <UniqueIdentifier>{cbc04452-06b9-43be-8c26-1ed29547d5eb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Scenes">
       <UniqueIdentifier>{b52f765e-6d75-4722-8b57-98df9614ff31}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game Objects\Fonts">
-      <UniqueIdentifier>{4f336fee-5452-4919-b530-cafcdb8945ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\World">
-      <UniqueIdentifier>{cb6576d7-9b51-421f-9245-268f4b26b21a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Inventory">
       <UniqueIdentifier>{cfd3961b-587a-434c-983a-ac48dd7d5ee0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Inventory">
       <UniqueIdentifier>{9d68c857-1096-484e-adf3-71d1655a3582}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Enemies">
-      <UniqueIdentifier>{c93e23b3-9703-41dd-98b4-254eb047ea0b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Enemies">
       <UniqueIdentifier>{4bd148d5-00e0-4b28-b182-0c82ce72029a}</UniqueIdentifier>
@@ -121,11 +97,50 @@
     <Filter Include="Source Files\Main character">
       <UniqueIdentifier>{a2b55f56-0a40-4af7-aef3-0ccdb4cc7238}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Game Objects\Enemies">
+      <UniqueIdentifier>{c93e23b3-9703-41dd-98b4-254eb047ea0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\States">
+      <UniqueIdentifier>{a9d8868a-bdb2-4c24-a089-33fb360f3368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{b0462762-03b5-4886-a66e-64dbfd97e471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Weapons">
+      <UniqueIdentifier>{4226e05a-ef16-4d5e-9842-828b227f9703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Weapons">
+      <UniqueIdentifier>{ceea6a60-5b13-4bb5-a084-11c291469373}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Interface">
+      <UniqueIdentifier>{4480cb28-057d-4afa-bdee-c710e253b909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Weapons\Bullets">
+      <UniqueIdentifier>{31331cc1-802a-4875-9d39-36dc39fa679a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Weapons\Bullets">
+      <UniqueIdentifier>{e3dff7aa-09d4-482c-acb9-c58ea63479ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Weapons\DerivedWeapons">
+      <UniqueIdentifier>{5642ee42-a7b9-4341-918b-1285385777e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Weapons\DerivedOther">
+      <UniqueIdentifier>{95c2b753-2d60-4a12-a358-3c7ed6d607db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Weapons\DerivedWeapons">
+      <UniqueIdentifier>{d2d0e48a-54cd-4b98-bb3c-35c576310463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Weapons\DerivedOther">
+      <UniqueIdentifier>{9f94555e-1f2a-4a5d-b9ae-b364c6b5c162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Weapons\FireLogic">
+      <UniqueIdentifier>{934803cf-0376-439a-9264-f80a30b0129a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Weapons\FireLogic">
+      <UniqueIdentifier>{797caed4-c111-4674-8a70-54e23f809d51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Miseries of the world.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
@@ -135,37 +150,10 @@
     <ClCompile Include="AudioSystem.cpp">
       <Filter>Source Files\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="Bullets.cpp">
-      <Filter>Source Files\Game Objects\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="TouchableObjects.cpp">
-      <Filter>Source Files\Game Objects\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="UsualRects.cpp">
-      <Filter>Source Files\Game Objects\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Weapons.cpp">
-      <Filter>Source Files\Game Objects\Entities</Filter>
-    </ClCompile>
     <ClCompile Include="Handler.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="FactoryOfFonts.cpp">
-      <Filter>Source Files\Game Objects\Fonts</Filter>
-    </ClCompile>
-    <ClCompile Include="ActionsWithRects.cpp">
-      <Filter>Source Files\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="Character.cpp">
-      <Filter>Source Files\Main character</Filter>
-    </ClCompile>
-    <ClCompile Include="Stats.cpp">
-      <Filter>Source Files\Main character</Filter>
-    </ClCompile>
-    <ClCompile Include="Moving.cpp">
-      <Filter>Source Files\Main character</Filter>
-    </ClCompile>
-    <ClCompile Include="Textures.cpp">
       <Filter>Source Files\Main character</Filter>
     </ClCompile>
     <ClCompile Include="Vector2f.cpp">
@@ -174,8 +162,134 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
+    <ClCompile Include="InputManager.cpp">
       <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryOfFonts.cpp">
+      <Filter>Source Files\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryOfEntities.cpp">
+      <Filter>Source Files\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Assets.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="SmoothMoving.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedTexture.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryScenes.cpp">
+      <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelsScenes.cpp">
+      <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="JSONSystem.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="IntroScene.cpp">
+      <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStates.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="InGame.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Pause.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryObjects.cpp">
+      <Filter>Source Files\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Randomizer.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Source Files\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Miseries of the world.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponManager.cpp">
+      <Filter>Source Files\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Remedy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletsPool.cpp">
+      <Filter>Source Files\Weapons\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullets.cpp">
+      <Filter>Source Files\Weapons\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateMachine.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Rifle.cpp">
+      <Filter>Source Files\Weapons\DerivedOther</Filter>
+    </ClCompile>
+    <ClCompile Include="Boulder.cpp">
+      <Filter>Source Files\Weapons\DerivedOther</Filter>
+    </ClCompile>
+    <ClCompile Include="Knife.cpp">
+      <Filter>Source Files\Weapons\DerivedOther</Filter>
+    </ClCompile>
+    <ClCompile Include="Pistol.cpp">
+      <Filter>Source Files\Weapons\DerivedOther</Filter>
+    </ClCompile>
+    <ClCompile Include="FireModeFactory.cpp">
+      <Filter>Source Files\Weapons\FireLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="Irregular.cpp">
+      <Filter>Source Files\Weapons\FireLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="RPG.cpp">
+      <Filter>Source Files\Weapons\DerivedWeapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Gun.cpp">
+      <Filter>Source Files\Weapons\DerivedWeapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Melee.cpp">
+      <Filter>Source Files\Weapons\DerivedWeapons</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimateStateMachine.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleOrSequence.cpp">
+      <Filter>Source Files\Weapons\FireLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="FireMode.cpp">
+      <Filter>Source Files\Weapons\FireLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="BurstMode.cpp">
+      <Filter>Source Files\Weapons\FireLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="SpreadMode.cpp">
+      <Filter>Source Files\Weapons\FireLogic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,37 +302,10 @@
     <ClInclude Include="AudioSystem.h">
       <Filter>Header Files\Sound</Filter>
     </ClInclude>
-    <ClInclude Include="Bullets.h">
-      <Filter>Header Files\Game Objects\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="TouchableObjects.h">
-      <Filter>Header Files\Game Objects\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="UsualRects.h">
-      <Filter>Header Files\Game Objects\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Weapons.h">
-      <Filter>Header Files\Game Objects\Entities</Filter>
-    </ClInclude>
     <ClInclude Include="Handler.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="FactoryOfFonts.h">
-      <Filter>Header Files\Game Objects\Fonts</Filter>
-    </ClInclude>
-    <ClInclude Include="ActionsWithRects.h">
-      <Filter>Header Files\Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Character.h">
-      <Filter>Header Files\Main character</Filter>
-    </ClInclude>
-    <ClInclude Include="Stats.h">
-      <Filter>Header Files\Main character</Filter>
-    </ClInclude>
-    <ClInclude Include="Textures.h">
-      <Filter>Header Files\Main character</Filter>
-    </ClInclude>
-    <ClInclude Include="Moving.h">
       <Filter>Header Files\Main character</Filter>
     </ClInclude>
     <ClInclude Include="Vector2f.h">
@@ -227,8 +314,137 @@
     <ClInclude Include="TextureManager.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
+    <ClInclude Include="InputManager.h">
       <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Assets.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedTexture.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="AutomaticlyBenchmarker.h">
+      <Filter>Header Files\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="FactoryScenes.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelsScenes.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="JSONSystem.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="IntroScene.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Pause.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStates.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="InGame.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="FactoryObjects.h">
+      <Filter>Header Files\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="FactoryOfEntities.h">
+      <Filter>Header Files\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="FactoryOfFonts.h">
+      <Filter>Header Files\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Randomizer.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Header Files\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponManager.h">
+      <Filter>Header Files\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="Remedy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletsPool.h">
+      <Filter>Header Files\Weapons\Bullets</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullets.h">
+      <Filter>Header Files\Weapons\Bullets</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="SmoothMoving.h">
+      <Filter>Header Files\Main character</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateMachine.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Boulder.h">
+      <Filter>Header Files\Weapons\DerivedOther</Filter>
+    </ClInclude>
+    <ClInclude Include="Knife.h">
+      <Filter>Header Files\Weapons\DerivedOther</Filter>
+    </ClInclude>
+    <ClInclude Include="Pistol.h">
+      <Filter>Header Files\Weapons\DerivedOther</Filter>
+    </ClInclude>
+    <ClInclude Include="Rifle.h">
+      <Filter>Header Files\Weapons\DerivedOther</Filter>
+    </ClInclude>
+    <ClInclude Include="FireMode.h">
+      <Filter>Header Files\Weapons\FireLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="FireModeFactory.h">
+      <Filter>Header Files\Weapons\FireLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="Irregular.h">
+      <Filter>Header Files\Weapons\FireLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimateStateMachine.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Gun.h">
+      <Filter>Header Files\Weapons\DerivedWeapons</Filter>
+    </ClInclude>
+    <ClInclude Include="Melee.h">
+      <Filter>Header Files\Weapons\DerivedWeapons</Filter>
+    </ClInclude>
+    <ClInclude Include="RPG.h">
+      <Filter>Header Files\Weapons\DerivedWeapons</Filter>
+    </ClInclude>
+    <ClInclude Include="ReloadLogic.h">
+      <Filter>Header Files\Weapons\FireLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleOrSequence.h">
+      <Filter>Header Files\Weapons\FireLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="BurstMode.h">
+      <Filter>Header Files\Weapons\FireLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="SpreadMode.h">
+      <Filter>Header Files\Weapons\FireLogic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

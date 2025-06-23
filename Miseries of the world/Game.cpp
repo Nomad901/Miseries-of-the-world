@@ -1,9 +1,7 @@
 #include "Game.h"
 
-Game::Game(const int pFlags, const std::string& pNameOfWindow, Uint32 pX, Uint32 pY, Uint32 pW, Uint32 pH) 
-	: mWindowsWidth{ pW },
-	  mWindowsHeight{ pH },
-	  mWindowsX{ pX },
+Game::Game(const int pFlags, const std::string& pNameOfWindow, Uint32 pX, Uint32 pY) 
+	: mWindowsX{ pX },
 	  mWindowsY{ pY }
 {
 	seter();
@@ -15,7 +13,7 @@ Game::Game(const int pFlags, const std::string& pNameOfWindow, Uint32 pX, Uint32
 	if (IMG_Init(IMG_INIT_JPG) == 0)
 		LOG("Couldn't initialize JPG support: " + std::string(SDL_GetError()));
 
-	mWindow = SDL_CreateWindow(pNameOfWindow.c_str(), pX, pY, pW, pH, pFlags);
+	mWindow = SDL_CreateWindow(pNameOfWindow.c_str(), pX, pY, WIN_WIDTH, WIN_HEIGHT, pFlags);
 	if (!mWindow)
 		LOG("Couldn't create window: " + std::string(SDL_GetError()));
 
@@ -38,8 +36,6 @@ void Game::startLoop()
 	while (mIsRunning) {
 		mTimer.startTimer();
 
-		SDL_GetMouseState(&mMouseX, &mMouseY);
-
 		mMapOfFunc[Type::ACTIONS]();
 
 		SDL_SetRenderDrawColor(mRenderer, mR, mG, mB, mA);
@@ -56,12 +52,6 @@ void Game::startLoop()
 void Game::stopLoop()
 {
 	mIsRunning = SDL_FALSE;
-}
-
-void Game::setDimensionOfWindow(const int pW, const int pH)
-{
-	mWindowsWidth = pW, mWindowsHeight = pH;
-	SDL_SetWindowSize(mWindow, pW, pH);
 }
 
 void Game::setPositionOfWindow(const int pX, const int pY)
@@ -85,7 +75,4 @@ void Game::seter()
 	mR = 0; mG = 0; mB = 0; mA = SDL_ALPHA_OPAQUE;
 	mDelay = 16;
 	mIsRunning = SDL_TRUE;
-	mMouseX = 0;
-	mMouseY = 0;
-	mTexture = nullptr;
 }

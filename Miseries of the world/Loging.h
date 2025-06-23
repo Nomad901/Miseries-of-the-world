@@ -10,8 +10,12 @@
 static std::mutex mutex;
 
 namespace Loging {
-	void log(const std::string& message, 
-			 const std::filesystem::path& file,
-			 const int& line);
+	void log(std::string_view pMessage,
+			 const std::filesystem::path& pFile,
+			 const int& pLine);
+
+	void message(std::string_view pMessage);
 }
 
+#define LOG(msg) Loging::log(msg, __FILE__,__LINE__)
+#define MESSAGE(msg) Loging::message(msg)
