@@ -3,13 +3,35 @@
 
 #include <SDL.h>
 
-struct ReloadLogic
-{
-	virtual ~ReloadLogic() = default;
+#include "Timer.h"
+#include "AnimatedTexture.h"
+#include "AnimateStateMachine.h"
 
-	virtual void reload() = 0;
-	virtual void neededToReload() = 0;
-	virtual void setRelodingTime(int32_t pReloadingTime) = 0;
-	virtual int32_t getReloadingTime() = 0;
+class ReloadLogic
+{
+public:
+	ReloadLogic(SDL_Renderer* pRenderer, SDL_Rect pCharRect,
+			    float pReloadingTime, bool pShowReloadingQuote);
+
+	bool isReloading();
+	void startReloading();
+	
+	void showReloadQuote(bool pShowing);
+	void setRelodingTime(float pReloadingTime);
+	float getReloadingTime();
+
+	void render(SDL_Renderer* pRenderer);
+	void update(SDL_Rect pCharRect);
+
+private:
+	bool manageDelay();
+
+private:
+	bool mShowingQuote{ true };
+	bool mIsReloading{ false };
+	float mReloadingTime{};
+
+	Timer mTimerReload;
+	std::unique_ptr<AnimateStateMachine> mAnimateStateMachine;
 };
 

@@ -12,11 +12,6 @@ class AnimateStateMachine
 {
 public:
 	AnimateStateMachine(SDL_Renderer* pRenderer);
-	AnimateStateMachine(SDL_Renderer* pRenderer, std::string_view pName, std::unique_ptr<AnimatedTexture> pAnimatedTexture,
-						const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity);
-	AnimateStateMachine(SDL_Renderer* pRenderer,  std::string_view pName, TypeWait pType, const PATH& pPath,
-						const Vector2f& pPos, const int pW, const int pH, HorVer pSide,
-					    const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity);
 
 	void pushState(std::string_view pName, std::unique_ptr<AnimatedTexture> pState,
 				   const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity);

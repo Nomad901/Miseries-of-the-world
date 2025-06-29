@@ -5,34 +5,6 @@ AnimateStateMachine::AnimateStateMachine(SDL_Renderer* pRenderer)
 	mRenderer = pRenderer;
 }
 
-AnimateStateMachine::AnimateStateMachine(SDL_Renderer* pRenderer, std::string_view pName, std::unique_ptr<AnimatedTexture> pAnimatedTexture,
-										 const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity)
-	: mState{ std::string(pName) }, mRenderer{ pRenderer }
-{
-	mNames.reserve(50);
-	mNames.emplace(std::string(pName));
-	if (!mStorageTextures.contains(mState))
-		mStorageTextures[mState].mAnimatedTexture = std::move(pAnimatedTexture);
-	mStorageTextures[mState].mAnimatedTexture->setSides(pNumbers);
-	mStorageTextures[mState].mDelay = pDelay;
-	mStorageTextures[mState].mAnimatedTexture->setIntensity(pItensity);
-}
-
-AnimateStateMachine::AnimateStateMachine(SDL_Renderer* pRenderer, std::string_view pName, TypeWait pType, const PATH& pPath,
-										 const Vector2f& pPos, const int pW, const int pH, HorVer pSide, 
-										 const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity)
-	: mState{ std::string(pName) }, mRenderer{ pRenderer }
-{
-	mNames.reserve(50);
-	mNames.emplace(std::string(pName));
-	std::unique_ptr<AnimatedTexture> tmpAnimated = std::make_unique<AnimatedTexture>();
-	tmpAnimated->appendAnimation(pType, pRenderer, pPath, pPos, pW, pH, pSide);
-	tmpAnimated->setSides(pNumbers);
-	mStorageTextures[mState].mAnimatedTexture = std::move(tmpAnimated);
-	mStorageTextures[mState].mDelay = pDelay;
-	mStorageTextures[mState].mAnimatedTexture->setIntensity(pItensity);
-}
-
 void AnimateStateMachine::pushState(std::string_view pName, std::unique_ptr<AnimatedTexture> pState,
 								    const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity)
 {

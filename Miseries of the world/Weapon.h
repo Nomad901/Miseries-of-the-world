@@ -28,8 +28,6 @@ class WeaponManager;
 // when the character take some bullets(i will implement this in the bullets class)
 // i will change quantity of bullets here
 
-
-
 // setting and getting parameters of Weapons
 
 class Weapon : protected Assets
@@ -73,7 +71,6 @@ public:
 	void updatePositions(const Vector2f& pPosChar);
 
 	virtual void setAsADefaultWeapon() = 0;
-	virtual void setAsASpecialWeapon() = 0;
 	virtual bool WeaponIsInView(SDL_Rect pCharCollision) = 0;
 	virtual void render(SDL_Renderer* pRenderer) = 0;
 	virtual void update() = 0;

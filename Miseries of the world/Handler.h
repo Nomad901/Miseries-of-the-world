@@ -21,7 +21,7 @@ class InGame;
 class Pistol;
 class Knife;
 class Boulder;
-class FireModeFactory;
+class ReloadLogic;
 
 using PATH = std::filesystem::path;
 
@@ -69,8 +69,9 @@ private:
 	std::unique_ptr<Bullets> mBullets;
 	std::unique_ptr<BulletsPool> mBulletsPool;
 
-	std::unique_ptr<FireModeFactory> mFireModeFactory;
 	RotateMachine mRotate;
+
+	std::unique_ptr<ReloadLogic> mReloadLogic;
 
 	bool mLost{ false };
 
