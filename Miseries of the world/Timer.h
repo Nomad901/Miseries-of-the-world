@@ -32,7 +32,7 @@ public:
 private:
 	bool mRunning { false };
 	bool mTimerFromEnd{ false };
-	float mLimit;
+	float mLimit{};
 
 	Dimension mDimension{ Dimension::MILISECONDS };
 	std::chrono::time_point<std::chrono::high_resolution_clock> mStartTime, mEndTime;

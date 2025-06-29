@@ -15,13 +15,13 @@ public:
 	~Irregular() override = default;
 
 	void shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload) override;
-
-	void update(SDL_Renderer* pRenderer, const Vector2f& pPos) override;
-
-	void setAsSpecial();
+	
+	void setAsSpecial() override;
 	void setQuantityBulletsPerTime(int32_t pQuantityBullets);
 	void setBurstCooldown(int32_t pBurstCooldown);
 
+	void render() override;
+	void update(SDL_Renderer* pRenderer, const Vector2f& pPos) override;
 protected:
 	bool manageDelay() override;
 	bool manageDelaySequence();
@@ -30,6 +30,8 @@ protected:
 	void subtractionBullets(int32_t& pTmpBreakingWeapon);
 
 private:
+	bool mActive{ false };
+
 	int32_t mCounterBullets{0};
 	int32_t mQuantityBulletsPerTime{0};
 	int32_t mBurstCooldown{0};
@@ -37,6 +39,5 @@ private:
 	RotateMachine mRotateMachine;
 	Timer mTimer;
 	Timer mTimerForBurst;
-	Randomizer mRandomizer{ 10,100 };
 };
 

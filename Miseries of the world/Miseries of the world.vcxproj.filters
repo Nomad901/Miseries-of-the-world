@@ -109,17 +109,11 @@
     <Filter Include="Header Files\Weapons">
       <UniqueIdentifier>{4226e05a-ef16-4d5e-9842-828b227f9703}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Weapons">
-      <UniqueIdentifier>{ceea6a60-5b13-4bb5-a084-11c291469373}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Interface">
       <UniqueIdentifier>{4480cb28-057d-4afa-bdee-c710e253b909}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Weapons\Bullets">
       <UniqueIdentifier>{31331cc1-802a-4875-9d39-36dc39fa679a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Weapons\Bullets">
-      <UniqueIdentifier>{e3dff7aa-09d4-482c-acb9-c58ea63479ea}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Weapons\DerivedWeapons">
       <UniqueIdentifier>{5642ee42-a7b9-4341-918b-1285385777e4}</UniqueIdentifier>
@@ -127,14 +121,20 @@
     <Filter Include="Header Files\Weapons\DerivedOther">
       <UniqueIdentifier>{95c2b753-2d60-4a12-a358-3c7ed6d607db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Weapons\FireLogic">
+      <UniqueIdentifier>{934803cf-0376-439a-9264-f80a30b0129a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Weapons">
+      <UniqueIdentifier>{ceea6a60-5b13-4bb5-a084-11c291469373}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Weapons\Bullets">
+      <UniqueIdentifier>{e3dff7aa-09d4-482c-acb9-c58ea63479ea}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Weapons\DerivedWeapons">
       <UniqueIdentifier>{d2d0e48a-54cd-4b98-bb3c-35c576310463}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Weapons\DerivedOther">
       <UniqueIdentifier>{9f94555e-1f2a-4a5d-b9ae-b364c6b5c162}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Weapons\FireLogic">
-      <UniqueIdentifier>{934803cf-0376-439a-9264-f80a30b0129a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Weapons\FireLogic">
       <UniqueIdentifier>{797caed4-c111-4674-8a70-54e23f809d51}</UniqueIdentifier>

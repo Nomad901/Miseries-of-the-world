@@ -1,6 +1,6 @@
 #include "SingleOrSequence.h"
 
-void Sequence::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload)
+void SingleOrSequence::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload)
 {
 	static int32_t tmpBreakingWeapon = getFireStat().mOriginalQuantityBullets - 5;
 	if (pWasReload)
@@ -17,11 +17,11 @@ void Sequence::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload)
 				return;
 		}
 		
-		mRotateMachine.calculateDegrees(getFireStat().mPos, InputManager::getInstance().getMousePos());
+		mRotateMachine.calculateRadians({static_cast<float>(pWeaponRect.x), static_cast<float>(pWeaponRect.y)}, InputManager::getInstance().getMousePos());
 
 		mBulletsPool->makeBulletActive();
 		mBulletsPool->manageLastBulletInside()->setSpeed(getFireStat().mSpeed);
-		auto tmpPos = getFireStat().mPos;
+		Vector2f tmpPos = { static_cast<float>(pCharRect.x), static_cast<float>(pCharRect.y) };
 		mBulletsPool->manageLastBulletInside()->shootBullet({ tmpPos.mX + getFireStat().mW - 40, tmpPos.mY }, InputManager::getInstance().getMousePos(),
 															  pWeaponRect, mRotateMachine.getAngle(), { static_cast<float>(pWeaponRect.w / 2 - 10),-5 },
 															  pCharRect.w, pCharRect.h);
@@ -35,7 +35,7 @@ void Sequence::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload)
 	}
 }
 
-void Sequence::update(SDL_Renderer* pRenderer, const Vector2f& pPos)
+void SingleOrSequence::update(SDL_Renderer* pRenderer, const Vector2f& pPos)
 {
 	if (mBulletsPool->getSizeBullets() <= 2)
 	{
@@ -45,7 +45,12 @@ void Sequence::update(SDL_Renderer* pRenderer, const Vector2f& pPos)
 	FireMode::getFireStat().mPos = pPos;
 }
 
-bool Sequence::manageDelay()
+void SingleOrSequence::render()
+{
+	mBulletsPool->update();
+}
+
+bool SingleOrSequence::manageDelay()
 {
 	if (!mTimer.isRunning())
 		mTimer.startTimer();
@@ -57,7 +62,7 @@ bool Sequence::manageDelay()
 	return true;
 }
 
-void Sequence::setAsSpecial()
+void SingleOrSequence::setAsSpecial()
 {
 	if (mMode == Mode::SEQUENCE) {
 		setDelay(20);
@@ -72,7 +77,7 @@ void Sequence::setAsSpecial()
 	}
 }
 
-void Sequence::setMode(Mode pMode)
+void SingleOrSequence::setMode(Mode pMode)
 {
 	mMode = pMode;
 }

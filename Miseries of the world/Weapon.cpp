@@ -127,8 +127,8 @@ void Weapon::updatePositions(const Vector2f& pPosChar)
 		pPosChar.mY > 0 && pPosChar.mY < WIN_HEIGHT)
 	{
 		mWeaponStats.mPos = pPosChar;
-		mCharCollision.mChar.x = pPosChar.mX;
-		mCharCollision.mChar.y = pPosChar.mY;
+		mCharCollision.mChar.x = static_cast<int>(pPosChar.mX);
+		mCharCollision.mChar.y = static_cast<int>(pPosChar.mY);
 	}
 }
 

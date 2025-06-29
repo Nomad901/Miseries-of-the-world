@@ -2,11 +2,6 @@
 #include "TextureManager.h"
 #include "../FactoryOfFonts.h"
 
-void Assets::download()
-{
-
-}
-
 auto Assets::getAnimation(const PATH& pPath) -> std::unordered_map<int, std::pair<SDL_Texture*, SDL_Rect>>
 {
     if (mAnimation.find(pPath) == mAnimation.end())

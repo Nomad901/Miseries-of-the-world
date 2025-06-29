@@ -25,7 +25,6 @@ public:
 private:
 	struct WeaponRelationship
 	{
-
 		std::unique_ptr<Weapon> mWeapon;
 		std::unique_ptr<Bullets> mBullets;
 

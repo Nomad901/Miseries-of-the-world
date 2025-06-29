@@ -11,22 +11,21 @@ void Irregular::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload)
 
 	manageReload(tmpBreakingWeapon, pWasReload);
 
-	if (getFireStat().mQuantitySets != 0 /*&& getFireStat().mQuantityBullets != 0*/)
+	if (getFireStat().mQuantitySets != 0 && getFireStat().mQuantityBullets != 0)
 	{
 		if (manageDelay() || manageDelaySequence())
 			return;
 
-		mRotateMachine.calculateDegrees(getFireStat().mPos, InputManager::getInstance().getMousePos());
+		mRotateMachine.calculateRadians(getFireStat().mPos, InputManager::getInstance().getMousePos());
 
-		auto tmpPos = getFireStat().mPos;
 		mBulletsPool->makeBulletActive();
 		mBulletsPool->manageLastBulletInside()->setSpeed(getFireStat().mSpeed);
+		Vector2f tmpPos = { static_cast<float>(pCharRect.x), static_cast<float>(pCharRect.y) };
 		mBulletsPool->manageLastBulletInside()->shootBullet({ tmpPos.mX + getFireStat().mW - 40, tmpPos.mY }, InputManager::getInstance().getMousePos(),
 															  pWeaponRect, mRotateMachine.getAngle(), { static_cast<float>(pWeaponRect.w / 2 - 10),-5 },
 															  pCharRect.w, pCharRect.h);
 		mCounterBullets++;
 
-				
 		if (getFireStat().mQuantityBullets <= tmpBreakingWeapon)
 		{
 			setShouldBreakWeapon(true);
@@ -37,14 +36,18 @@ void Irregular::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload)
 	}
 }
 
+void Irregular::render()
+{
+	mBulletsPool->update();
+}
+
 void Irregular::update(SDL_Renderer* pRenderer, const Vector2f& pPos)
 {
 	if (mBulletsPool->getSizeBullets() <= 0)
 	{
 		mBulletsPool->init(getFireStat().mCapacity, pRenderer, getFireStat().mPath, pPos,
 			getFireStat().mW, getFireStat().mH, getFireStat().mSpeed);
-	}
-	
+	}	
 	if (mBulletsPool->getSizeActiveBullets() >= mQuantityBulletsPerTime)
 	{
 		if(!mTimer.isRunning())
@@ -64,6 +67,7 @@ bool Irregular::manageDelay()
 		}
 		return true;
 	}
+	return false;
 }
 
 bool Irregular::manageDelaySequence()
@@ -108,8 +112,9 @@ void Irregular::manageReload(int32_t& pTmpBreakingWeapon, bool pWasReload)
 {
 	if (pWasReload)
 	{
-		subtractionBullets(pTmpBreakingWeapon);
 		setQuantityBullets(getFireStat().mOriginalQuantityBullets);
+		pTmpBreakingWeapon = getFireStat().mOriginalQuantityBullets;
+		subtractionBullets(pTmpBreakingWeapon);
 		setQuantitySets(getFireStat().mQuantitySets - 1);	
 	}
 }

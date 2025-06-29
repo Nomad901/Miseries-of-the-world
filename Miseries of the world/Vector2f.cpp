@@ -91,11 +91,12 @@ Vector2f Vector2f::rotateVector(const Vector2f& pVec, const float pAngle)
 Vector2f Vector2f::normalize() const
 {
 	const float varLenght = length();
-	if (varLenght > 0)
+	if(varLenght != 0)
 		return Vector2f(mX / varLenght, mY / varLenght);
-	return Vector2f(0, 0);
+	return Vector2f{ 0.0f,0.0f };
 }
- float Vector2f::distanceTo(const Vector2f& pOther) const
+
+float Vector2f::distanceTo(const Vector2f& pOther) const
 {
 	return std::sqrt((mX - pOther.mX) * (mX - pOther.mX) + (mY - pOther.mY) * (mY - pOther.mY));
 }

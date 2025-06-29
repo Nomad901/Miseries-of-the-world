@@ -1,11 +1,16 @@
 #include "AnimateStateMachine.h"
 
+AnimateStateMachine::AnimateStateMachine(SDL_Renderer* pRenderer)
+{
+	mRenderer = pRenderer;
+}
+
 AnimateStateMachine::AnimateStateMachine(SDL_Renderer* pRenderer, std::string_view pName, std::unique_ptr<AnimatedTexture> pAnimatedTexture,
 										 const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity)
 	: mState{ std::string(pName) }, mRenderer{ pRenderer }
 {
 	mNames.reserve(50);
-	mNames.push_back(std::string(pName));
+	mNames.emplace(std::string(pName));
 	if (!mStorageTextures.contains(mState))
 		mStorageTextures[mState].mAnimatedTexture = std::move(pAnimatedTexture);
 	mStorageTextures[mState].mAnimatedTexture->setSides(pNumbers);
@@ -19,7 +24,7 @@ AnimateStateMachine::AnimateStateMachine(SDL_Renderer* pRenderer, std::string_vi
 	: mState{ std::string(pName) }, mRenderer{ pRenderer }
 {
 	mNames.reserve(50);
-	mNames.push_back(std::string(pName));
+	mNames.emplace(std::string(pName));
 	std::unique_ptr<AnimatedTexture> tmpAnimated = std::make_unique<AnimatedTexture>();
 	tmpAnimated->appendAnimation(pType, pRenderer, pPath, pPos, pW, pH, pSide);
 	tmpAnimated->setSides(pNumbers);
@@ -32,7 +37,7 @@ void AnimateStateMachine::pushState(std::string_view pName, std::unique_ptr<Anim
 								    const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity)
 {
 	mState = std::string(pName);
-	mNames.push_back(std::string(pName));
+	mNames.emplace(std::string(pName));
 	if (!mStorageTextures.contains(mState))
 		mStorageTextures[mState].mAnimatedTexture = std::move(pState);
 	mStorageTextures[mState].mAnimatedTexture->setSides(pNumbers);
@@ -40,16 +45,21 @@ void AnimateStateMachine::pushState(std::string_view pName, std::unique_ptr<Anim
 	mStorageTextures[mState].mAnimatedTexture->setIntensity(pItensity);
 }
 
-void AnimateStateMachine::pushState(std::string_view pName, TypeWait pType, const PATH& pPath, 
+void AnimateStateMachine::pushStateW(std::string_view pName, TypeWait pType, const PATH& pPath, 
 									const Vector2f& pPos, const int pW, const int pH, HorVer pSide,
 									const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity)
 {
 	mState = std::string(pName);
-	mNames.push_back(std::string(pName));
-	std::unique_ptr<AnimatedTexture> tmpAnimated = std::make_unique<AnimatedTexture>();
-	tmpAnimated->appendAnimation(pType, mRenderer, pPath, pPos, pW, pH, pSide);
-	tmpAnimated->setSides(pNumbers);
-	mStorageTextures[mState].mAnimatedTexture = std::move(tmpAnimated);
+	mNames.emplace(std::string(pName));
+	if (mStorageTextures.contains(mState))
+		mStorageTextures[mState].mAnimatedTexture->appendAnimation(pType, mRenderer, pPath, pPos, pW, pH, pSide);
+	else
+	{
+		std::unique_ptr<AnimatedTexture> tmpAnimated = std::make_unique<AnimatedTexture>();
+		tmpAnimated->appendAnimation(pType, mRenderer, pPath, pPos, pW, pH, pSide);
+		tmpAnimated->setSides(pNumbers);
+		mStorageTextures[mState].mAnimatedTexture = std::move(tmpAnimated);
+	}
 	mStorageTextures[mState].mDelay = pDelay;
 	mStorageTextures[mState].mAnimatedTexture->setIntensity(pItensity);
 }
@@ -63,12 +73,9 @@ void AnimateStateMachine::popState(std::string_view pName)
 		mStorageTextures[std::string(pName)].mAnimatedTexture.release();
 		mStorageTextures[std::string(pName)].mAnimatedTexture = nullptr;
 		mStorageTextures.erase(std::string(pName));
-
-		if (std::ranges::contains(mNames, std::string(pName)))
-		{
-			auto it = std::remove(mNames.begin(), mNames.end(), std::string(pName));
-			mNames.erase(it);
-		} 
+		
+		if (mNames.contains(std::string(pName)))
+			mNames.erase(std::string(pName));
 	}
 	else
 		LOG("There is no such a name!");
@@ -184,7 +191,10 @@ void AnimateStateMachine::render(const std::vector<std::string>& pNames, bool pR
 			if (mStorageTextures.contains(name))
 			{
 				render(name, pRotate, pAngle);
-				mNames = pNames;
+				for (auto& i : pNames)
+				{
+					mNames.emplace(i);
+				}
 			}
 			else
 			{
@@ -195,22 +205,23 @@ void AnimateStateMachine::render(const std::vector<std::string>& pNames, bool pR
 	}
 }
 
-std::unique_ptr<AnimatedTexture>& AnimateStateMachine::getState(std::string_view pName)
+auto AnimateStateMachine::getState(std::string_view pName) -> std::expected<std::reference_wrapper<AnimatedTexture>, std::string_view>
 {
-	if (mState == std::string(pName))
-		getState();
-	else {
-		if (mStorageTextures.contains(std::string(pName)))
-		{
-			mState = std::string(pName);
-			return mStorageTextures[mState].mAnimatedTexture;
-		}
-		else
-			LOG("There is no such a name!");
+	auto it = mStorageTextures.find(std::string(pName));
+	if (it != mStorageTextures.end())
+	{
+		mState = std::string(pName);
+		return std::ref(*it->second.mAnimatedTexture);
 	}
+	LOG("There is no such a name!");
+	return std::unexpected("There is no such a name!");
 }
 
-std::unique_ptr<AnimatedTexture>& AnimateStateMachine::getState() 
+auto AnimateStateMachine::getState() -> std::expected<std::reference_wrapper<AnimatedTexture>, std::string_view>
 {
-	return mStorageTextures[mState].mAnimatedTexture;
+	auto it = mStorageTextures.find(mState);
+	if (it != mStorageTextures.end())
+		return std::ref(*it->second.mAnimatedTexture);
+	LOG("You didnt set the state!");
+	return std::unexpected("You didnt set the state!");
 }

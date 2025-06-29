@@ -1,5 +1,8 @@
 #pragma once
+#include <unordered_set>
 #include <algorithm>
+#include <expected>
+
 #include "AnimatedTexture.h"
 #include "TextureManager.h"
 #include "Assets.h"
@@ -8,6 +11,7 @@
 class AnimateStateMachine
 {
 public:
+	AnimateStateMachine(SDL_Renderer* pRenderer);
 	AnimateStateMachine(SDL_Renderer* pRenderer, std::string_view pName, std::unique_ptr<AnimatedTexture> pAnimatedTexture,
 						const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity);
 	AnimateStateMachine(SDL_Renderer* pRenderer,  std::string_view pName, TypeWait pType, const PATH& pPath,
@@ -16,7 +20,7 @@ public:
 
 	void pushState(std::string_view pName, std::unique_ptr<AnimatedTexture> pState,
 				   const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity);
-	void pushState(std::string_view pName, TypeWait pType, const PATH& pPath,
+	void pushStateW(std::string_view pName, TypeWait pType, const PATH& pPath,
 				   const Vector2f& pPos, const int pW, const int pH, HorVer pSide,
 				   const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity);
 	void popState(std::string_view pName);
@@ -36,8 +40,8 @@ public:
 	void render(std::string_view pName, bool pRotate, float pAngle = 0.0f);
 	void render(const std::vector<std::string>& pNames, bool pRotate, float pAngle = 0.0f);
 
-	std::unique_ptr<AnimatedTexture>& getState(std::string_view pName);
-	std::unique_ptr<AnimatedTexture>& getState();
+	auto getState(std::string_view pName) -> std::expected<std::reference_wrapper<AnimatedTexture>, std::string_view>;
+	auto getState()						  -> std::expected<std::reference_wrapper<AnimatedTexture>, std::string_view>;
 
 private:
 	SDL_Renderer* mRenderer{ nullptr };
@@ -50,6 +54,6 @@ private:
 		std::unique_ptr<AnimatedTexture> mAnimatedTexture{ nullptr };
 	};
 	std::string mState;
-	std::vector<std::string> mNames;
+	std::unordered_set<std::string> mNames;
 	std::unordered_map<std::string, AnimatedTextureStats> mStorageTextures;
 };

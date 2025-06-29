@@ -14,7 +14,7 @@ void AnimatedTexture::appendAnimation(TypeWait pType, SDL_Renderer* pRenderer, c
 	mPath = pPath;
 	mHorVer = pSide;
 	if (pType == TypeWait::WAIT)
-		mWaitAnim = true;
+		mConditionals.mWaitAnim = true;
 
 	if (mAnimation.find(pPath) == mAnimation.end())
 	{
@@ -40,6 +40,26 @@ void AnimatedTexture::appendAnimation(TypeWait pType, SDL_Renderer* pRenderer, c
 	}
 	mTimer.setDimensionOfTime(Dimension::MILISECONDS);
 	mTimer.setLimit(100.0f);
+}
+
+void AnimatedTexture::setIntensity(const float pIntensity)
+{
+	mIntensity = pIntensity;
+}
+
+void AnimatedTexture::setCurrentSide(const SideOfChar pSide)
+{
+	mCurrentSide = pSide;
+}
+
+void AnimatedTexture::setActive(const bool pActive)
+{
+	mConditionals.mActive = pActive;
+}
+
+void AnimatedTexture::waitWithAnim(const bool pWaitAnim)
+{
+	mConditionals.mWaitAnim = pWaitAnim;
 }
 
 //check for the purple background. each frame - append to the vector through "appendWithoutBack()"
@@ -132,7 +152,7 @@ void AnimatedTexture::dividerFrames(SDL_Renderer* pRenderer)
 
 	createTexturesFromFrames(pRenderer);
 
-	if (mWaitAnim)
+	if (mConditionals.mWaitAnim)
 	{
 		for (auto& i : mStorageWaitFrames)
 		{
@@ -173,7 +193,7 @@ void AnimatedTexture::createTexturesFromFrames(SDL_Renderer* pRenderer)
 		
 		SDL_SetRenderTarget(pRenderer, nullptr);
 
-		if(mWaitAnim)
+		if(mConditionals.mWaitAnim)
 			mStorageWaitFrames[static_cast<int>(i)] = { tmpTexture, mSprites[i] };
 		else
 			mStorageFrames[static_cast<int>(i)] = { tmpTexture, mSprites[i] };
@@ -209,12 +229,47 @@ void AnimatedTexture::setPosition(const Vector2f& pPos)
 
 bool AnimatedTexture::isEnded() const
 {
-	return mEnded;
+	return mConditionals.mEnded;
 }
 
 void AnimatedTexture::setEnded(bool pEnded)
 {
-	mEnded = pEnded;
+	mConditionals.mEnded = pEnded;
+}
+
+void AnimatedTexture::enableWaitAnim(bool pWait)
+{
+	mConditionals.mInWaitAnim = pWait;
+}
+
+void AnimatedTexture::setAnimating(bool pAnimating)
+{
+	mConditionals.mAnimating = pAnimating;
+}
+
+bool AnimatedTexture::isInWaitAnim() const noexcept
+{
+	return mConditionals.mInWaitAnim;
+}
+
+bool AnimatedTexture::isAnimating() const noexcept
+{
+	return mConditionals.mAnimating;
+}
+
+Vector2f AnimatedTexture::getPosition() const
+{
+	return { static_cast<float>(mDstRect.x), static_cast<float>(mDstRect.y) };
+}
+
+AnimatedTexture::conditionalVars const& AnimatedTexture::getAllConditions() const noexcept
+{
+	return mConditionals;
+}
+
+bool AnimatedTexture::isActive() const
+{
+	return mConditionals.mActive;
 }
 
 SDL_Rect AnimatedTexture::getAnimRect() const noexcept
@@ -224,42 +279,44 @@ SDL_Rect AnimatedTexture::getAnimRect() const noexcept
 
 void AnimatedTexture::stopAnimation()
 {
-	mAnimating = false;
+	mConditionals.mAnimating = false;
 }
 
 void AnimatedTexture::runAnimation()
 {
 	mTimer.startTimer();
-	mAnimating = true;
+	mConditionals.mAnimating = true;
+	mConditionals.mOnceAnim = false;
 }
 
 void AnimatedTexture::runAnimationOnlyOnce()
 {
 	mTimer.startTimer();
-	mAnimating = true;
-	mOnceAnim = true;
+	mConditionals.mAnimating = true;
+	mConditionals.mOnceAnim = true;
 }
 
 void AnimatedTexture::render(SDL_Renderer* pRenderer)
 {
-	if (mAnimating && !mEnded)
+	if (mConditionals.mAnimating)
 	{
-		if (mActive)
+		if (mConditionals.mActive && !mConditionals.mInWaitAnim)
 		{
 			if (!mSteps.empty())
 			{
 				if (mCounter >= mSteps[mCurrentSide].size())
 				{
-					mEnded = true;
-					if (!mOnceAnim)
+					mConditionals.mEnded = true;
+					if (!mConditionals.mOnceAnim)
 						mCounter = 0;
 					else
 					{
-						mActive = false;
-						mAnimating = false;
+						mConditionals.mActive = false;
+						mConditionals.mAnimating = false;
 					}
 				}
-				SDL_RenderCopy(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect);
+				else
+					SDL_RenderCopy(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect);
 				if (mTimer.getDeltaTime(false) > mIntensity)
 				{
 					mTimer.resetTimer();
@@ -270,32 +327,30 @@ void AnimatedTexture::render(SDL_Renderer* pRenderer)
 			else
 				MESSAGE("U didnt set steps!");
 		}
-		else
+		else if(mConditionals.mWaitAnim && mConditionals.mInWaitAnim)
 		{
-			if (mWaitAnim)
+			if (mCounter >= mSteps[mCurrentSide].size())
 			{
-				if (mCounter >= mSteps[mCurrentSide].size())
+				mConditionals.mEnded = true;
+				if (!mConditionals.mOnceAnim)
+					mCounter = 0;
+				else
 				{
-					mEnded = true;
-					if (!mOnceAnim)
-						mCounter = 0;
-					else
-					{
-						mActive = false;
-						mAnimating = false;
-					}
-				}
-				SDL_RenderCopy(pRenderer, mStorageWaitFrames[mCounter].first, nullptr, &mDstRect);
-				if (mTimer.getDeltaTime(false) > mIntensity)
-				{
-					mTimer.resetTimer();
-					if (mCounter < mSteps[mCurrentSide].size())
-						mCounter++;
+					mConditionals.mActive = false;
+					mConditionals.mAnimating = false;
 				}
 			}
 			else
-				SDL_RenderCopy(pRenderer, mStorageFrames[mSteps[mCurrentSide][0]].first, nullptr, &mDstRect);
+				SDL_RenderCopy(pRenderer, mStorageWaitFrames[mCounter].first, nullptr, &mDstRect);
+			if (mTimer.getDeltaTime(false) > mIntensity)
+			{
+				mTimer.resetTimer();
+				if (mCounter < mSteps[mCurrentSide].size())
+					mCounter++;
+			}
 		}
+		else
+			SDL_RenderCopy(pRenderer, mStorageFrames[mSteps[mCurrentSide][0]].first, nullptr, &mDstRect);
 	}
 	else
 		mCounter = 0;
@@ -303,30 +358,24 @@ void AnimatedTexture::render(SDL_Renderer* pRenderer)
 
 void AnimatedTexture::renderWithRotate(SDL_Renderer* pRenderer, double pAngle, const Vector2f& pMousePos)
 {
-	if (mAnimating && !mEnded)
+	if (mConditionals.mAnimating)
 	{
-		if (mActive)
+		if (mConditionals.mActive && !mConditionals.mInWaitAnim)
 		{
 			if (!mSteps.empty())
 			{
 				if (mCounter >= mSteps[mCurrentSide].size())
 				{
-					mEnded = true;
-					if (!mOnceAnim)
+					mConditionals.mEnded = true;
+					if (!mConditionals.mOnceAnim)
 						mCounter = 0;
 					else
-					{
 						SDL_RenderCopyEx(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter -1]].first, nullptr, &mDstRect, pAngle, NULL,
 										 pMousePos.mX >= getPosition().mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
-					}
 				}
 				else
-				{
-					if (pMousePos.mX >= getPosition().mX)
-						SDL_RenderCopyEx(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect, pAngle, NULL, SDL_FLIP_NONE);
-					else
-						SDL_RenderCopyEx(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect, pAngle, NULL, SDL_FLIP_VERTICAL);
-				}
+					SDL_RenderCopyEx(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect, pAngle, NULL, 
+									 pMousePos.mX >= getPosition().mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
 				if (mTimer.getDeltaTime(false) > mIntensity)
 				{
 					mTimer.resetTimer();
@@ -337,35 +386,31 @@ void AnimatedTexture::renderWithRotate(SDL_Renderer* pRenderer, double pAngle, c
 			else
 				MESSAGE("U didnt set steps!");
 		}
-		else
+		else if (mConditionals.mWaitAnim && mConditionals.mInWaitAnim)
 		{
-			if (mWaitAnim)
+			if (mCounter >= mSteps[mCurrentSide].size())
 			{
-				if (mCounter >= mSteps[mCurrentSide].size())
-				{
-					mEnded = true;
-					if (!mOnceAnim)
-						mCounter = 0;
-					else
-					{
-						mActive = false;
-						mAnimating = false;
-					}
-				}
-				if (pMousePos.mX >= getPosition().mX)
-					SDL_RenderCopyEx(pRenderer, mStorageWaitFrames[mCounter].first, nullptr, &mDstRect, pAngle, NULL, SDL_FLIP_NONE);
+				mConditionals.mEnded = true;
+				if (!mConditionals.mOnceAnim)
+					mCounter = 0;
 				else
-					SDL_RenderCopyEx(pRenderer, mStorageWaitFrames[mCounter].first, nullptr, &mDstRect, pAngle, NULL, SDL_FLIP_VERTICAL);
-				if (mTimer.getDeltaTime(false) > mIntensity)
 				{
-					mTimer.resetTimer();
-					if (mCounter < mSteps[mCurrentSide].size())
-						mCounter++;
+					mConditionals.mActive = false;
+					mConditionals.mAnimating = false;
 				}
 			}
 			else
-				SDL_RenderCopy(pRenderer, mStorageFrames[mSteps[mCurrentSide][0]].first, nullptr, &mDstRect);
+				SDL_RenderCopyEx(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect, pAngle, NULL,
+								 pMousePos.mX >= getPosition().mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
+			if (mTimer.getDeltaTime(false) > mIntensity)
+			{
+				mTimer.resetTimer();
+				if (mCounter < mSteps[mCurrentSide].size())
+					mCounter++;
+			}
 		}
+		else
+			SDL_RenderCopy(pRenderer, mStorageFrames[mSteps[mCurrentSide][0]].first, nullptr, &mDstRect);
 	}
 	else
 		mCounter = 0;

@@ -25,6 +25,8 @@ enum class TypeWait
 
 class AnimatedTexture : public TextureManager
 {
+private:
+	struct conditionalVars;
 public:
 	AnimatedTexture() = default;
 	~AnimatedTexture();
@@ -32,17 +34,22 @@ public:
 	void appendAnimation(TypeWait pType, SDL_Renderer* pRenderer, const PATH& pPath, const Vector2f& pPos, 
 						 const int pW, const int pH, HorVer pSide);
 	//than bigger - then slower
-	inline void setIntensity(const float pIntensity)   { mIntensity = pIntensity; }
-	inline void setCurrentSide(const SideOfChar pSide) { mCurrentSide = pSide;    }
-	inline void setActive(const bool pActive)		   { mActive = pActive;       }
-	inline void waitWithAnim(const bool pWaitAnim)     { mWaitAnim = pWaitAnim;   }
+	void setIntensity(const float pIntensity);
+	void setCurrentSide(const SideOfChar pSide);
+	void setActive(const bool pActive);
+	void waitWithAnim(const bool pWaitAnim);
 	void setSides(const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers);
 	void setPosition(const Vector2f& pPos);
-	
-	Vector2f getPosition() const { return { static_cast<float>(mDstRect.x), static_cast<float>(mDstRect.y) }; }
-	bool isActive() const { return mActive; }
-	bool isEnded() const;
 	void setEnded(bool pEnded);
+	void enableWaitAnim(bool pWait);
+	void setAnimating(bool pAnimating);
+
+	Vector2f getPosition() const;
+	conditionalVars const& getAllConditions() const noexcept;
+	bool isActive() const;
+	bool isEnded() const;
+	bool isInWaitAnim() const noexcept;
+	bool isAnimating() const noexcept;
 
 	SDL_Rect getAnimRect() const noexcept;
 
@@ -60,11 +67,15 @@ private:
 	void createTexturesFromFrames(SDL_Renderer* pRenderer);
 
 private:
-	bool mWaitAnim{ false };
-	bool mAnimating{ false };
-	bool mActive{ false };
-	bool mOnceAnim{ false };
-	bool mEnded{ false };
+	struct conditionalVars
+	{
+		bool mInWaitAnim{ false };
+		bool mWaitAnim{ false };
+		bool mAnimating{ false };
+		bool mActive{ false };
+		bool mOnceAnim{ false };
+		bool mEnded{ false };
+	} mConditionals;
 
 	float mIntensity{ 0.0f };
 	int32_t mCounter{ 0 };

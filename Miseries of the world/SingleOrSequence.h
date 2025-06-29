@@ -7,17 +7,17 @@ enum class Mode
 	SINGLE = 1
 };
 
-class Sequence : public FireMode
+class SingleOrSequence : public FireMode
 {
 public:
-	Sequence() = default;
-	~Sequence() override = default;
+	SingleOrSequence() = default;
+	~SingleOrSequence() override = default;
 
 	void shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload) override;
-
 	void update(SDL_Renderer* pRenderer, const Vector2f& pPos) override;
+	void render() override;
 
-	void setAsSpecial();
+	void setAsSpecial() override;
 	void setMode(Mode pMode);
 
 protected:

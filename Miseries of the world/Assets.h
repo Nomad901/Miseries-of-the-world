@@ -26,7 +26,7 @@ public:
 	}
 
 	//if wanna download at once all of this
-	void download();
+	void load();
 
 	auto getAnimation(const PATH& pPath) -> std::unordered_map<int, std::pair<SDL_Texture*, SDL_Rect>>;
 	SDL_Texture* getTexture(const PATH& pPath);

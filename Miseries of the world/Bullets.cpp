@@ -2,12 +2,14 @@
 
 Bullets::Bullets(SDL_Renderer* pRenderer,
 				 const PATH& pPath, const Vector2f& pPos,
-				 int32_t pW, int32_t pH, int32_t pSpeed)
+				 int32_t pW, int32_t pH, float pSpeed)
 	: mPos{ pPos }, mRenderer(pRenderer), 
 	  mSpeed{pSpeed}, mPath{pPath}
 {
-	mRect = { static_cast<int>(pPos.mX),static_cast<int>(pPos.mY), pW ,pH };
-	TextureManager::getInstance().appendTextureWithoutBack(pRenderer, pPath, mRect, { 34,177,76,255 });
+	mRect = { pPos.mX,pPos.mY, static_cast<float>(pW),static_cast<float>(pH) };
+	SDL_Rect tmpRect = { static_cast<int>(mRect.x),static_cast<int>(mRect.y),
+						 static_cast<int>(mRect.w),static_cast<int>(mRect.h) };
+	TextureManager::getInstance().appendTextureWithoutBack(pRenderer, pPath, tmpRect, { 34,177,76,255 });
 }
 
 void Bullets::shootBullet(const Vector2f& pPlayerPos, const Vector2f& pMousePos, SDL_Rect pWeaponRect,
@@ -17,15 +19,15 @@ void Bullets::shootBullet(const Vector2f& pPlayerPos, const Vector2f& pMousePos,
 	mPos = centerPos;
 	mAttachedOffset = pOffset;
 
-	mRotateMachine.calculateDirection(pPlayerPos, pMousePos, pW, pH);
+	mRotateMachine.calculateDirection(pPlayerPos, pMousePos);
 	mRotateMachine.calculateLength(mRotateMachine.getDirection());
 
 	if (mRotateMachine.getLength() > 0.1f) {
 		mRotateMachine.calculateSpeed(mRotateMachine.getDirection(),
-									  mRotateMachine.getLength(),
-									  mSpeed);
+			mRotateMachine.getLength(),
+			mSpeed);
 
-		mRotateMachine.setAngle(pAngle);
+		mRotateMachine.setAngle(DimensionDegOrRad::RADIANS,pAngle);
 
 		mActive = true;
 		updateAttachedRect(pWeaponRect);
@@ -34,12 +36,10 @@ void Bullets::shootBullet(const Vector2f& pPlayerPos, const Vector2f& pMousePos,
 
 bool Bullets::isColliding(SDL_Rect pRect)
 {
-	pRect.w -= 32;
-	pRect.h -= 30;
-	pRect.x += 20;
-	pRect.y += 20;
+	SDL_FRect tmpRect = { static_cast<float>(pRect.x + 20),static_cast<float>(pRect.y + 20),
+						  static_cast<float>(pRect.w - 32),static_cast<float>(pRect.h - 30) };
 
-	return SDL_HasIntersection(&mRect, &pRect);
+	return SDL_HasIntersectionF(&mRect, &tmpRect);
 }
 
 bool Bullets::isActive()
@@ -68,8 +68,8 @@ Vector2f Bullets::getPos() const noexcept
 void Bullets::setPos(const Vector2f& pPos)
 {
 	mPos = pPos;
-	mRect.x = static_cast<int>(pPos.mX);
-	mRect.y = static_cast<int>(pPos.mY);
+	mRect.x = pPos.mX;
+	mRect.y = pPos.mY;
 }
 
 int32_t Bullets::getSpeed() const noexcept
@@ -77,7 +77,7 @@ int32_t Bullets::getSpeed() const noexcept
 	return mSpeed;
 }
 
-void Bullets::setSpeed(int32_t pSpeed)
+void Bullets::setSpeed(float pSpeed)
 {
 	mSpeed = pSpeed;
 }
@@ -90,18 +90,24 @@ PATH Bullets::getPath()
 void Bullets::setPath(const PATH& pPath)
 {
 	mPath = pPath;
+	SDL_Rect tmpRect = { static_cast<int>(mRect.x),static_cast<int>(mRect.y),
+						 static_cast<int>(mRect.w),static_cast<int>(mRect.h) };
 	if (TextureManager::getInstance().containsPath(pPath))
-		TextureManager::getInstance().appendTextureWithoutBack(mRenderer, pPath, mRect, { 34,177,76,255 });
+		TextureManager::getInstance().appendTextureWithoutBack(mRenderer, pPath, tmpRect, { 34,177,76,255 });
 }
 
 void Bullets::render()
 {
 	if (mActive)
 	{
-		if(!TextureManager::getInstance().containsPath(mPath))
-			TextureManager::getInstance().appendTextureWithoutBack(mRenderer, mPath, mRect, { 34,177,76,255 });
-		SDL_RenderCopyEx(mRenderer, TextureManager::getInstance().getTexture(mPath), nullptr, &mRect, mRotateMachine.getAngle(), nullptr,
-						 mMousePos.mX >= mPos.mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
+		if (!TextureManager::getInstance().containsPath(mPath))
+		{
+			SDL_Rect tmpRect = { static_cast<int>(mRect.x),static_cast<int>(mRect.y),
+							     static_cast<int>(mRect.w),static_cast<int>(mRect.h) };
+			TextureManager::getInstance().appendTextureWithoutBack(mRenderer, mPath, tmpRect, { 34,177,76,255 });
+		}
+		SDL_RenderCopyExF(mRenderer, TextureManager::getInstance().getTexture(mPath), nullptr, &mRect, mRotateMachine.getAngle() * 180 / M_PI, nullptr,
+						  InputManager::getInstance().getMousePos().mX >= mPos.mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
 	}
 }
 
@@ -111,8 +117,9 @@ void Bullets::update()
 	{
 		if (checkBoundaries())
 			mActive = false;
-		mRect.x += static_cast<int>(mRotateMachine.getSpeed().mX);
-		mRect.y += static_cast<int>(mRotateMachine.getSpeed().mY);
+
+		mRect.x += mRotateMachine.getSpeed().mX;
+		mRect.y += mRotateMachine.getSpeed().mY;
 
 		mPos.mX = static_cast<float>(mRect.x);
 		mPos.mY = static_cast<float>(mRect.y);
@@ -121,12 +128,14 @@ void Bullets::update()
 
 void Bullets::updateAttachedRect(SDL_Rect pWeaponRect)
 {
-	float angleRect = mRotateMachine.getAngle() * M_PI / 180;
+	float angleRect = mRotateMachine.getAngle();
 	
+	float weaponCenterX = static_cast<float>(pWeaponRect.x) + static_cast<float>(pWeaponRect.w) / 2.0f;
+	float weaponCenterY = static_cast<float>(pWeaponRect.y) + static_cast<float>(pWeaponRect.h) / 2.0f;
+	 
 	float rotatedX = mAttachedOffset.mX * cos(angleRect) - mAttachedOffset.mY * sin(angleRect);
 	float rotatedY = mAttachedOffset.mX * sin(angleRect) + mAttachedOffset.mY * cos(angleRect);
-
-	mRect.x = pWeaponRect.x + pWeaponRect.w / 2 + static_cast<int>(rotatedX) - mRect.w / 2;
-	mRect.y = pWeaponRect.y + pWeaponRect.h / 2 + static_cast<int>(rotatedY) - mRect.h / 2;	
+	
+	mRect.x = weaponCenterX + rotatedX - mRect.w / 2.0f;
+	mRect.y = weaponCenterY + rotatedY - mRect.h / 2.0f;
 }
-

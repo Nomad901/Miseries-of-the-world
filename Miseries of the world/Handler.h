@@ -7,7 +7,7 @@
 #include "Game.h"
 #include "Character.h"
 #include "../FactoryObjects.h"
-#include "Irregular.h"
+#include "RotateMachine.h"
 
 class Bullets;
 class BulletsPool;
@@ -20,6 +20,7 @@ class InGame;
 class Pistol;
 class Knife;
 class Boulder;
+class FireModeFactory;
 
 using PATH = std::filesystem::path;
 
@@ -64,9 +65,8 @@ private:
 	std::unique_ptr<Bullets> mBullets;
 	std::unique_ptr<BulletsPool> mBulletsPool;
 
-	//std::unique_ptr<Boulder> mBoulder;
-	std::unique_ptr<Irregular> mSequence;
-
+	std::unique_ptr<FireModeFactory> mFireModeFactory;
+	RotateMachine mRotate;
 
 	bool mLost{ false };
 

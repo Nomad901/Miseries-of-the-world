@@ -49,6 +49,11 @@ void FireMode::setWasDamage(bool pWas)
 	mWasDamage = pWas;
 }
 
+void FireMode::setPos(const Vector2f& pPos)
+{
+	mFireStat.mPos = pPos;
+}
+
 bool FireMode::shouldBreakWeapon()
 {
 	return mShouldBreakWeapon;
@@ -72,6 +77,11 @@ int32_t FireMode::getOrigQuantityBullets()
 int32_t FireMode::getQuantitySets()
 {
 	return mFireStat.mQuantitySets;
+}
+
+Vector2f FireMode::getPos()
+{
+	return mFireStat.mPos;
 }
 
 std::vector<int> FireMode::isShot(const std::vector<SDL_Rect>& pRects)
@@ -115,12 +125,7 @@ std::vector<int> FireMode::isShot(const std::vector<SDL_Rect>& pRects)
 	return shotIndexes;
 }
 
-void FireMode::render()
-{
-	mBulletsPool->update();
-}
-
-FireMode::FireStat FireMode::getFireStat()
+FireMode::FireStat& FireMode::getFireStat()
 {
 	return mFireStat;
 }

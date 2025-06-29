@@ -11,14 +11,13 @@ public:
 	~SpreadMode() override = default;
 
 	void shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload) override;
-
 	void update(SDL_Renderer* pRenderer, const Vector2f& pPos) override;
+	void render();
 
-	void setAsSpecial();
+	void setAsSpecial() override;
 	void setQuantityBulletsPerTime(int32_t pQuantityBullets);
-	void setBurstCooldown(int32_t pBurstCooldown);
 
-	void setPercentSpread(int32_t pSpread);
+	void setRangeOfSpread(int32_t pRange);
 
 protected:
 	bool manageDelay() override;
@@ -27,29 +26,9 @@ protected:
 	void subtractionBullets(int32_t& pTmpBreakingWeapon);
 
 private:
-	int32_t mQuantityBulletsPerTime;
+	int32_t mQuantityBulletsPerTime{ 0 };
 	
+	Randomizer mRandomizer{ 10,100 };
 	RotateMachine mRotateMachine;
-	Randomizer mRandomizer; 
 	Timer mTimer;
 };
-
-//setDelay(300);
-//setQuantityBullets(8);
-//setOrigQuantityBullets(8);
-//setQuantitySets(8);
-//mQuantityBulletsSpread = 5;
-
-//pTmpBreakingWeapon = getFireStat().mOriginalQuantityBullets - 2;
-//setQuantityBullets(getFireStat().mOriginalQuantityBullets);
-//setQuantitySets(getFireStat().mQuantitySets - 1);
-
-
-//if (mMode == ModeIrregular::SPREAD)
-//{
-//	mRandomizer.generateNew();
-//	if (i % 2 == 0)
-//		mRotateMachine.setAngle(mRotateMachine.getAngle() - mRandomizer.getNumber());
-//	else
-//		mRotateMachine.setAngle(mRotateMachine.getAngle() + mRandomizer.getNumber());
-//}

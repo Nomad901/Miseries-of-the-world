@@ -23,23 +23,25 @@ public:
 	void setQuantitySets(int32_t pQuantity);
 	void setShouldBreakWeapon(bool pShould);
 	void setWasDamage(bool pWas);
+	void setPos(const Vector2f& pPos);
 
 	bool shouldBreakWeapon();
 	bool wasDamage();
 	int32_t getQuantityBullets();
 	int32_t getOrigQuantityBullets();
 	int32_t getQuantitySets();
+	Vector2f getPos();
 
 	std::vector<int> isShot(const std::vector<SDL_Rect>& pRects);
-	void render();
 
+	virtual void render() = 0;
 	virtual void shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload) = 0;
 	virtual void update(SDL_Renderer* pRenderer, const Vector2f& pPos) = 0;
+	virtual void setAsSpecial() = 0;
 protected:
 	virtual bool manageDelay() = 0;
-	virtual void setAsSpecial() = 0;
 	
-	FireStat getFireStat();
+	FireStat& getFireStat();
 
 protected:
 	std::unique_ptr<BulletsPool> mBulletsPool;
