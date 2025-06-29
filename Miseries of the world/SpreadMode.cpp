@@ -23,7 +23,7 @@ void SpreadMode::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload
 			mBulletsPool->makeBulletActive();
 			mBulletsPool->manageLastBulletInside()->setSpeed(getFireStat().mSpeed);
 			Vector2f tmpPos = { static_cast<float>(pCharRect.x), static_cast<float>(pCharRect.y) };
-			mBulletsPool->manageLastBulletInside()->shootBullet({ tmpPos.mX + getFireStat().mW - 40, tmpPos.mY }, InputManager::getInstance().getMousePos(),
+			mBulletsPool->manageLastBulletInside()->shootBullet({ tmpPos.mX + getFireStat().mW - 40, tmpPos.mY + tmpCounter }, InputManager::getInstance().getMousePos(),
 																  pWeaponRect, mRotateMachine.getAngle(), { static_cast<float>(pWeaponRect.w / 2 - 10),-5 },
 																  pCharRect.w, pCharRect.h);
 			tmpCounter += 20;
@@ -46,7 +46,7 @@ void SpreadMode::update(SDL_Renderer* pRenderer, const Vector2f& pPos)
 		mBulletsPool->init(getFireStat().mCapacity, pRenderer, getFireStat().mPath, pPos,
 						   getFireStat().mW, getFireStat().mH, getFireStat().mSpeed);
 	}
-	FireMode::setPos(pPos);
+	FireMode::getFireStat().mPos = pPos;
 }
 
 void SpreadMode::render()

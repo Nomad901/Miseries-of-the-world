@@ -4,16 +4,8 @@ BurstMode::BurstMode(SDL_Renderer* pRenderer)
 {
 	mTimer.setDimensionOfTime(Dimension::MILISECONDS);	
 	mBurstTimer.setDimensionOfTime(Dimension::MILISECONDS);
-	
-	FactoryOfFonts::init();
-	FactoryOfFonts::getInstance().appendNewFont(pRenderer, 
-												std::filesystem::current_path() / "Assets" / "photos and ttf" / "Arial.ttf", "Ready!", 
-												{255,255,255,255}, 15);
-}
-
-BurstMode::~BurstMode()
-{
-	FactoryOfFonts::getInstance().shutDown();
+	FactoryOfFonts::getInstance().appendNewFonts(pRenderer, std::filesystem::current_path() / "Assets" / "photos and ttf" / "Arial.ttf",
+												{ {"Ready!"}, {"Waiting..."} },{255,255,255,255}, 25);
 }
 
 void BurstMode::shootChargedBullets(SDL_Rect pCharRect, SDL_Rect pWeaponRect)
@@ -34,7 +26,6 @@ void BurstMode::shootChargedBullets(SDL_Rect pCharRect, SDL_Rect pWeaponRect)
 	}
 	if (getFireStat().mQuantityBullets-1 <= mMeasureBreakingWeapon)
 	{
-		std::cout << "im here!\n";
 		setShouldBreakWeapon(true);
 		subtractionBullets();
 		getFireStat().mQuantityBullets -= 1;
@@ -52,7 +43,6 @@ void BurstMode::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload)
 	
 	mShowReady = false;
 	mCharRect = pCharRect;
-	std::cout << std::format("CurrentQuantityBullets: {}\n", getFireStat().mQuantityBullets);
 	if (getFireStat().mQuantitySets != 0 && getFireStat().mQuantityBullets != 0)
 	{
 		if (mSparing && mCurrentQuantityBullets < mQuantityBulletsPerTime)
@@ -76,16 +66,24 @@ void BurstMode::update(SDL_Renderer* pRenderer, const Vector2f& pPos)
 	if (mBulletsPool->getSizeBullets() <= 0)
 	{
 		mBulletsPool->init(getFireStat().mCapacity, pRenderer, getFireStat().mPath, pPos,
-						   getFireStat().mW, getFireStat().mH, getFireStat().mSpeed);
+			getFireStat().mW, getFireStat().mH, getFireStat().mSpeed);
 	}
 	FireMode::getFireStat().mPos = pPos;
 
-	mAnimatedStateMachine->getState("ChargingAnim").value().get().setPosition({ pPos.mX + mCharRect.w, 
-																   pPos.mY - mCharRect.h / 2.0f});
+	mAnimatedStateMachine->getState("ChargingAnim").value().get().setPosition({ pPos.mX + mCharRect.w,
+																   pPos.mY - mCharRect.h / 2.0f });
 	if (mShowReady)
+	{
 		FactoryOfFonts::getInstance().render("Ready!", pRenderer, { static_cast<int>(pPos.mX),
 																	static_cast<int>(pPos.mY - mCharRect.h / 2),
 																	50,50 });
+	}
+	if (mTimer.isRunning())
+	{
+		FactoryOfFonts::getInstance().render("Waiting...", pRenderer, { static_cast<int>(pPos.mX),
+																		static_cast<int>(pPos.mY - mCharRect.h / 2),
+																	    80,50 });
+	}
 }
 
 void BurstMode::render()

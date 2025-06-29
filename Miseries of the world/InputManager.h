@@ -35,7 +35,9 @@ public:
 	bool isPressed(SDL_Scancode pScanCode)  const;
 	bool isReleased(SDL_Scancode pScanCode) const;
 	bool isHeld(SDL_Scancode pScanCode)     const;
+	bool buttonWasPressed()					const;
 	
+	bool mouseWasPressed()					const;
 	bool isMousePressed(MouseButton mMouse);
 	bool isMouseReleased(MouseButton mMouse);
 	bool isMouseHeld(MouseButton mMouse);

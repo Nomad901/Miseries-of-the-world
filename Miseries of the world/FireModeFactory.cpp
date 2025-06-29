@@ -42,26 +42,9 @@ auto FireModeFactory::isExist(std::string_view pName) -> bool
 	return false;
 }
 
-auto FireModeFactory::getReadMode() -> std::expected<std::reference_wrapper<const FireMode>, std::string_view>
+auto FireModeFactory::getNameCurrentMode() -> std::string
 {
-	auto it = mStorageFireModes.find(mCurrentFireMode);
-	if (it != mStorageFireModes.end()) {
-		mCurrentFireMode = it->first;
-		return std::ref(*it->second);
-	}
-	LOG("U didnt set the mode!");
-	return std::unexpected("U didnt set the mode!");
-}
-
-auto FireModeFactory::getReadMode(std::string_view pName) -> std::expected<std::reference_wrapper<const FireMode>, std::string_view>
-{
-	auto it = mStorageFireModes.find(std::string(pName));
-	if (it != mStorageFireModes.end()) {
-		mCurrentFireMode = it->first;
-		return std::cref(*it->second);
-	}
-	LOG("This mode doesnt exist!");
-	return std::unexpected("This mode doesnt exist!");
+	return mCurrentFireMode;
 }
 
 auto FireModeFactory::getMode() -> std::expected<std::reference_wrapper<FireMode>, std::string_view>
@@ -84,48 +67,6 @@ auto FireModeFactory::getMode(std::string_view pName) -> std::expected<std::refe
 	}
 	LOG("This mode doesn't exist!");
 	return std::unexpected("This mode doesn't exist!");
-}
-
-template<typename T>
-requires ProperlyDerived<T>
-auto FireModeFactory::getExactMode(std::string_view pName) -> std::expected<std::reference_wrapper<FireMode>, std::string_view>
-{
-	auto it = mStorageFireModes.find(std::string(pName));
-	if (it != mStorageFireModes.end())
-	{
-		mCurrentFireMode = std::string(pName);
-
-		FireMode* baseClass = it->second.get();
-		if (T* derivedPtr = dynamic_cast<T*>(baseClass))
-			return std::ref(*derivedPtr);
-		else
-		{
-			LOG("Incorrect mode type!");
-			return std::unexpected("Incorrect mode type!");
-		}
-	}
-	LOG("There is no such a name!");
-	return std::unexpected("There is no such a name!");
-}
-
-template<typename T>
-requires ProperlyDerived<T>
-auto FireModeFactory::getExactMode() -> std::expected<std::reference_wrapper<FireMode>, std::string_view>
-{
-	auto it = mStorageFireModes.find(mCurrentFireMode);
-	if (it != mStorageFireModes.end())
-	{
-		FireMode* baseClass = it->second.get();
-		if (T* derivedPtr = dynamic_cast<T*>(baseClass))
-			return std::ref(*derivedPtr);
-		else
-		{
-			LOG("Incorrect mode type!");
-			return std::unexpected("Incorrect mode type!");
-		}
-	}
-	LOG("There is no such a name!");
-	return std::unexpected("There is no such a name!");
 }
 
 auto FireModeFactory::getStorageLabels() -> std::unordered_set<std::string>

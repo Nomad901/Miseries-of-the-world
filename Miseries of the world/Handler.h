@@ -8,6 +8,7 @@
 #include "Character.h"
 #include "../FactoryObjects.h"
 #include "RotateMachine.h"
+#include "FactoryOfFonts.h"
 
 class Bullets;
 class BulletsPool;
@@ -41,6 +42,9 @@ public:
 	void updateAll() {}
 
 private:
+	bool mFont{ false };
+	Timer mTimerForChanged;
+
 	bool mShouldUpdate{ false };
 	float mInterpolation{0.0f};
 	const int TICKS_PER_SECOND = 60;

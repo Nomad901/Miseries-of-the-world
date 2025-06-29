@@ -67,6 +67,16 @@ bool InputManager::isHeld(SDL_Scancode pScanCode) const
     return ((mNowKeyboardState[pScanCode] != 0) && (mPrevKeyboardState[pScanCode] != 0));
 }
 
+bool InputManager::buttonWasPressed() const
+{
+    for (size_t i = 0; i < mKeyboardLength; ++i)
+    {
+        if (mNowKeyboardState[i] != 0)
+            return true;
+    }
+    return false;
+}
+
 bool InputManager::isMousePressed(MouseButton mMouse)
 {
     Uint32 mask = 0;

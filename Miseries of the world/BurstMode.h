@@ -12,7 +12,6 @@ class BurstMode : public FireMode
 {
 public:
 	BurstMode(SDL_Renderer* pRenderer);
-	~BurstMode() override;
 
 	void shootChargedBullets(SDL_Rect pCharRect, SDL_Rect pWeaponRect);
 	void shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload) override;
