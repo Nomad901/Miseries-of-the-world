@@ -1,6 +1,6 @@
 #include "AnimateStateMachine.h"
 
-AnimateStateMachine::AnimateStateMachine(SDL_Renderer* pRenderer)
+void AnimateStateMachine::init(SDL_Renderer* pRenderer)
 {
 	mRenderer = pRenderer;
 }

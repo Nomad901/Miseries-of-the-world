@@ -11,12 +11,14 @@
 class ReloadLogic
 {
 public:
+	ReloadLogic() = default;
+
 	// if pShowReloadingQuote will be false - then the game will show just numbers'
 	// Reloading time - in seconds
-	ReloadLogic(SDL_Renderer* pRenderer, SDL_Rect pCharRect,
-				int16_t pReloadingTime, bool pShowReloadingQuote,
-				SDL_Color pColorNumbers = { 255,255,255,255 },
-				int32_t pSizeNumbers = 25);
+	void initReloadLogic(SDL_Renderer* pRenderer, SDL_Rect pCharRect,
+						 int16_t pReloadingTime, bool pShowReloadingQuote,
+						 SDL_Color pColorNumbers = { 255,255,255,255 },
+						 int32_t pSizeNumbers = 25);
 
 	bool isReloading();
 	void startReloading();
@@ -46,7 +48,7 @@ private:
 	SDL_Rect mRectNumbers{};
 
 	Timer mTimerReload;
-	std::unique_ptr<AnimateStateMachine> mAnimateStateMachine;
+	AnimateStateMachine mAnimateStateMachine;
 
 };
 

@@ -2,12 +2,6 @@
 #include "WeaponManager.h"
 #include "AnimatedTexture.h"
 
-Weapon::Weapon(SDL_Renderer* pRenderer)
-{
-	mRenderer = pRenderer;
-	mAnimateStateMachine = std::make_unique<AnimateStateMachine>(mRenderer);
-}
-
 void Weapon::setAllParameteres(const Vector2f pPos, int32_t pW, int32_t pH,
 							   float pRobustness, std::pair<int32_t, int32_t> pPower, 
 							   int16_t pWeight)
@@ -20,6 +14,12 @@ void Weapon::setAllParameteres(const Vector2f pPos, int32_t pW, int32_t pH,
 	mWeaponStats.mWeight = pWeight;
 
 	mCharCollision.mWeapon = { static_cast<int32_t>(pPos.mX), static_cast<int32_t>(pPos.mY), pW, pH };
+}
+
+void Weapon::initWeapon(SDL_Renderer* pRenderer)
+{
+	mRenderer = pRenderer;
+	mAnimateStateMachine.init(pRenderer);
 }
 
 const Weapon::WeaponStates& Weapon::getWeaponStates() const noexcept
@@ -42,6 +42,11 @@ const Weapon::Textures& Weapon::getTextures() const noexcept
 	return mTextures;
 }
 
+AnimateStateMachine& Weapon::getAnimatedStateMachine()
+{
+	return mAnimateStateMachine;
+}
+
 void Weapon::setActive(bool pActive)
 {
 	mWeaponStates.mIsActive = pActive;
@@ -60,6 +65,21 @@ void Weapon::setWasDamage(bool pWasDamage)
 void Weapon::makeFreezed(bool pFreezed)
 {
 	mWeaponStates.mIsFreezed = pFreezed;
+}
+
+void Weapon::makeBroken(bool pBroken)
+{
+	mWeaponStates.mIsBroken = pBroken;
+}
+
+void Weapon::makeShoot(bool pShoot)
+{
+	mWeaponStates.mShootingState = pShoot;
+}
+
+void Weapon::makeReload(bool pReload)
+{
+	mWeaponStates.mRealodingState = pReload;
 }
 
 void Weapon::setRobustness(float pRobustness)
@@ -90,7 +110,8 @@ void Weapon::setSize(const int32_t pW, const int32_t pH)
 void Weapon::setPos(const Vector2f& pPos)
 {
 	if (pPos.mX > 0 && pPos.mX < WIN_WIDTH &&
-		pPos.mY > 0 && pPos.mY < WIN_HEIGHT)
+		pPos.mY > 0 && pPos.mY < WIN_HEIGHT &&
+		!mWeaponStates.mIsFreezed)
 	{
 		mWeaponStats.mPos = pPos;
 		
@@ -115,10 +136,7 @@ void Weapon::setWeaponCollision(SDL_Rect pWeaponCollision)
 	mCharCollision.mWeapon = pWeaponCollision;
 }
 
-void Weapon::setPaths(const PATH& pStaticPath, const PATH& pBrokenPath,
-					  const PATH& pReloadPath, const PATH& pShootPath,
-					  const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers,
-					  int32_t pDelay, float pIntensity)
+void Weapon::setPaths(const PATH& pStaticPath, const PATH& pBrokenPath)
 {
 	if (std::filesystem::exists(pStaticPath))
 	{
@@ -127,20 +145,30 @@ void Weapon::setPaths(const PATH& pStaticPath, const PATH& pBrokenPath,
 	}
 	if (std::filesystem::exists(pBrokenPath))
 	{
-		mTextures.mStaticPath = pBrokenPath;
+		mTextures.mBrokenWeapon = pBrokenPath;
 		TextureManager::getInstance().appendTexture(mRenderer, pBrokenPath, mCharCollision.mWeapon);
 	}
-	if (std::filesystem::exists(pReloadPath))
-	{
-		mTextures.mStaticPath = pReloadPath;
-		mAnimateStateMachine->pushStateW("ReloadAnimWeapon", TypeWait::GENERAL, pReloadPath, Weapon::getWeaponStats().mPos,
-										  mWeaponStats.mW, mWeaponStats.mH, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
-	}
+}
+
+void Weapon::setShootPath(const PATH& pShootPath, int32_t pW, int32_t pH,
+						  const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pIntensity)
+{
 	if (std::filesystem::exists(pShootPath))
 	{
-		mTextures.mStaticPath = pShootPath;
-		mAnimateStateMachine->pushStateW("ShootAnimWeapon", TypeWait::GENERAL, pShootPath, Weapon::getWeaponStats().mPos,
-										  mWeaponStats.mW, mWeaponStats.mH, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
+		mTextures.mShootingPath = pShootPath;
+		mAnimateStateMachine.pushStateW("ShootAnimWeapon", TypeWait::GENERAL, pShootPath, Weapon::getWeaponStats().mPos,
+										 pW, pH, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
+	}
+}
+
+void Weapon::setReloadPath(const PATH& pReloadPath, int32_t pW, int32_t pH,
+						   const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pIntensity)
+{
+	if (std::filesystem::exists(pReloadPath))
+	{
+		mTextures.mReloadingPath = pReloadPath;
+		mAnimateStateMachine.pushStateW("ReloadAnimWeapon", TypeWait::GENERAL, pReloadPath, Weapon::getWeaponStats().mPos,
+										 pW, pH, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
 	}
 }
 

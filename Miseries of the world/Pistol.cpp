@@ -1,3 +1,4 @@
+#include "Pistol.h"
 //#include "Pistol.h"
 //#include "Timer.h"
 //#include "BulletsPool.h"
@@ -271,3 +272,24 @@
 //						   &TextureManager::getInstance().getRect(Weapon::getBrokenPath()));
 //	}
 //}
+
+void Pistol::shoot()
+{
+}
+
+void Pistol::checkRobustness()
+{
+}
+
+void Pistol::checkDamage()
+{
+}
+
+void Pistol::setAsASpecialWeapon()
+{
+}
+
+bool Pistol::manageDelay()
+{
+	return false;
+}

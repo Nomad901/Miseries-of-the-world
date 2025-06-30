@@ -11,7 +11,9 @@
 class AnimateStateMachine
 {
 public:
-	AnimateStateMachine(SDL_Renderer* pRenderer);
+	AnimateStateMachine() = default;
+	
+	void init(SDL_Renderer* pRenderer);
 
 	void pushState(std::string_view pName, std::unique_ptr<AnimatedTexture> pState,
 				   const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pItensity);

@@ -38,9 +38,11 @@ protected:
 	struct CharCollision;
 	struct Textures;
 public:
-	Weapon(SDL_Renderer* pRenderer);
+	Weapon() = default;
 	virtual ~Weapon() = default;
 	
+	void initWeapon(SDL_Renderer* pRenderer);
+
 	void setAllParameteres(const Vector2f pPos, int32_t pW, int32_t pH,
 						   float pRobustness, std::pair<int32_t, int32_t> pPower,
 						   int16_t pWeight);
@@ -49,11 +51,16 @@ public:
 	const WeaponStats&    getWeaponStats()	  const noexcept;
 	const CharCollision&  getCharCollisions() const noexcept;
 	const Textures&		  getTextures()		  const noexcept;
+	AnimateStateMachine&  getAnimatedStateMachine();
 
 	void setActive(bool pActive);
 	void setAvailable(bool pAvailable);
 	void setWasDamage(bool pWasDamage);
+	
 	void makeFreezed(bool pFreezed);
+	void makeBroken(bool pBroken);
+	void makeShoot(bool pShoot);
+	void makeReload(bool pReload);
 
 	void setRobustness(float pRobustness);
 	void setWeight(int16_t pWeight);
@@ -63,11 +70,13 @@ public:
 
 	void setCharCollision(SDL_Rect pCharCollision);
 	void setWeaponCollision(SDL_Rect pWeaponCollision);
+	
+	void setPaths(const PATH& pStaticPath, const PATH& pBrokenPath);
 
-	void setPaths(const PATH& pStaticPath, const PATH& pBrokenPath, 
-				  const PATH& pReloadPath, const PATH& pShootPath,
-				  const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers,
-				  int32_t pDelay,float pIntensity);
+	void setShootPath(const PATH& pShootPath, int32_t pW, int32_t pH,
+					  const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers,  int32_t pDelay, float pIntensity);
+	void setReloadPath(const PATH& pReloadPath, int32_t pW, int32_t pH,
+					   const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pIntensity);
 
 	int32_t wasDamage();
 	int32_t getSpeedOfChar(int32_t pHisSpeed);
@@ -77,7 +86,7 @@ public:
 	//virtual void setAsADefaultWeapon() = 0;
 	virtual bool WeaponIsInView(SDL_Rect pCharCollision) = 0;
 	virtual void render(SDL_Renderer* pRenderer) = 0;
-	virtual void update() = 0;
+	virtual void update(const Vector2f& pPos) = 0;
 
 //protected:
 //	void defaultParametersWeapons();
@@ -85,10 +94,15 @@ public:
 protected:
 	struct WeaponStates
 	{
+		bool mShootingState{ false };
+		bool mRealodingState{ false };
+
 		bool mIsActive{ false };
 		bool mIsAvailable{ false };
 		bool mWasDamage{ false };
+
 		bool mIsFreezed{ false };
+		bool mIsBroken{ false };
 	};
 
 	struct WeaponStats
@@ -127,6 +141,6 @@ private:
 	CharCollision mCharCollision;
 	Textures mTextures;
 
-	std::unique_ptr<AnimateStateMachine> mAnimateStateMachine;
+	AnimateStateMachine mAnimateStateMachine;
 };
 

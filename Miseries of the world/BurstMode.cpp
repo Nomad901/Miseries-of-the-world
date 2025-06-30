@@ -70,7 +70,7 @@ void BurstMode::update(SDL_Renderer* pRenderer, const Vector2f& pPos)
 	}
 	FireMode::getFireStat().mPos = pPos;
 
-	mAnimatedStateMachine->getState("ChargingAnim").value().get().setPosition({ pPos.mX + mCharRect.w,
+	mAnimatedStateMachine.getState("ChargingAnim").value().get().setPosition({ pPos.mX + mCharRect.w,
 																   pPos.mY - mCharRect.h / 2.0f });
 	if (mShowReady)
 	{
@@ -93,8 +93,8 @@ void BurstMode::render()
 	if (manageDelay())
 		return;
 
-	mAnimatedStateMachine->setCurrentState("ChargingAnim");
-	auto& tmpAnimState = mAnimatedStateMachine->getState().value().get();
+	mAnimatedStateMachine.setCurrentState("ChargingAnim");
+	auto& tmpAnimState = mAnimatedStateMachine.getState().value().get();
 	if (mSparing && getFireStat().mQuantityBullets > 0)
 	{
 		tmpAnimState.setActive(true);
@@ -109,7 +109,7 @@ void BurstMode::render()
 			tmpAnimState.enableWaitAnim(false);
 			tmpAnimState.runAnimationOnlyOnce();
 		}
-		mAnimatedStateMachine->render("ChargingAnim", false);
+		mAnimatedStateMachine.render("ChargingAnim", false);
 	}
 	else
 	{
@@ -122,14 +122,14 @@ void BurstMode::render()
 void BurstMode::loadAnim(SDL_Renderer* pRenderer, const Vector2f pWeaponPos, 
 						 const PATH& pChargeAnim, const PATH& pChargeDoneAnim)
 {
-	mAnimatedStateMachine = std::make_unique<AnimateStateMachine>(pRenderer);
-	mAnimatedStateMachine->pushStateW("ChargingAnim", TypeWait::GENERAL, pChargeAnim, { pWeaponPos.mX + 20.0f, pWeaponPos.mY - 20.0f },
+	mAnimatedStateMachine.init(pRenderer);
+	mAnimatedStateMachine.pushStateW("ChargingAnim", TypeWait::GENERAL, pChargeAnim, { pWeaponPos.mX + 20.0f, pWeaponPos.mY - 20.0f },
 									  50, 50, HorVer::HORIZONTAL, { {SideOfChar::UP, {0,1,2,3,4,5,6,7} } },
 									  10, static_cast<float>(mDelayStoraging));
-	mAnimatedStateMachine->pushStateW("ChargingAnim", TypeWait::WAIT, pChargeDoneAnim, { pWeaponPos.mX + 20.0f, pWeaponPos.mY - 20.0f },
+	mAnimatedStateMachine.pushStateW("ChargingAnim", TypeWait::WAIT, pChargeDoneAnim, { pWeaponPos.mX + 20.0f, pWeaponPos.mY - 20.0f },
 									  50, 50, HorVer::HORIZONTAL, { {SideOfChar::UP, {0,1,2,3,4} } },
 									  10, static_cast<float>(mDelayStoraging));
-	mAnimatedStateMachine->getState("ChargingAnim").value().get().waitWithAnim(true);
+	mAnimatedStateMachine.getState("ChargingAnim").value().get().waitWithAnim(true);
 }
 
 void BurstMode::setAsSpecial() 

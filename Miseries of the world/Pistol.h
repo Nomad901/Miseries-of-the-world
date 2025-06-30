@@ -1,4 +1,22 @@
-//#pragma once
+#pragma once
+#include "Gun.h"
+
+class Pistol : public Gun
+{
+public:
+	Pistol() = default;
+
+	void shoot() override;
+	void checkRobustness() override;
+	void checkDamage() override;
+	void setAsASpecialWeapon() override;
+
+protected:
+	bool manageDelay() override;
+
+
+};
+
 //#include <SDL.h>
 //
 //#include "Weapon.h"

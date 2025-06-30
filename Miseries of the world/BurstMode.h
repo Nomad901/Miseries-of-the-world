@@ -54,6 +54,6 @@ private:
 	RotateMachine mRotateMachine;
 	Timer mTimer;
 	Timer mBurstTimer;
-	std::unique_ptr<AnimateStateMachine> mAnimatedStateMachine;
+	AnimateStateMachine mAnimatedStateMachine;
 };
 
