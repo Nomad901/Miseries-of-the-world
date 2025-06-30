@@ -295,7 +295,7 @@
       <Filter>Source Files\Weapons\DerivedWeapons</Filter>
     </ClCompile>
     <ClCompile Include="ReloadLogic.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Weapons\FireLogic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -440,9 +440,6 @@
     <ClInclude Include="RPG.h">
       <Filter>Header Files\Weapons\DerivedWeapons</Filter>
     </ClInclude>
-    <ClInclude Include="ReloadLogic.h">
-      <Filter>Header Files\Weapons\FireLogic</Filter>
-    </ClInclude>
     <ClInclude Include="SingleOrSequence.h">
       <Filter>Header Files\Weapons\FireLogic</Filter>
     </ClInclude>
@@ -454,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="Throwable.h">
       <Filter>Header Files\Weapons\DerivedWeapons</Filter>
+    </ClInclude>
+    <ClInclude Include="ReloadLogic.h">
+      <Filter>Header Files\Weapons\FireLogic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

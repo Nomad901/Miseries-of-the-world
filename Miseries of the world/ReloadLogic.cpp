@@ -1,17 +1,25 @@
 #include "ReloadLogic.h"
 
 ReloadLogic::ReloadLogic(SDL_Renderer* pRenderer, SDL_Rect pCharRect,
-                         float pReloadingTime, bool pShowReloadingQuote)
+                         int16_t pReloadingTime, bool pShowReloadingQuote,
+                         SDL_Color pColorNumbers,
+                         int32_t pSizeNumbers)
 {
-    mTimerReload.setDimensionOfTime(Dimension::MILISECONDS);
+    mTimerReload.setDimensionOfTime(Dimension::SECONDS);
   
     mAnimateStateMachine = std::make_unique<AnimateStateMachine>(pRenderer);
     mAnimateStateMachine->pushStateW("ReloadQuote", TypeWait::GENERAL,
                           std::filesystem::current_path() / "Assets" / "photos and ttf" / "reloadQuote.png",
                           { static_cast<float>(pCharRect.x),static_cast<float>(pCharRect.h) }, pCharRect.w+50, pCharRect.h, HorVer::HORIZONTAL,
                           { {SideOfChar::RIGHT, {0,1,2}} }, 10, 300);
+    mColor = pColorNumbers;
+    mRenderer = pRenderer;
     mShowingQuote = pShowReloadingQuote;
     mReloadingTime = pReloadingTime;
+    mCurrentReloadingTime = pReloadingTime;
+    
+    FactoryOfFonts::getInstance().appendNewFont(pRenderer, std::filesystem::current_path() / "Assets" / "photos and ttf" / "Arial.ttf",
+                                                std::to_string(pReloadingTime), pColorNumbers, pSizeNumbers);
 }
 
 bool ReloadLogic::isReloading()
@@ -54,16 +62,26 @@ void ReloadLogic::render(SDL_Renderer* pRenderer)
             }
             mAnimateStateMachine->render("ReloadQuote", false);
         }
+        else
+            FactoryOfFonts::getInstance().render(std::to_string(mCurrentReloadingTime), pRenderer, mRectNumbers);
+        
     }
     else
     {
         mAnimateStateMachine->getState("ReloadQuote").value().get().setActive(false);
         mAnimateStateMachine->getState("ReloadQuote").value().get().stopAnimation();
+        mCurrentReloadingTime = mReloadingTime;
+        mCounterTimer = 1;
     }
 }
 
 void ReloadLogic::update(SDL_Rect pCharRect)
 {
+    if(!mShowingQuote)
+        mRectNumbers = { pCharRect.x + pCharRect.w, pCharRect.y - pCharRect.h / 2, pCharRect.w-50, pCharRect.h-50 };
+    else
+        mRectNumbers = { pCharRect.x + pCharRect.w, pCharRect.y - pCharRect.h, pCharRect.w - 50, pCharRect.h - 50 };
+
     if (mIsReloading)
     {
         if (!mTimerReload.isRunning())
@@ -71,9 +89,13 @@ void ReloadLogic::update(SDL_Rect pCharRect)
         if (!manageDelay())
             mIsReloading = false;
         if (mShowingQuote)
+            mAnimateStateMachine->getState("ReloadQuote").value().get().setPosition({ static_cast<float>(mRectNumbers.x), 
+                                                                                      static_cast<float>(mRectNumbers.y) });
+        if (mNeedToSubtract)
         {
-            mAnimateStateMachine->getState("ReloadQuote").value().get().setPosition({ static_cast<float>(pCharRect.x),
-                                                                                      static_cast<float>(pCharRect.y - pCharRect.h / 2 - 50) });
+            FactoryOfFonts::getInstance().changeText(mRenderer, std::to_string(mReloadingTime),
+                                                     std::to_string(mCurrentReloadingTime -= 1), mColor);
+            mNeedToSubtract = false;
         }
     }
 }
@@ -86,6 +108,11 @@ bool ReloadLogic::manageDelay()
         {
             mTimerReload.stopTimer();
             return false;
+        }
+        if (mTimerReload.getDeltaTime(false) == mCounterTimer)
+        {
+            mNeedToSubtract = true;
+            mCounterTimer++;
         }
         return true;
     }

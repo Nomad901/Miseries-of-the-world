@@ -16,9 +16,9 @@
 
 Handler::Handler(Game* pGame)
 	:mGame(pGame),
-	mInterpolation{0.0f}
+	mInterpolation{ 0.0f }
 {
- 	Assets::init();
+	Assets::init();
 	TextureManager::init();
 	InputManager::init();
 	FactoryOfFonts::init();
@@ -27,7 +27,7 @@ Handler::Handler(Game* pGame)
 	//mRandomizerX = std::make_unique<Randomizer>(0, WIN_WIDTH);
 	//mRandomizerY = std::make_unique<Randomizer>(0, WIN_HEIGHT);
 	SDL_Rect tmpRect = { 100,100,100,100 };
-	mReloadLogic = std::make_unique<ReloadLogic>(mGame->getRenderer(), tmpRect, 3000, true);
+	mReloadLogic = std::make_unique<ReloadLogic>(mGame->getRenderer(), tmpRect, 3, false);
 }
 
 Handler::~Handler()
@@ -65,17 +65,17 @@ void Handler::actions()
 			mFactoryObjects->setPosition("Character", { mFactoryObjects->getPos("Character").mX - 5, mFactoryObjects->getPos("Character").mY });
 		if (InputManager::getInstance().isHeld(SDL_SCANCODE_D))
 			mFactoryObjects->setPosition("Character", { mFactoryObjects->getPos("Character").mX + 5, mFactoryObjects->getPos("Character").mY });
-		
+
 
 		InputManager::getInstance().updatePrevStates();
-    }
+	}
 
-} 
+}
 
 void Handler::outro()
 {
-    mTimer.startTimer();
-	
+	mTimer.startTimer();
+
 	mFactoryObjects->render("Character", mGame->getRenderer(), false);
 
 	if (mReloadLogic->isReloading())
@@ -83,7 +83,6 @@ void Handler::outro()
 		mReloadLogic->update(mFactoryObjects->getRect("Character"));
 		mReloadLogic->render(mGame->getRenderer());
 	}
-	
+
 	mTimer.setProperFPS(1);
 }
-

@@ -2,6 +2,12 @@
 #include "WeaponManager.h"
 #include "AnimatedTexture.h"
 
+Weapon::Weapon(SDL_Renderer* pRenderer)
+{
+	mRenderer = pRenderer;
+	mAnimateStateMachine = std::make_unique<AnimateStateMachine>(mRenderer);
+}
+
 void Weapon::setAllParameteres(const Vector2f pPos, int32_t pW, int32_t pH,
 							   float pRobustness, std::pair<int32_t, int32_t> pPower, 
 							   int16_t pWeight)
@@ -12,6 +18,8 @@ void Weapon::setAllParameteres(const Vector2f pPos, int32_t pW, int32_t pH,
 	mWeaponStats.mScaleOfRobustness = pRobustness;
 	mWeaponStats.mPower.setBeginAndEnd(pPower.first, pPower.second);
 	mWeaponStats.mWeight = pWeight;
+
+	mCharCollision.mWeapon = { static_cast<int32_t>(pPos.mX), static_cast<int32_t>(pPos.mY), pW, pH };
 }
 
 const Weapon::WeaponStates& Weapon::getWeaponStates() const noexcept
@@ -73,6 +81,9 @@ void Weapon::setSize(const int32_t pW, const int32_t pH)
 	{
 		mWeaponStats.mW = pW;
 		mWeaponStats.mH = pH;
+		
+		mCharCollision.mWeapon.w = pW;
+		mCharCollision.mWeapon.h = pH;
 	}
 }
 
@@ -80,7 +91,12 @@ void Weapon::setPos(const Vector2f& pPos)
 {
 	if (pPos.mX > 0 && pPos.mX < WIN_WIDTH &&
 		pPos.mY > 0 && pPos.mY < WIN_HEIGHT)
+	{
 		mWeaponStats.mPos = pPos;
+		
+		mCharCollision.mWeapon.x = static_cast<int32_t>(pPos.mX);
+		mCharCollision.mWeapon.y = static_cast<int32_t>(pPos.mY);
+	}
 }
 
 void Weapon::setPower(std::pair<int32_t, int32_t> pPowerRange)
@@ -94,16 +110,38 @@ void Weapon::setCharCollision(SDL_Rect pCharCollision)
 	mCharCollision.mChar = pCharCollision;
 }
 
-void Weapon::setPaths(const PATH& pStaticPath, const PATH& pBrokenPath, const PATH& pReloadPath, const PATH& pShootPath)
+void Weapon::setWeaponCollision(SDL_Rect pWeaponCollision)
+{
+	mCharCollision.mWeapon = pWeaponCollision;
+}
+
+void Weapon::setPaths(const PATH& pStaticPath, const PATH& pBrokenPath,
+					  const PATH& pReloadPath, const PATH& pShootPath,
+					  const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers,
+					  int32_t pDelay, float pIntensity)
 {
 	if (std::filesystem::exists(pStaticPath))
+	{
 		mTextures.mStaticPath = pStaticPath;
+		TextureManager::getInstance().appendTexture(mRenderer, pStaticPath, mCharCollision.mWeapon);
+	}
 	if (std::filesystem::exists(pBrokenPath))
+	{
 		mTextures.mStaticPath = pBrokenPath;
+		TextureManager::getInstance().appendTexture(mRenderer, pBrokenPath, mCharCollision.mWeapon);
+	}
 	if (std::filesystem::exists(pReloadPath))
+	{
 		mTextures.mStaticPath = pReloadPath;
+		mAnimateStateMachine->pushStateW("ReloadAnimWeapon", TypeWait::GENERAL, pReloadPath, Weapon::getWeaponStats().mPos,
+										  mWeaponStats.mW, mWeaponStats.mH, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
+	}
 	if (std::filesystem::exists(pShootPath))
+	{
 		mTextures.mStaticPath = pShootPath;
+		mAnimateStateMachine->pushStateW("ShootAnimWeapon", TypeWait::GENERAL, pShootPath, Weapon::getWeaponStats().mPos,
+										  mWeaponStats.mW, mWeaponStats.mH, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
+	}
 }
 
 int32_t Weapon::wasDamage()
@@ -121,25 +159,29 @@ int32_t Weapon::getSpeedOfChar(int32_t pHisSpeed)
 	return pHisSpeed * (1 - (mWeaponStats.mWeight / 100));
 }
 
-void Weapon::updatePositions(const Vector2f& pPosChar)
+void Weapon::updatePositions(const Vector2f& pPosChar, const Vector2f& pPosWeapon)
 {
 	if (pPosChar.mX > 0 && pPosChar.mX < WIN_WIDTH &&
 		pPosChar.mY > 0 && pPosChar.mY < WIN_HEIGHT)
 	{
-		mWeaponStats.mPos = pPosChar;
-		mCharCollision.mChar.x = static_cast<int>(pPosChar.mX);
-		mCharCollision.mChar.y = static_cast<int>(pPosChar.mY);
+		mWeaponStats.mPos = pPosWeapon;
+
+		mCharCollision.mChar.x   = static_cast<int32_t>(pPosChar.mX);
+		mCharCollision.mChar.y   = static_cast<int32_t>(pPosChar.mY);
+
+		mCharCollision.mWeapon.x = static_cast<int32_t>(pPosWeapon.mX);
+		mCharCollision.mWeapon.y = static_cast<int32_t>(pPosWeapon.mY);
 	}
 }
 
-void Weapon::defaultParametersWeapons()
-{
-	mWeaponStats.mScaleOfRobustness = 100;
-	mWeaponStats.mWeight = 20;
-	mWeaponStats.mPower.setBeginAndEnd(0, 5);
-
-	//mBulletsManager.mDelay = 100;
-	//mBulletsManager.mQuantityBullets = 60;
-	//mBulletsManager.mOriginalQuantityBullets = 60;
-	//mBulletsManager.mQuantityOfSets = 3;
-}
+//void Weapon::defaultParametersWeapons()
+//{
+//	mWeaponStats.mScaleOfRobustness = 100;
+//	mWeaponStats.mWeight = 20;
+//	mWeaponStats.mPower.setBeginAndEnd(0, 5);
+//	
+//	//mBulletsManager.mDelay = 100;
+//	//mBulletsManager.mQuantityBullets = 60;
+//	//mBulletsManager.mOriginalQuantityBullets = 60;
+//	//mBulletsManager.mQuantityOfSets = 3;
+//}

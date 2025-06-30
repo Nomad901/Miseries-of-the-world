@@ -4,7 +4,7 @@
 #include "Randomizer.h"
 #include "Assets.h"
 #include "TextureManager.h"
-#include "AnimatedTexture.h"
+#include "AnimateStateMachine.h"
 #include "FactoryObjects.h"
 
 class WeaponManager;
@@ -38,7 +38,7 @@ protected:
 	struct CharCollision;
 	struct Textures;
 public:
-	Weapon() = default;
+	Weapon(SDL_Renderer* pRenderer);
 	virtual ~Weapon() = default;
 	
 	void setAllParameteres(const Vector2f pPos, int32_t pW, int32_t pH,
@@ -62,21 +62,25 @@ public:
 	void setPower(std::pair<int32_t, int32_t> pPowerRange);
 
 	void setCharCollision(SDL_Rect pCharCollision);
+	void setWeaponCollision(SDL_Rect pWeaponCollision);
 
-	void setPaths(const PATH& pStaticPath, const PATH& pBrokenPath, const PATH& pReloadPath, const PATH& pShootPath);
+	void setPaths(const PATH& pStaticPath, const PATH& pBrokenPath, 
+				  const PATH& pReloadPath, const PATH& pShootPath,
+				  const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers,
+				  int32_t pDelay,float pIntensity);
 
 	int32_t wasDamage();
 	int32_t getSpeedOfChar(int32_t pHisSpeed);
 
-	void updatePositions(const Vector2f& pPosChar);
+	void updatePositions(const Vector2f& pPosChar, const Vector2f& pPosWeapon);
 
-	virtual void setAsADefaultWeapon() = 0;
+	//virtual void setAsADefaultWeapon() = 0;
 	virtual bool WeaponIsInView(SDL_Rect pCharCollision) = 0;
 	virtual void render(SDL_Renderer* pRenderer) = 0;
 	virtual void update() = 0;
 
-protected:
-	void defaultParametersWeapons();
+//protected:
+//	void defaultParametersWeapons();
 
 protected:
 	struct WeaponStates
@@ -99,6 +103,8 @@ protected:
 
 	struct CharCollision
 	{
+		// set size and pos - will affect on the weapon collision
+		SDL_Rect mWeapon{ 0,0,0,0 };
 		SDL_Rect mChar{ 0,0,0,0 };
 	};
 
@@ -114,12 +120,13 @@ protected:
 	FactoryObjects mObjects;
 
 private:
-	SDL_Renderer* mRenderer{ nullptr };
+	SDL_Renderer* mRenderer;
 
 	WeaponStates mWeaponStates;
 	WeaponStats mWeaponStats;
 	CharCollision mCharCollision;
 	Textures mTextures;
 
+	std::unique_ptr<AnimateStateMachine> mAnimateStateMachine;
 };
 

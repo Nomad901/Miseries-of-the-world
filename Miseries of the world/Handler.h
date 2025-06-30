@@ -34,7 +34,7 @@ public:
 	void loopBack();
 	void actions();
 	void outro();
-	
+
 	//void popState(GameStates* pGameState);
 	//void pushState(GameStates* pGameState);
 	//void changeCurState(GameStates* pGameState);
@@ -46,13 +46,13 @@ private:
 	Timer mTimerForChanged;
 
 	bool mShouldUpdate{ false };
-	float mInterpolation{0.0f};
+	float mInterpolation{ 0.0f };
 	const int TICKS_PER_SECOND = 60;
 	const int MS_PER_SEC = 1000 / TICKS_PER_SECOND;
-	
+
 	std::unique_ptr<Randomizer> mRandomizerX;
 	std::unique_ptr<Randomizer> mRandomizerY;
-	
+
 	std::unique_ptr<FactoryObjects> mEnemy;
 
 	AnimatedTexture mAnimated;
@@ -76,4 +76,3 @@ private:
 	bool mLost{ false };
 
 };
-
