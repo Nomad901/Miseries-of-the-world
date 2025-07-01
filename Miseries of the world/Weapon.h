@@ -66,10 +66,11 @@ public:
 	void setWeight(int16_t pWeight);
 	void setSize(const int32_t pW, const int32_t pH);
 	void setPos(const Vector2f& pPos);
+	void setPosChar(const Vector2f& pPosChar);
 	void setPower(std::pair<int32_t, int32_t> pPowerRange);
 
-	void setCharCollision(SDL_Rect pCharCollision);
-	void setWeaponCollision(SDL_Rect pWeaponCollision);
+	void setCharCollision(SDL_FRect pCharCollision);
+	void setWeaponCollision(SDL_FRect pWeaponCollision);
 	
 	void setPaths(const PATH& pStaticPath, const PATH& pBrokenPath);
 
@@ -118,8 +119,8 @@ protected:
 	struct CharCollision
 	{
 		// set size and pos - will affect on the weapon collision
-		SDL_Rect mWeapon{ 0,0,0,0 };
-		SDL_Rect mChar{ 0,0,0,0 };
+		SDL_FRect mWeapon{ 0,0,0,0 };
+		SDL_FRect mChar{ 0,0,0,0 };
 	};
 
 	// this will be used by animStateMachine. implement there getrect()

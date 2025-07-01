@@ -34,6 +34,8 @@ public:
 	void setSpeed(const Vector2f& pSpeed);
 	void setDimension(DimensionDegOrRad pDimension);
 
+	void rotateAttachedRect(SDL_FRect& pAttachedRect, SDL_FRect pBaseRect, float pAngle, const Vector2f& pOffsets);
+
 	double getAngle() const noexcept;
 	double getLength() const noexcept;
 	Vector2f getDirection() const noexcept;

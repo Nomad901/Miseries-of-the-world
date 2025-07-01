@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "Assets.h"
 #include "InputManager.h"
+#include "RotateMachine.h"
 
 enum class SideOfChar
 {
@@ -40,6 +41,7 @@ public:
 	void waitWithAnim(const bool pWaitAnim);
 	void setSides(const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers);
 	void setPosition(const Vector2f& pPos);
+	void setPositionRotate(SDL_FRect pBaseRect, float pAngle, const Vector2f& pOffset);
 	void setEnded(bool pEnded);
 	void enableWaitAnim(bool pWait);
 	void setAnimating(bool pAnimating);
@@ -51,7 +53,7 @@ public:
 	bool isInWaitAnim() const noexcept;
 	bool isAnimating() const noexcept;
 
-	SDL_Rect getAnimRect() const noexcept;
+	SDL_FRect getAnimRect() const noexcept;
 
 	void stopAnimation();
 	void runAnimation();
@@ -81,11 +83,13 @@ private:
 	int32_t mCounter{ 0 };
 	Timer mTimer;
 
-	SDL_Rect mDstRect{50,50,50,50};
+	SDL_FRect mDstRect{50,50,50,50};
 	std::vector<SDL_Rect> mSprites;
 	std::unordered_map<int, std::pair<SDL_Texture*, SDL_Rect>> mStorageFrames;
 	std::unordered_map<int, std::pair<SDL_Texture*, SDL_Rect>> mStorageWaitFrames;
 	std::unordered_map<SideOfChar, std::vector<uint32_t>> mSteps;
+
+	RotateMachine mRotateMachine;
 
 	HorVer mHorVer{ HorVer::HORIZONTAL };
 	SideOfChar mCurrentSide{ SideOfChar::UP };

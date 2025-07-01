@@ -37,6 +37,8 @@ public:
 					SDL_Color pColor, const bool pFill) const;
 	void drawPixel(SDL_Renderer* pRenderer, const Vector2f& pPos, SDL_Color pColor) const;
 
+	SDL_FRect convertRect(SDL_Rect pRect);
+
 private:
 	std::unordered_map<std::string, std::pair<SDL_Rect,SDL_Color>> mStorageOfRects;
 

@@ -13,7 +13,7 @@ void Weapon::setAllParameteres(const Vector2f pPos, int32_t pW, int32_t pH,
 	mWeaponStats.mPower.setBeginAndEnd(pPower.first, pPower.second);
 	mWeaponStats.mWeight = pWeight;
 
-	mCharCollision.mWeapon = { static_cast<int32_t>(pPos.mX), static_cast<int32_t>(pPos.mY), pW, pH };
+	mCharCollision.mWeapon = { pPos.mX,pPos.mY, static_cast<float>(pW), static_cast<float>(pH) };
 }
 
 void Weapon::initWeapon(SDL_Renderer* pRenderer)
@@ -102,8 +102,8 @@ void Weapon::setSize(const int32_t pW, const int32_t pH)
 		mWeaponStats.mW = pW;
 		mWeaponStats.mH = pH;
 		
-		mCharCollision.mWeapon.w = pW;
-		mCharCollision.mWeapon.h = pH;
+		mCharCollision.mWeapon.w = static_cast<float>(pW);
+		mCharCollision.mWeapon.h = static_cast<float>(pH);
 	}
 }
 
@@ -115,8 +115,18 @@ void Weapon::setPos(const Vector2f& pPos)
 	{
 		mWeaponStats.mPos = pPos;
 		
-		mCharCollision.mWeapon.x = static_cast<int32_t>(pPos.mX);
-		mCharCollision.mWeapon.y = static_cast<int32_t>(pPos.mY);
+		mCharCollision.mWeapon.x = pPos.mX;
+		mCharCollision.mWeapon.y = pPos.mY;
+	}
+}
+
+void Weapon::setPosChar(const Vector2f& pPosChar)
+{
+	if (pPosChar.mX > 0 && pPosChar.mX < WIN_WIDTH &&
+		pPosChar.mY > 0 && pPosChar.mY < WIN_HEIGHT)
+	{
+		mCharCollision.mChar.x = pPosChar.mX;
+		mCharCollision.mChar.y = pPosChar.mY;
 	}
 }
 
@@ -126,12 +136,12 @@ void Weapon::setPower(std::pair<int32_t, int32_t> pPowerRange)
 		mWeaponStats.mPower.setBeginAndEnd(pPowerRange.first, pPowerRange.second);
 }
 
-void Weapon::setCharCollision(SDL_Rect pCharCollision)
+void Weapon::setCharCollision(SDL_FRect pCharCollision)
 {
 	mCharCollision.mChar = pCharCollision;
 }
 
-void Weapon::setWeaponCollision(SDL_Rect pWeaponCollision)
+void Weapon::setWeaponCollision(SDL_FRect pWeaponCollision)
 {
 	mCharCollision.mWeapon = pWeaponCollision;
 }
@@ -141,12 +151,20 @@ void Weapon::setPaths(const PATH& pStaticPath, const PATH& pBrokenPath)
 	if (std::filesystem::exists(pStaticPath))
 	{
 		mTextures.mStaticPath = pStaticPath;
-		TextureManager::getInstance().appendTexture(mRenderer, pStaticPath, mCharCollision.mWeapon);
+		TextureManager::getInstance().appendTexture(mRenderer, pStaticPath, 
+			{ static_cast<int32_t>(mCharCollision.mWeapon.x),
+			  static_cast<int32_t>(mCharCollision.mWeapon.y),
+			  static_cast<int32_t>(mCharCollision.mWeapon.w),
+			  static_cast<int32_t>(mCharCollision.mWeapon.h) });
 	}
 	if (std::filesystem::exists(pBrokenPath))
 	{
 		mTextures.mBrokenWeapon = pBrokenPath;
-		TextureManager::getInstance().appendTexture(mRenderer, pBrokenPath, mCharCollision.mWeapon);
+		TextureManager::getInstance().appendTexture(mRenderer, pBrokenPath,
+			{ static_cast<int32_t>(mCharCollision.mWeapon.x),
+			  static_cast<int32_t>(mCharCollision.mWeapon.y),
+			  static_cast<int32_t>(mCharCollision.mWeapon.w),
+			  static_cast<int32_t>(mCharCollision.mWeapon.h) });
 	}
 }
 
@@ -156,6 +174,7 @@ void Weapon::setShootPath(const PATH& pShootPath, int32_t pW, int32_t pH,
 	if (std::filesystem::exists(pShootPath))
 	{
 		mTextures.mShootingPath = pShootPath;
+		std::cout << std::format("Pos and size: {}-{}/{}-{}\n", Weapon::getWeaponStats().mPos.mX, Weapon::getWeaponStats().mPos.mY, pW, pH);
 		mAnimateStateMachine.pushStateW("ShootAnimWeapon", TypeWait::GENERAL, pShootPath, Weapon::getWeaponStats().mPos,
 										 pW, pH, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
 	}

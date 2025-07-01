@@ -151,3 +151,11 @@ void FactoryObjects::drawPixel(SDL_Renderer* pRenderer, const Vector2f& pPos, SD
 			  pColor.r, pColor.g, pColor.b, pColor.a);
 }
 
+SDL_FRect FactoryObjects::convertRect(SDL_Rect pRect)
+{
+	return { static_cast<float>(pRect.x),
+			 static_cast<float>(pRect.y),
+			 static_cast<float>(pRect.w),
+			 static_cast<float>(pRect.h) };
+}
+

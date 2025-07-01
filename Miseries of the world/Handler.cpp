@@ -40,12 +40,12 @@ void Handler::loopBack()
 {
 	mFactoryObjects->appendObject("Character", { 600,600, 100,100 }, { 255,255,255,255 });
 	
-	mPistol->initGun(mGame->getRenderer(), mFactoryObjects->getRect("Character"), 3, false);
-	mPistol->setAllParameteres(mFactoryObjects->getPos("Character"), 100, 50, 100, std::make_pair(0, 5), 5);
+	mPistol->initGun(mGame->getRenderer(), mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")), 3, false);
+	mPistol->setAllParameteres(mFactoryObjects->getPos("Character"), 100, 100, 100, std::make_pair(0, 5), 5);
 	mPistol->setPaths(mGame->getPath() / "Assets" / "photos and ttf" / "Pistol.png", mGame->getPath() / "Assets" / "photos and ttf" / "brokenPistol.png");
-	mPistol->setShootPath(mGame->getPath() / "Assets" / "photos and ttf" / "PistolSh.png", 70, 50,
+	mPistol->setShootPath(mGame->getPath() / "Assets" / "photos and ttf" / "PistolSh.png", 60, 50,
 						 { {SideOfChar::RIGHT, {0,1,2}} }, 50, 300);
-	mPistol->setReloadPath(mGame->getPath() / "Assets" / "photos and ttf" / "PistolRel.png", 70, 50,
+	mPistol->setReloadPath(mGame->getPath() / "Assets" / "photos and ttf" / "PistolRel.png", 60, 90,
 						 { {SideOfChar::RIGHT, {0,1,2,3,4,5,6,7,8,9,10,11,12}} }, 50, 200);
 }
 

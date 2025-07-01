@@ -1,6 +1,6 @@
 #include "ReloadLogic.h"
 
-void ReloadLogic::initReloadLogic(SDL_Renderer* pRenderer, SDL_Rect pCharRect, int16_t pReloadingTime, 
+void ReloadLogic::initReloadLogic(SDL_Renderer* pRenderer, SDL_FRect pCharRect, int16_t pReloadingTime,
                                   bool pShowReloadingQuote, 
                                   SDL_Color pColorNumbers, int32_t pSizeNumbers)
 {

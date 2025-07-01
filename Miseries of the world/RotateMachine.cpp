@@ -85,6 +85,18 @@ void RotateMachine::setDimension(DimensionDegOrRad pDimension)
     mDimension = pDimension;
 }
 
+void RotateMachine::rotateAttachedRect(SDL_FRect& pAttachedRect, SDL_FRect pBaseRect, float pAngle, const Vector2f& pOffsets)
+{
+    float weaponCenterX = pBaseRect.x + pBaseRect.w / 2.0f;
+    float weaponCenterY = pBaseRect.y + pBaseRect.h / 2.0f;
+
+    float rotatedX = pOffsets.mX * cos(pAngle) - pOffsets.mY * sin(pAngle);
+    float rotatedY = pOffsets.mX * sin(pAngle) + pOffsets.mY * cos(pAngle);
+
+    pAttachedRect.x = weaponCenterX + rotatedX - pAttachedRect.w / 2.0f;
+    pAttachedRect.y = weaponCenterY + rotatedY - pAttachedRect.h / 2.0f;
+}
+
 double RotateMachine::getAngle() const noexcept
 {
     return mAngle;

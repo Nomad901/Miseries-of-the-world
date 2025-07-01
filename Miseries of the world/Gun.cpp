@@ -67,18 +67,18 @@ bool Gun::manageBrokenState(SDL_Renderer* pRenderer)
 	{
 		if (Weapon::getWeaponStates().mIsFreezed)
 		{
-			SDL_RenderCopyEx(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mBrokenWeapon),
-							 nullptr, &Weapon::getCharCollisions().mWeapon, mRotateMachine.getAngle(), nullptr,
-							 InputManager::getInstance().getMousePos().mX >= Weapon::getWeaponStats().mPos.mX ?
-							 SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
+			SDL_RenderCopyExF(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mBrokenWeapon),
+							  nullptr, &Weapon::getCharCollisions().mWeapon, mRotateMachine.getAngle(), nullptr,
+							  InputManager::getInstance().getMousePos().mX >= Weapon::getWeaponStats().mPos.mX ?
+							  SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
 		}
 		else
 		{
-			SDL_RenderCopy(pRenderer,
-						   Weapon::getWeaponStates().mIsBroken ?
-						   TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath) :
-						   TextureManager::getInstance().getTexture(Weapon::getTextures().mBrokenWeapon),
-						   nullptr, &Weapon::getCharCollisions().mWeapon);
+			SDL_RenderCopyF(pRenderer,
+						    Weapon::getWeaponStates().mIsBroken ?
+						    TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath) :
+						    TextureManager::getInstance().getTexture(Weapon::getTextures().mBrokenWeapon),
+						    nullptr, &Weapon::getCharCollisions().mWeapon);
 		}
 		return true;
 	}
@@ -90,11 +90,12 @@ FireModeFactory& Gun::getFireModeFactory()
 	return mFireModeFactory;
 }
 
-void Gun::initGun(SDL_Renderer* pRenderer, SDL_Rect pCharRect,
+void Gun::initGun(SDL_Renderer* pRenderer, SDL_FRect pCharRect,
 				  int16_t pReloadingTime, bool pShowReloadingQuote,
 				  SDL_Color pColorNumbers, int32_t pSizeNumbers)
 {
 	Weapon::initWeapon(pRenderer);
+	Weapon::setCharCollision(pCharRect);
 	mReloadLogic.initReloadLogic(pRenderer, pCharRect, pReloadingTime, pShowReloadingQuote, pColorNumbers, pSizeNumbers);
 }
 
@@ -118,13 +119,13 @@ void Gun::render(SDL_Renderer* pRenderer)
 			!manageReloadState(pRenderer))
 		{
 			if (Weapon::getWeaponStates().mIsFreezed)
-				SDL_RenderCopy(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath),
+				SDL_RenderCopyF(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath),
 							   nullptr, &Weapon::getCharCollisions().mWeapon);
 			else
-				SDL_RenderCopyEx(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath),
-								 nullptr, &Weapon::getCharCollisions().mWeapon, mRotateMachine.getAngle(), nullptr,
-								 InputManager::getInstance().getMousePos().mX >= Weapon::getWeaponStats().mPos.mX ?
-								 SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
+				SDL_RenderCopyExF(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath),
+								  nullptr, &Weapon::getCharCollisions().mWeapon, mRotateMachine.getAngle(), nullptr,
+								  InputManager::getInstance().getMousePos().mX >= Weapon::getWeaponStats().mPos.mX ?
+								  SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
 		}
 	}
 }
@@ -132,6 +133,21 @@ void Gun::render(SDL_Renderer* pRenderer)
 void Gun::update(const Vector2f& pPos)
 {
 	Weapon::setPos(pPos);
-	Weapon::getAnimatedStateMachine().getState("ShootAnimWeapon").value().get().setPosition(pPos);
-	Weapon::getAnimatedStateMachine().getState("ReloadAnimWeapon").value().get().setPosition(pPos);
+	Weapon::setPosChar(pPos);
+	
+	manageRotateAround(pPos);
+
+	Weapon::getAnimatedStateMachine().getState("ShootAnimWeapon").value().get().setPositionRotate(Weapon::getCharCollisions().mChar,
+									  mRotateMachine.getAngle(), { static_cast<float>(Weapon::getCharCollisions().mChar.w / 2 - 10),-5 });
+	Weapon::getAnimatedStateMachine().getState("ReloadAnimWeapon").value().get().setPositionRotate(Weapon::getCharCollisions().mChar,
+									  mRotateMachine.getAngle(), { static_cast<float>(Weapon::getCharCollisions().mChar.w / 2 - 10),-5 });
+}
+
+void Gun::manageRotateAround(const Vector2f& pPos)
+{
+	mRotateMachine.calculateRadians(pPos, InputManager::getInstance().getMousePos());
+	SDL_FRect tmpRect = Weapon::getCharCollisions().mWeapon;
+	mRotateMachine.rotateAttachedRect(tmpRect, Weapon::getCharCollisions().mChar, mRotateMachine.getAngle(),
+									{ static_cast<float>(Weapon::getCharCollisions().mChar.w / 2 - 10),-5 });
+	Weapon::setPos({ tmpRect.x, tmpRect.y });
 }

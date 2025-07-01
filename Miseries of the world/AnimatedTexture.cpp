@@ -30,10 +30,10 @@ void AnimatedTexture::appendAnimation(TypeWait pType, SDL_Renderer* pRenderer, c
 		TextureManager::setPosition(mPath, pPos);
 
 		mDstRect = {
-			static_cast<int>(pPos.mX),
-			static_cast<int>(pPos.mY),
-			pW,
-			pH
+			pPos.mX,
+			pPos.mY,
+			static_cast<float>(pW),
+			static_cast<float>(pH)
 		};
 
 		dividerFrames(pRenderer);
@@ -227,6 +227,12 @@ void AnimatedTexture::setPosition(const Vector2f& pPos)
 	mDstRect.y = static_cast<int>(pPos.mY);
 }
 
+void AnimatedTexture::setPositionRotate(SDL_FRect pBaseRect, float pAngle, const Vector2f& pOffset)
+{
+	mRotateMachine.rotateAttachedRect(mDstRect, pBaseRect, pAngle,
+									{ static_cast<float>(pBaseRect.w / 2 - 10),-5 });
+}
+
 bool AnimatedTexture::isEnded() const
 {
 	return mConditionals.mEnded;
@@ -272,7 +278,7 @@ bool AnimatedTexture::isActive() const
 	return mConditionals.mActive;
 }
 
-SDL_Rect AnimatedTexture::getAnimRect() const noexcept
+SDL_FRect AnimatedTexture::getAnimRect() const noexcept
 {
 	return mDstRect;
 }
@@ -316,7 +322,7 @@ void AnimatedTexture::render(SDL_Renderer* pRenderer)
 					}
 				}
 				else
-					SDL_RenderCopy(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect);
+					SDL_RenderCopyF(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect);
 				if (mTimer.getDeltaTime(false) > mIntensity)
 				{
 					mTimer.resetTimer();
@@ -341,7 +347,7 @@ void AnimatedTexture::render(SDL_Renderer* pRenderer)
 				}
 			}
 			else
-				SDL_RenderCopy(pRenderer, mStorageWaitFrames[mCounter].first, nullptr, &mDstRect);
+				SDL_RenderCopyF(pRenderer, mStorageWaitFrames[mCounter].first, nullptr, &mDstRect);
 			if (mTimer.getDeltaTime(false) > mIntensity)
 			{
 				mTimer.resetTimer();
@@ -350,7 +356,7 @@ void AnimatedTexture::render(SDL_Renderer* pRenderer)
 			}
 		}
 		else
-			SDL_RenderCopy(pRenderer, mStorageFrames[mSteps[mCurrentSide][0]].first, nullptr, &mDstRect);
+			SDL_RenderCopyF(pRenderer, mStorageFrames[mSteps[mCurrentSide][0]].first, nullptr, &mDstRect);
 	}
 	else
 		mCounter = 0;
@@ -370,11 +376,11 @@ void AnimatedTexture::renderWithRotate(SDL_Renderer* pRenderer, double pAngle, c
 					if (!mConditionals.mOnceAnim)
 						mCounter = 0;
 					else
-						SDL_RenderCopyEx(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter -1]].first, nullptr, &mDstRect, pAngle, NULL,
+						SDL_RenderCopyExF(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter -1]].first, nullptr, &mDstRect, pAngle, NULL,
 										 pMousePos.mX >= getPosition().mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
 				}
 				else
-					SDL_RenderCopyEx(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect, pAngle, NULL, 
+					SDL_RenderCopyExF(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect, pAngle, NULL, 
 									 pMousePos.mX >= getPosition().mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
 				if (mTimer.getDeltaTime(false) > mIntensity)
 				{
@@ -400,7 +406,7 @@ void AnimatedTexture::renderWithRotate(SDL_Renderer* pRenderer, double pAngle, c
 				}
 			}
 			else
-				SDL_RenderCopyEx(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect, pAngle, NULL,
+				SDL_RenderCopyExF(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter]].first, nullptr, &mDstRect, pAngle, NULL,
 								 pMousePos.mX >= getPosition().mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
 			if (mTimer.getDeltaTime(false) > mIntensity)
 			{
@@ -410,7 +416,7 @@ void AnimatedTexture::renderWithRotate(SDL_Renderer* pRenderer, double pAngle, c
 			}
 		}
 		else
-			SDL_RenderCopy(pRenderer, mStorageFrames[mSteps[mCurrentSide][0]].first, nullptr, &mDstRect);
+			SDL_RenderCopyF(pRenderer, mStorageFrames[mSteps[mCurrentSide][0]].first, nullptr, &mDstRect);
 	}
 	else
 		mCounter = 0;

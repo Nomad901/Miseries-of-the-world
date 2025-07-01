@@ -11,7 +11,7 @@ public:
 	Gun() = default;
 	virtual ~Gun() = default;
 
-	void initGun(SDL_Renderer* pRenderer, SDL_Rect pCharRect,
+	void initGun(SDL_Renderer* pRenderer, SDL_FRect pCharRect,
 				 int16_t pReloadingTime, bool pShowReloadingQuote,
 				 SDL_Color pColorNumbers = { 255,255,255,255 },
 				 int32_t pSizeNumbers = 25);
@@ -32,6 +32,8 @@ protected:
 	bool manageShootState(SDL_Renderer* pRenderer);
 	bool manageReloadState(SDL_Renderer* pRenderer);
 	bool manageBrokenState(SDL_Renderer* pRenderer);
+
+	void manageRotateAround(const Vector2f& pPos);
 
 	FireModeFactory& getFireModeFactory();
 private:
