@@ -159,3 +159,11 @@ SDL_FRect FactoryObjects::convertRect(SDL_Rect pRect)
 			 static_cast<float>(pRect.h) };
 }
 
+SDL_Rect FactoryObjects::convertFRect(SDL_FRect pFRect)
+{
+	return { static_cast<int32_t>(pFRect.x),
+			 static_cast<int32_t>(pFRect.y),
+			 static_cast<int32_t>(pFRect.w),
+			 static_cast<int32_t>(pFRect.h) };
+}
+

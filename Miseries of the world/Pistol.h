@@ -1,19 +1,38 @@
 #pragma once
+#include <SDL.h>
+
 #include "Gun.h"
+
+class SingleOrSequence;
 
 class Pistol : public Gun
 {
 public:
 	Pistol() = default;
 
+	// init Weapon - FireMode - Gun classes at once
+	void initPistol(SDL_Renderer* pRenderer, SDL_FRect pCharRect, int16_t pReloadingTime,
+				    bool pShowReloadingQuote, SDL_Color pColorNumbersReload, int32_t pSizeNumbersReload, 
+				    int32_t pCapacityBullets, const PATH& pPathBullets, int32_t pDelayBullets, 
+				    int32_t pQuantityBullets, int32_t pQuantitySetsBullets, const Vector2f& pPosBullets, 
+				    int32_t pWBullets, int32_t pHBullets, int32_t pSpeedBullets, const Vector2f& pPosWeapon,
+				    int32_t pWWeapon, int32_t pHWeapon, float pRobustness, std::pair<int32_t, int32_t> pPower,
+				    int16_t pWeight);
+
 	void shoot() override;
+	void reload() override;
 	void checkRobustness() override;
 	void checkDamage() override;
 	void setAsASpecialWeapon() override;
-
+	
+	void setAsSpecialWeapon();
 protected:
 	bool manageDelay() override;
 
+private:
+	FireModeFactory mFireModeFactory;
+	Randomizer mRobustness{ 3,6 };
+	Timer mTimer; 
 
 };
 

@@ -48,8 +48,11 @@ bool Gun::manageReloadState(SDL_Renderer* pRenderer)
 			tmpAnimTexture.get().setCurrentSide(SideOfChar::RIGHT);
 			tmpAnimTexture.get().setActive(true);
 			tmpAnimTexture.get().runAnimationOnlyOnce();
+			mReloadLogic.startReloading();
 		}
 		Weapon::getAnimatedStateMachine().render("ReloadAnimWeapon", true, mRotateMachine.getAngle());
+		mReloadLogic.update(mFactoryObjects.convertFRect(Weapon::getCharCollisions().mChar));
+		mReloadLogic.render(pRenderer);
 		return true;
 	}
 	if (tmpAnimTexture.get().isAnimating())
@@ -83,11 +86,6 @@ bool Gun::manageBrokenState(SDL_Renderer* pRenderer)
 		return true;
 	}
 	return false;
-}
-
-FireModeFactory& Gun::getFireModeFactory()
-{
-	return mFireModeFactory;
 }
 
 void Gun::initGun(SDL_Renderer* pRenderer, SDL_FRect pCharRect,

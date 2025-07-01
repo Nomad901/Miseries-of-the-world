@@ -1,4 +1,57 @@
 #include "Pistol.h"
+#include "SingleOrSequence.h"
+
+void Pistol::initPistol(SDL_Renderer* pRenderer, SDL_FRect pCharRect, int16_t pReloadingTime, 
+					    bool pShowReloadingQuote, SDL_Color pColorNumbersReload, int32_t pSizeNumbersReload, 
+					    int32_t pCapacityBullets, const PATH& pPathBullets, int32_t pDelayBullets,
+					    int32_t pQuantityBullets, int32_t pQuantitySetsBullets, const Vector2f& pPosBullets,
+					    int32_t pWBullets, int32_t pHBullets, int32_t pSpeedBullets, const Vector2f& pPosWeapon,
+					    int32_t pWWeapon, int32_t pHWeapon, float pRobustness, std::pair<int32_t, int32_t> pPower, int16_t pWeight)
+{
+	Weapon::setAllParameteres(pPosWeapon, pWWeapon, pHWeapon, pRobustness, pPower, pWeight);
+	Gun::initGun(pRenderer, pCharRect, pReloadingTime, pShowReloadingQuote, pColorNumbersReload, pSizeNumbersReload);
+	mFireModeFactory.appendMode("SingleOrSequence", std::make_unique<SingleOrSequence>());
+	mFireModeFactory.getExactMode<SingleOrSequence>().value().get().init(pRenderer, pCapacityBullets, pPathBullets,
+								  pDelayBullets, pQuantityBullets, pQuantitySetsBullets, pPosBullets, pWBullets, pHBullets, pSpeedBullets);
+	mTimer.setDimensionOfTime(Dimension::MILISECONDS);
+}
+
+void Pistol::shoot()
+{
+}
+
+void Pistol::reload()
+{
+}
+
+void Pistol::checkRobustness()
+{
+}
+
+void Pistol::checkDamage()
+{
+}
+
+void Pistol::setAsASpecialWeapon()
+{
+}
+
+void Pistol::setAsSpecialWeapon()
+{
+	
+}
+
+bool Pistol::manageDelay()
+{
+	if (mTimer.isRunning())
+	{
+
+	}
+	return false;
+}
+
+
+
 //#include "Pistol.h"
 //#include "Timer.h"
 //#include "BulletsPool.h"
@@ -272,24 +325,3 @@
 //						   &TextureManager::getInstance().getRect(Weapon::getBrokenPath()));
 //	}
 //}
-
-void Pistol::shoot()
-{
-}
-
-void Pistol::checkRobustness()
-{
-}
-
-void Pistol::checkDamage()
-{
-}
-
-void Pistol::setAsASpecialWeapon()
-{
-}
-
-bool Pistol::manageDelay()
-{
-	return false;
-}

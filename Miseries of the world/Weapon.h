@@ -78,7 +78,7 @@ public:
 					  const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers,  int32_t pDelay, float pIntensity);
 	void setReloadPath(const PATH& pReloadPath, int32_t pW, int32_t pH,
 					   const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pIntensity);
-
+	
 	int32_t wasDamage();
 	int32_t getSpeedOfChar(int32_t pHisSpeed);
 

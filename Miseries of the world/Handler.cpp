@@ -46,7 +46,7 @@ void Handler::loopBack()
 	mPistol->setShootPath(mGame->getPath() / "Assets" / "photos and ttf" / "PistolSh.png", 60, 50,
 						 { {SideOfChar::RIGHT, {0,1,2}} }, 50, 300);
 	mPistol->setReloadPath(mGame->getPath() / "Assets" / "photos and ttf" / "PistolRel.png", 60, 90,
-						 { {SideOfChar::RIGHT, {0,1,2,3,4,5,6,7,8,9,10,11,12}} }, 50, 200);
+						 { {SideOfChar::RIGHT, {0,1,2,3,4,5,6,7,8,9,10,11,12}} }, 50, 240);
 }
 
 void Handler::actions()	
