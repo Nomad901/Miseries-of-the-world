@@ -118,9 +118,9 @@ float Gun::getCurrentRobustness() const noexcept
 bool Gun::WeaponIsInView(SDL_Rect pCharCollision)
 {
 	SDL_Rect tmpRect = pCharCollision;
-	tmpRect.w += 100;
-	tmpRect.h += 100;
-	if (mObjects.areColliding(tmpRect, TextureManager::getInstance().getRect(Weapon::getTextures().mStaticPath)))
+	tmpRect.w += 50;
+	tmpRect.h += 50;
+	if (mObjects.areColliding(tmpRect, mFactoryObjects.convertFRect(Weapon::getCharCollisions().mWeapon)))
 		return true;
 	return false;
 }

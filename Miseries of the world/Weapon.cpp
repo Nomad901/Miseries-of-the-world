@@ -53,6 +53,12 @@ float Weapon::getNumberRobustness()
 	return mWeaponStats.mRobustness.getNumber();
 }
 
+int32_t Weapon::getPower()
+{
+	mWeaponStats.mPower.generateNew();
+	return mWeaponStats.mPower.getNumber();
+}
+
 void Weapon::setActive(bool pActive)
 {
 	mWeaponStates.mIsActive = pActive;

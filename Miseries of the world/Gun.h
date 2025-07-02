@@ -52,7 +52,7 @@ public:
 
 	virtual void shoot() = 0;
 	virtual void reload() = 0;
-	virtual void checkDamage() = 0;
+	virtual bool checkDamage(SDL_FRect pEnemyRect) = 0;
 	virtual void setAsASpecialWeapon() = 0;
 	
 protected:

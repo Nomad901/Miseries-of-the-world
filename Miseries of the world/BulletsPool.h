@@ -19,7 +19,7 @@ public:
 	std::unique_ptr<Bullets>& manageFirstBulletInside();
 	std::unique_ptr<Bullets>& manageLastBulletInside();
 	std::unique_ptr<Bullets>& manageBulletIndise(size_t pIndex);
-	bool hasIntersection(SDL_Rect pRect);
+	std::pair<size_t,bool> hasIntersection(SDL_Rect pRect);
 
 	void returnActiveBullet(std::unique_ptr<Bullets> pActiveBullet);
 

@@ -31,6 +31,7 @@ public:
 	int32_t getOrigQuantityBullets();
 	int32_t getQuantitySets();
 	Vector2f getPos();
+	BulletsPool& getBulletsPoolInstance();
 
 	std::vector<int> isShot(const std::vector<SDL_Rect>& pRects);
 

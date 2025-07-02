@@ -53,6 +53,7 @@ public:
 	const Textures&		  getTextures()		  const noexcept;
 	AnimateStateMachine&  getAnimatedStateMachine();
 	float getNumberRobustness();
+	int32_t getPower();
 
 	void setActive(bool pActive);
 	void setAvailable(bool pAvailable);

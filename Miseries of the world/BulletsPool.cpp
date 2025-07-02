@@ -80,19 +80,20 @@ std::unique_ptr<Bullets>& BulletsPool::manageBulletIndise(size_t pIndex)
 		return mStorageActiveBullets[pIndex];
 }
 
-bool BulletsPool::hasIntersection(SDL_Rect pRect)
+std::pair<size_t, bool> BulletsPool::hasIntersection(SDL_Rect pRect)
 {
 	clearEmptyData();
 	if (!mStorageActiveBullets.empty())
 	{
-		for (auto& i : mStorageActiveBullets)
+		for (size_t i = 0; i < mStorageActiveBullets.size(); ++i)
 		{
-			if (i->isColliding(pRect))
-				return true;
+			if (mStorageActiveBullets[i]->isColliding(pRect))
+				return std::make_pair(i, true);
 		}
 	}
-	return false;
+	return std::make_pair(0, false);
 }
+
 void BulletsPool::returnActiveBullet(std::unique_ptr<Bullets> pActiveBullet)
 {
 	mStorageActiveBullets.push_back(std::move(pActiveBullet));

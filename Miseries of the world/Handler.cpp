@@ -39,18 +39,9 @@ Handler::~Handler()
 void Handler::loopBack()
 {
 	mFactoryObjects->appendObject("Character", { 600,600, 100,100 }, { 255,255,255,255 });
-	mPistol->initPistol(mGame->getRenderer(), mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")),
-					   Gun::Config::ReloadConfig{ false, 3, 25, {255,255,255,255} },
-					   Gun::Config::BulletsConfig{ 500, mGame->getPath() / "Assets" / "photos and ttf" / "bulletV2.png", 100,
-					   60,6,30,30,3,mPistol->getWeaponStats().mPos },
-					   Gun::Config::WeaponConfig{ 100,5, std::make_pair(0, 5),100,100, mPistol->getWeaponStats().mPos });
-	
-	mPistol->setPaths(mGame->getPath() / "Assets" / "photos and ttf" / "Pistol.png", mGame->getPath() / "Assets" / "photos and ttf" / "brokenPistol.png");
-	mPistol->setShootPath(mGame->getPath() / "Assets" / "photos and ttf" / "PistolSh.png", 60, 50,
-		{ {SideOfChar::RIGHT, {0,1,2}} }, 50, 300);
-	mPistol->setReloadPath(mGame->getPath() / "Assets" / "photos and ttf" / "PistolRel.png", 60, 90,
-		{ {SideOfChar::RIGHT, {0,1,2,3,4,5,6,7,8,9,10,11,12}} }, 50, 200);
-	mPistol->setAsASpecialWeapon();
+	mFactoryObjects->appendObject("Enemy", { 800, 600, 100,100 }, { 0,0,0,255 });
+
+	mPistol->initPistolAutomaticaly(mGame->getRenderer(), mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
 }
 
 void Handler::actions()
@@ -62,10 +53,23 @@ void Handler::actions()
 	{
 		InputManager::getInstance().update(mGame, events);
 
-		if (InputManager::getInstance().isMousePressed(MouseButton::LEFT))
-			mPistol->shoot();
+		if (InputManager::getInstance().isMouseHeld(MouseButton::LEFT))
+		{
+			if (mPistol->getWeaponStates().mIsFreezed)
+			{
+				if (mPistol->WeaponIsInView(mFactoryObjects->getRect("Character")))
+					mPistol->makeFreezed(false);
+			}
+			else
+				mPistol->shoot();
+			
+		}
 		if (InputManager::getInstance().isMousePressed(MouseButton::RIGHT))
 			mPistol->reload();
+		if (InputManager::getInstance().isPressed(SDL_SCANCODE_T))
+		{
+			mPistol->makeFreezed(true);
+		}
 
 		if (InputManager::getInstance().isHeld(SDL_SCANCODE_W))
 			mFactoryObjects->setPosition("Character", { mFactoryObjects->getPos("Character").mX, mFactoryObjects->getPos("Character").mY - 5 });
@@ -86,7 +90,15 @@ void Handler::outro()
 {
 	mTimer.startTimer();
 
+	static int32_t tmpNumber = 100;
+
 	mFactoryObjects->render("Character", mGame->getRenderer(), false);
+	mFactoryObjects->render("Enemy", mGame->getRenderer(), false);
+	
+	auto tmpValue = mPistol->manageDamage(mFactoryObjects->convertRect(mFactoryObjects->getRect("Enemy")));
+	if (tmpValue.second)
+		tmpNumber -= tmpValue.first;
+	//std::cout << std::format("HP: {}\n", tmpNumber);
 
 	mPistol->render(mGame->getRenderer());
 	mPistol->update(mFactoryObjects->getPos("Character"));

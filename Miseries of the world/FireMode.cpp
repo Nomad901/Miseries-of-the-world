@@ -84,6 +84,11 @@ Vector2f FireMode::getPos()
 	return mFireStat.mPos;
 }
 
+BulletsPool& FireMode::getBulletsPoolInstance()
+{
+	return *mBulletsPool;
+}
+
 std::vector<int> FireMode::isShot(const std::vector<SDL_Rect>& pRects)
 {
 	static std::vector<int> shotIndexes;
