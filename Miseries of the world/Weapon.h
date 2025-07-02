@@ -52,6 +52,7 @@ public:
 	const CharCollision&  getCharCollisions() const noexcept;
 	const Textures&		  getTextures()		  const noexcept;
 	AnimateStateMachine&  getAnimatedStateMachine();
+	float getNumberRobustness();
 
 	void setActive(bool pActive);
 	void setAvailable(bool pAvailable);
@@ -110,6 +111,7 @@ protected:
 	{
 		//no more than 100. but 101 - an infinite Robustness, unbreakable
 		float mScaleOfRobustness{ 100.0f };
+		Randomizer mRobustness{ 3,6 };
 		int16_t mWeight{ 0 };
 		int32_t mW{ 0 }, mH{ 0 };
 		Vector2f mPos{ 0.0f,0.0f };

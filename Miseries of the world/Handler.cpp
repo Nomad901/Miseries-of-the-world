@@ -15,9 +15,9 @@
 
 Handler::Handler(Game* pGame)
 	:mGame(pGame),
-	mInterpolation{0.0f}
+	mInterpolation{ 0.0f }
 {
- 	Assets::init();
+	Assets::init();
 	TextureManager::init();
 	InputManager::init();
 	FactoryOfFonts::init();
@@ -39,17 +39,21 @@ Handler::~Handler()
 void Handler::loopBack()
 {
 	mFactoryObjects->appendObject("Character", { 600,600, 100,100 }, { 255,255,255,255 });
+	mPistol->initPistol(mGame->getRenderer(), mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")),
+					   Gun::Config::ReloadConfig{ false, 3, 25, {255,255,255,255} },
+					   Gun::Config::BulletsConfig{ 500, mGame->getPath() / "Assets" / "photos and ttf" / "bulletV2.png", 100,
+					   60,6,30,30,3,mPistol->getWeaponStats().mPos },
+					   Gun::Config::WeaponConfig{ 100,5, std::make_pair(0, 5),100,100, mPistol->getWeaponStats().mPos });
 	
-	mPistol->initGun(mGame->getRenderer(), mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")), 3, false);
-	mPistol->setAllParameteres(mFactoryObjects->getPos("Character"), 100, 100, 100, std::make_pair(0, 5), 5);
 	mPistol->setPaths(mGame->getPath() / "Assets" / "photos and ttf" / "Pistol.png", mGame->getPath() / "Assets" / "photos and ttf" / "brokenPistol.png");
 	mPistol->setShootPath(mGame->getPath() / "Assets" / "photos and ttf" / "PistolSh.png", 60, 50,
-						 { {SideOfChar::RIGHT, {0,1,2}} }, 50, 300);
+		{ {SideOfChar::RIGHT, {0,1,2}} }, 50, 300);
 	mPistol->setReloadPath(mGame->getPath() / "Assets" / "photos and ttf" / "PistolRel.png", 60, 90,
-						 { {SideOfChar::RIGHT, {0,1,2,3,4,5,6,7,8,9,10,11,12}} }, 50, 240);
+		{ {SideOfChar::RIGHT, {0,1,2,3,4,5,6,7,8,9,10,11,12}} }, 50, 200);
+	mPistol->setAsASpecialWeapon();
 }
 
-void Handler::actions()	
+void Handler::actions()
 {
 	static int x = 0, y = 0;
 
@@ -59,15 +63,9 @@ void Handler::actions()
 		InputManager::getInstance().update(mGame, events);
 
 		if (InputManager::getInstance().isMousePressed(MouseButton::LEFT))
-			mPistol->makeShoot(true);
+			mPistol->shoot();
 		if (InputManager::getInstance().isMousePressed(MouseButton::RIGHT))
-			mPistol->makeReload(true);
-
-		if (InputManager::getInstance().isPressed(SDL_SCANCODE_X))
-		{
-			mPistol->makeShoot(false);
-			mPistol->makeReload(false);
-		}
+			mPistol->reload();
 
 		if (InputManager::getInstance().isHeld(SDL_SCANCODE_W))
 			mFactoryObjects->setPosition("Character", { mFactoryObjects->getPos("Character").mX, mFactoryObjects->getPos("Character").mY - 5 });
@@ -77,21 +75,22 @@ void Handler::actions()
 			mFactoryObjects->setPosition("Character", { mFactoryObjects->getPos("Character").mX - 5, mFactoryObjects->getPos("Character").mY });
 		if (InputManager::getInstance().isHeld(SDL_SCANCODE_D))
 			mFactoryObjects->setPosition("Character", { mFactoryObjects->getPos("Character").mX + 5, mFactoryObjects->getPos("Character").mY });
-		
+
 
 		InputManager::getInstance().updatePrevStates();
-    }
+	}
 
-} 
+}
 
 void Handler::outro()
 {
-    mTimer.startTimer();
-	
+	mTimer.startTimer();
+
 	mFactoryObjects->render("Character", mGame->getRenderer(), false);
-	
+
 	mPistol->render(mGame->getRenderer());
 	mPistol->update(mFactoryObjects->getPos("Character"));
+	mPistol->updateBullets(mGame->getRenderer());
 
 	mTimer.setProperFPS(1);
 }

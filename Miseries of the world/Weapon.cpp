@@ -47,6 +47,12 @@ AnimateStateMachine& Weapon::getAnimatedStateMachine()
 	return mAnimateStateMachine;
 }
 
+float Weapon::getNumberRobustness()
+{
+	mWeaponStats.mRobustness.generateNew();
+	return mWeaponStats.mRobustness.getNumber();
+}
+
 void Weapon::setActive(bool pActive)
 {
 	mWeaponStates.mIsActive = pActive;
@@ -174,7 +180,6 @@ void Weapon::setShootPath(const PATH& pShootPath, int32_t pW, int32_t pH,
 	if (std::filesystem::exists(pShootPath))
 	{
 		mTextures.mShootingPath = pShootPath;
-		std::cout << std::format("Pos and size: {}-{}/{}-{}\n", Weapon::getWeaponStats().mPos.mX, Weapon::getWeaponStats().mPos.mY, pW, pH);
 		mAnimateStateMachine.pushStateW("ShootAnimWeapon", TypeWait::GENERAL, pShootPath, Weapon::getWeaponStats().mPos,
 										 pW, pH, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
 	}

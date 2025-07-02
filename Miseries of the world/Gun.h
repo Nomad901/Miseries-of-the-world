@@ -8,36 +8,65 @@
 class Gun : public Weapon
 {
 public:
+	struct Config
+	{
+		struct WeaponConfig
+		{
+			float mRobustness{};
+			int16_t mWeight{};
+			std::pair<int32_t, int32_t> mPower{};
+			int32_t mW{}, mH{};
+			Vector2f mPosWeapon{ 0.0f,0.0f };
+		} mWeaponConfig;
+		struct BulletsConfig
+		{
+			int32_t mCapacityBullets{};
+			PATH mPathBullets = std::filesystem::current_path();
+			int32_t mDelayBullets{};
+			int32_t mQuantityBullets{};
+			int32_t mQuantitySetsBullets{};
+			int32_t mW{}, mH{};
+			int32_t mSpeedBullets{};
+			Vector2f mPosBullets{ 0.0f,0.0f };
+		} mBulletsConfig;
+		struct ReloadConfig
+		{
+			bool mShowReloadingQuote{ false };
+			int16_t mReloadingTime{};
+			int32_t mSizeNumbersReload{ 25 };
+			SDL_Color mColorNumbersReload{ 255,255,255,255 };
+		} mReloadConfig;
+	} mConfig;
+
+public:
 	Gun() = default;
 	virtual ~Gun() = default;
 
-	void initGun(SDL_Renderer* pRenderer, SDL_FRect pCharRect,
-				 int16_t pReloadingTime, bool pShowReloadingQuote,
-				 SDL_Color pColorNumbers = { 255,255,255,255 },
-				 int32_t pSizeNumbers = 25);
-	
+	void initGun(SDL_Renderer* pRenderer, const Config::ReloadConfig& pReloadConfig, SDL_FRect pCharRect);
+	void manageRobustness();
+	float getCurrentRobustness() const noexcept;
+
 	bool WeaponIsInView(SDL_Rect pCharCollision) override;
 	void render(SDL_Renderer* pRenderer) override;
 	void update(const Vector2f& pPos) override;
 
 	virtual void shoot() = 0;
 	virtual void reload() = 0;
-	virtual void checkRobustness() = 0;
 	virtual void checkDamage() = 0;
 	virtual void setAsASpecialWeapon() = 0;
 	
 protected:
-	virtual bool manageDelay() = 0;
 	bool brokenChecker(SDL_Renderer* pRenderer);
-
-	bool manageShootState(SDL_Renderer* pRenderer);
-	bool manageReloadState(SDL_Renderer* pRenderer);
-	bool manageBrokenState(SDL_Renderer* pRenderer);
 
 	void manageRotateAround(const Vector2f& pPos);
 
 private:
-	int32_t mCurrentRobustness{};
+	bool manageShootState(SDL_Renderer* pRenderer);
+	bool manageReloadState(SDL_Renderer* pRenderer);
+	bool manageBrokenState(SDL_Renderer* pRenderer);
+
+private:
+	float mCurrentRobustness{ Weapon::getWeaponStats().mScaleOfRobustness };
 
 	ReloadLogic mReloadLogic;
 	RotateMachine mRotateMachine;

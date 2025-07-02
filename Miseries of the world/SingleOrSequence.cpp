@@ -3,12 +3,14 @@
 void SingleOrSequence::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload)
 {
 	static int32_t tmpBreakingWeapon = getFireStat().mOriginalQuantityBullets - 5;
+	
 	if (pWasReload)
 	{
-		tmpBreakingWeapon = getFireStat().mOriginalQuantityBullets - 5;
+		tmpBreakingWeapon = getFireStat().mOriginalQuantityBullets-5;
 		setQuantityBullets(getFireStat().mOriginalQuantityBullets);
 		setQuantitySets(getFireStat().mQuantitySets - 1);
 	}
+
 	if (getFireStat().mQuantitySets != 0)
 	{
 		if (mTimer.isRunning())
@@ -16,7 +18,7 @@ void SingleOrSequence::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWas
 			if (manageDelay())
 				return;
 		}
-		
+
 		mRotateMachine.calculateRadians({static_cast<float>(pWeaponRect.x), static_cast<float>(pWeaponRect.y)}, InputManager::getInstance().getMousePos());
 
 		mBulletsPool->makeBulletActive();
@@ -67,12 +69,14 @@ void SingleOrSequence::setAsSpecial()
 	if (mMode == Mode::SEQUENCE) {
 		setDelay(20);
 		setQuantityBullets(40);
+		setOrigQuantityBullets(40);
 		setQuantitySets(6);
 	}
 	else
 	{
 		setDelay(300);
 		setQuantityBullets(15);
+		setOrigQuantityBullets(15);
 		setQuantitySets(15);
 	}
 }

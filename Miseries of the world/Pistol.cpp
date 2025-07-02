@@ -1,31 +1,44 @@
 #include "Pistol.h"
 #include "SingleOrSequence.h"
 
-void Pistol::initPistol(SDL_Renderer* pRenderer, SDL_FRect pCharRect, int16_t pReloadingTime, 
-					    bool pShowReloadingQuote, SDL_Color pColorNumbersReload, int32_t pSizeNumbersReload, 
-					    int32_t pCapacityBullets, const PATH& pPathBullets, int32_t pDelayBullets,
-					    int32_t pQuantityBullets, int32_t pQuantitySetsBullets, const Vector2f& pPosBullets,
-					    int32_t pWBullets, int32_t pHBullets, int32_t pSpeedBullets, const Vector2f& pPosWeapon,
-					    int32_t pWWeapon, int32_t pHWeapon, float pRobustness, std::pair<int32_t, int32_t> pPower, int16_t pWeight)
+void Pistol::initPistol(SDL_Renderer* pRenderer, SDL_FRect pCharRect, const Config::ReloadConfig& pReloadConfig,
+					    const Config::BulletsConfig& pBulletsConfig, const Config::WeaponConfig& pWeaponConfig)
 {
-	Weapon::setAllParameteres(pPosWeapon, pWWeapon, pHWeapon, pRobustness, pPower, pWeight);
-	Gun::initGun(pRenderer, pCharRect, pReloadingTime, pShowReloadingQuote, pColorNumbersReload, pSizeNumbersReload);
+	Weapon::setAllParameteres(pWeaponConfig.mPosWeapon, pWeaponConfig.mW, pWeaponConfig.mH, 
+							  pWeaponConfig.mRobustness, pWeaponConfig.mPower, pWeaponConfig.mWeight);
+	Gun::initGun(pRenderer, pReloadConfig, pCharRect);
 	mFireModeFactory.appendMode("SingleOrSequence", std::make_unique<SingleOrSequence>());
-	mFireModeFactory.getExactMode<SingleOrSequence>().value().get().init(pRenderer, pCapacityBullets, pPathBullets,
-								  pDelayBullets, pQuantityBullets, pQuantitySetsBullets, pPosBullets, pWBullets, pHBullets, pSpeedBullets);
-	mTimer.setDimensionOfTime(Dimension::MILISECONDS);
+	auto tmpMode = mFireModeFactory.getExactMode<SingleOrSequence>().value();
+	tmpMode.get().init(pRenderer, pBulletsConfig.mCapacityBullets, pBulletsConfig.mPathBullets, pBulletsConfig.mDelayBullets,
+					   pBulletsConfig.mQuantityBullets, pBulletsConfig.mQuantitySetsBullets, pBulletsConfig.mPosBullets,
+					   pBulletsConfig.mW, pBulletsConfig.mH, pBulletsConfig.mSpeedBullets);
+	tmpMode.get().setMode(Mode::SINGLE);
 }
 
 void Pistol::shoot()
 {
+	auto tmpFireMode = mFireModeFactory.getExactMode<SingleOrSequence>().value();
+	if (!Weapon::getWeaponStates().mRealodingState &&
+		!Weapon::getWeaponStates().mIsBroken &&
+		!Weapon::getWeaponStates().mIsFreezed)
+	{
+		mFireModeFactory.getExactMode<SingleOrSequence>().value().get().shoot(mFactoryObjects.convertFRect(Weapon::getCharCollisions().mChar),
+																			  mFactoryObjects.convertFRect(Weapon::getCharCollisions().mWeapon),
+																			  mWasReload);
+		Weapon::makeShoot(true);
+		mWasReload = false;
+	}
+	if (tmpFireMode.get().getQuantityBullets() == 0)
+	{
+		reload();
+	}
 }
 
 void Pistol::reload()
 {
-}
-
-void Pistol::checkRobustness()
-{
+	mWasReload = true;
+	if (!Weapon::getWeaponStates().mRealodingState)
+		Weapon::makeReload(true);
 }
 
 void Pistol::checkDamage()
@@ -34,20 +47,25 @@ void Pistol::checkDamage()
 
 void Pistol::setAsASpecialWeapon()
 {
+	mFireModeFactory.getExactMode<SingleOrSequence>().value().get().setAsSpecial();
+	Weapon::setAllParameteres(Weapon::getWeaponStats().mPos, Weapon::getWeaponStats().mW, 
+							  Weapon::getWeaponStats().mH, 100, std::make_pair(2, 5), 5);
 }
 
-void Pistol::setAsSpecialWeapon()
+void Pistol::updateBullets(SDL_Renderer* pRenderer)
 {
-	
-}
-
-bool Pistol::manageDelay()
-{
-	if (mTimer.isRunning())
+	mFireModeFactory.getExactMode<SingleOrSequence>().value().get().render();
+	mFireModeFactory.getExactMode<SingleOrSequence>().value().get().update(pRenderer, Weapon::getWeaponStats().mPos);
+	if (mFireModeFactory.getExactMode<SingleOrSequence>().value().get().shouldBreakWeapon())
 	{
-
+		Gun::manageRobustness();
+		mFireModeFactory.getExactMode<SingleOrSequence>().value().get().setShouldBreakWeapon(false);
 	}
-	return false;
+
+	std::cout << std::format("QuantityBullets: {}\n", mFireModeFactory.getExactMode<SingleOrSequence>().value().get().getQuantityBullets());
+	std::cout << std::format("Sets: {}\n", mFireModeFactory.getExactMode<SingleOrSequence>().value().get().getQuantitySets());
+	std::cout << std::format("Breaking: {}\n", Gun::getCurrentRobustness());
+
 }
 
 

@@ -2,7 +2,7 @@
 
 bool Gun::brokenChecker(SDL_Renderer* pRenderer)
 {
-	if (mCurrentRobustness == 0)
+	if (mCurrentRobustness <= 0)
 	{
 		Weapon::makeBroken(true);
 		return true;
@@ -25,6 +25,11 @@ bool Gun::manageShootState(SDL_Renderer* pRenderer)
 			tmpAnimTexture.get().runAnimationOnlyOnce();
 		}
 		Weapon::getAnimatedStateMachine().render("ShootAnimWeapon", true, mRotateMachine.getAngle());
+		if (tmpAnimTexture.get().isEnded())
+		{
+			Weapon::makeShoot(false);
+			return false;
+		}
 		return true;
 	}
 	if (tmpAnimTexture.get().isAnimating())
@@ -53,6 +58,11 @@ bool Gun::manageReloadState(SDL_Renderer* pRenderer)
 		Weapon::getAnimatedStateMachine().render("ReloadAnimWeapon", true, mRotateMachine.getAngle());
 		mReloadLogic.update(mFactoryObjects.convertFRect(Weapon::getCharCollisions().mChar));
 		mReloadLogic.render(pRenderer);
+		if (!mReloadLogic.isReloading())
+		{
+			Weapon::makeReload(false);
+			return false;
+		}
 		return true;
 	}
 	if (tmpAnimTexture.get().isAnimating())
@@ -66,9 +76,10 @@ bool Gun::manageReloadState(SDL_Renderer* pRenderer)
 
 bool Gun::manageBrokenState(SDL_Renderer* pRenderer)
 {
+	brokenChecker(pRenderer);
 	if (Weapon::getWeaponStates().mIsBroken)
 	{
-		if (Weapon::getWeaponStates().mIsFreezed)
+		if (!Weapon::getWeaponStates().mIsFreezed)
 		{
 			SDL_RenderCopyExF(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mBrokenWeapon),
 							  nullptr, &Weapon::getCharCollisions().mWeapon, mRotateMachine.getAngle(), nullptr,
@@ -77,10 +88,7 @@ bool Gun::manageBrokenState(SDL_Renderer* pRenderer)
 		}
 		else
 		{
-			SDL_RenderCopyF(pRenderer,
-						    Weapon::getWeaponStates().mIsBroken ?
-						    TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath) :
-						    TextureManager::getInstance().getTexture(Weapon::getTextures().mBrokenWeapon),
+			SDL_RenderCopyF(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mBrokenWeapon),
 						    nullptr, &Weapon::getCharCollisions().mWeapon);
 		}
 		return true;
@@ -88,13 +96,23 @@ bool Gun::manageBrokenState(SDL_Renderer* pRenderer)
 	return false;
 }
 
-void Gun::initGun(SDL_Renderer* pRenderer, SDL_FRect pCharRect,
-				  int16_t pReloadingTime, bool pShowReloadingQuote,
-				  SDL_Color pColorNumbers, int32_t pSizeNumbers)
+void Gun::initGun(SDL_Renderer* pRenderer, const Config::ReloadConfig& pReloadConfig, SDL_FRect pCharRect)
 {
 	Weapon::initWeapon(pRenderer);
 	Weapon::setCharCollision(pCharRect);
-	mReloadLogic.initReloadLogic(pRenderer, pCharRect, pReloadingTime, pShowReloadingQuote, pColorNumbers, pSizeNumbers);
+	mReloadLogic.initReloadLogic(pRenderer, pCharRect, pReloadConfig.mReloadingTime, pReloadConfig.mShowReloadingQuote,
+								 pReloadConfig.mColorNumbersReload, pReloadConfig.mSizeNumbersReload);
+	mConfig.mReloadConfig = pReloadConfig;
+}
+
+void Gun::manageRobustness()
+{
+	mCurrentRobustness -= Weapon::getNumberRobustness();
+}
+
+float Gun::getCurrentRobustness() const noexcept
+{
+	return mCurrentRobustness;
 }
 
 bool Gun::WeaponIsInView(SDL_Rect pCharCollision)
