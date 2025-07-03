@@ -67,10 +67,10 @@ bool SingleOrSequence::manageDelay()
 void SingleOrSequence::setAsSpecial()
 {
 	if (mMode == Mode::SEQUENCE) {
-		setDelay(20);
-		setQuantityBullets(40);
-		setOrigQuantityBullets(40);
-		setQuantitySets(6);
+		setDelay(100);
+		setQuantityBullets(30);
+		setOrigQuantityBullets(30);
+		setQuantitySets(4);
 	}
 	else
 	{

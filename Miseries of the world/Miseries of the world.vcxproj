@@ -178,11 +178,13 @@
     <ClCompile Include="Rifle.cpp" />
     <ClCompile Include="RotateMachine.cpp" />
     <ClCompile Include="RPG.cpp" />
+    <ClCompile Include="Shotgun.cpp" />
     <ClCompile Include="SingleOrSequence.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="SmoothMoving.cpp" />
     <ClCompile Include="SpreadMode.cpp" />
     <ClCompile Include="StateMachine.cpp" />
+    <ClCompile Include="Tango.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Throwable.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -232,11 +234,13 @@
     <ClInclude Include="RotateMachine.h" />
     <ClInclude Include="RPG.h" />
     <ClInclude Include="ReloadLogic.h" />
+    <ClInclude Include="Shotgun.h" />
     <ClInclude Include="SingleOrSequence.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SmoothMoving.h" />
     <ClInclude Include="SpreadMode.h" />
     <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="Tango.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Throwable.h" />
     <ClInclude Include="Timer.h" />

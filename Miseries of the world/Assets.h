@@ -15,6 +15,7 @@ using PATH = std::filesystem::path;
 
 class TextureManager;
 class FactoryOfFonts;
+class FireMode;
 
 class Assets : public Singleton<Assets>
 {

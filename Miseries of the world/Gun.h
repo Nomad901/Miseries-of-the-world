@@ -57,10 +57,10 @@ public:
 	
 protected:
 	bool brokenChecker(SDL_Renderer* pRenderer);
-
 	void manageRotateAround(const Vector2f& pPos);
 
 private:
+	virtual void seterModes() = 0;
 	bool manageShootState(SDL_Renderer* pRenderer);
 	bool manageReloadState(SDL_Renderer* pRenderer);
 	bool manageBrokenState(SDL_Renderer* pRenderer);

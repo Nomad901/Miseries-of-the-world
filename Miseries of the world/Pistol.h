@@ -5,6 +5,12 @@
 
 class SingleOrSequence;
 
+enum class PistolType
+{
+	DEFAULT = 0,
+	FAST = 1
+};
+
 /*
 	how to init this with your hands -> look at initPistolAutomaticaly function;
 */
@@ -21,9 +27,9 @@ public:
 						   int32_t mQuantityBullets{}; int32_t mQuantitySetsBullets{}; int32_t mW{}, mH{}; int32_t mSpeedBullets{}; Vector2f mPosBullets{ 0.0f,0.0f }; }
 	struct ReloadConfig { bool mShowReloadingQuote{ false }; int16_t mReloadingTime{}; int32_t mSizeNumbersReload{ 25 }; SDL_Color mColorNumbersReload{ 255,255,255,255 };}
 	*/
-	void initPistol(SDL_Renderer* pRenderer, SDL_FRect pCharRect, const Config::ReloadConfig& pReloadConfig,
+	void initPistol(SDL_Renderer* pRenderer, PistolType pType, SDL_FRect pCharRect, const Config::ReloadConfig& pReloadConfig,
 				    const Config::BulletsConfig& pBulletsConfig, const Config::WeaponConfig& pWeaponConfig);
-	void initPistolAutomaticaly(SDL_Renderer* pRenderer, SDL_FRect pCharRect);
+	void initPistolAutomaticaly(SDL_Renderer* pRenderer, PistolType pType, SDL_FRect pCharRect);
 
 	void updateBullets(SDL_Renderer* pRenderer);
 	std::pair<int32_t, bool> manageDamage(SDL_FRect pEnemyRect);
@@ -32,9 +38,12 @@ public:
 	void reload() override;
 	bool checkDamage(SDL_FRect pEnemyRect) override;
 	void setAsASpecialWeapon() override;
+private:
+	void seterModes() override;
 
 private:
 	bool mWasReload{ false };
+	PistolType mPistolType{ PistolType::DEFAULT };
 	FireModeFactory mFireModeFactory;
 	FactoryObjects mFactoryObjects;
 

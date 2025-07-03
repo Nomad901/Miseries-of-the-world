@@ -41,7 +41,7 @@ void Handler::loopBack()
 	mFactoryObjects->appendObject("Character", { 600,600, 100,100 }, { 255,255,255,255 });
 	mFactoryObjects->appendObject("Enemy", { 800, 600, 100,100 }, { 0,0,0,255 });
 
-	mPistol->initPistolAutomaticaly(mGame->getRenderer(), mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
+	mPistol->initPistolAutomaticaly(mGame->getRenderer(), PistolType::FAST, mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
 }
 
 void Handler::actions()
@@ -98,7 +98,7 @@ void Handler::outro()
 	auto tmpValue = mPistol->manageDamage(mFactoryObjects->convertRect(mFactoryObjects->getRect("Enemy")));
 	if (tmpValue.second)
 		tmpNumber -= tmpValue.first;
-	//std::cout << std::format("HP: {}\n", tmpNumber);
+	std::cout << std::format("HP: {}\n", tmpNumber);
 
 	mPistol->render(mGame->getRenderer());
 	mPistol->update(mFactoryObjects->getPos("Character"));

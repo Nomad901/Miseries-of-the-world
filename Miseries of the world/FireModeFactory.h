@@ -20,9 +20,9 @@ public:
 
 	auto isExist(std::string_view pName) -> bool;
 	
-	auto getNameCurrentMode()				 -> std::string;
-	auto getMode()							 -> std::expected<std::reference_wrapper<FireMode>, std::string_view>;
-	auto getMode(std::string_view pName)     -> std::expected<std::reference_wrapper<FireMode>, std::string_view>;
+	auto getNameCurrentMode()			 -> std::string;
+	auto getMode()						 -> std::expected<std::reference_wrapper<FireMode>, std::string_view>;
+	auto getMode(std::string_view pName) -> std::expected<std::reference_wrapper<FireMode>, std::string_view>;
 
 	template<typename T>
 		requires ProperlyDerived<T>
