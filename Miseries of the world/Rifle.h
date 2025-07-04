@@ -43,6 +43,9 @@ public:
 private:
 	void seterModes() override;
 
+	void makeUsualRifle(SDL_Renderer* pRenderer, SDL_FRect pCharRect);
+	void makeSniperRifle(SDL_Renderer* pRenderer, SDL_FRect pCharRect);
+
 private:
 	bool mWasReload{ false };
 	RifleType mRifleType{ RifleType::DEFAULT };

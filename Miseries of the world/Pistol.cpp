@@ -20,13 +20,13 @@ void Pistol::initPistolAutomaticaly(SDL_Renderer* pRenderer, PistolType pType, S
 	initPistol(pRenderer, pType, pCharRect,
 			   Gun::Config::ReloadConfig{ false, 3, 25, {255,255,255,255} },
 			   Gun::Config::BulletsConfig{ 500, std::filesystem::current_path() / "Assets" / "photos and ttf" / "bulletV2.png", 100,
-			   60,6,30,30,3,getWeaponStats().mPos },
+										   60,6,30,30,3,getWeaponStats().mPos },
 			   Gun::Config::WeaponConfig{ 100,5, std::make_pair(0, 5),100,100, getWeaponStats().mPos });
 	Weapon::setPaths(std::filesystem::current_path() / "Assets" / "photos and ttf" / "Pistol.png", 
 					 std::filesystem::current_path() / "Assets" / "photos and ttf" / "brokenPistol.png");
-	Weapon::setShootPath(std::filesystem::current_path() / "Assets" / "photos and ttf" / "PistolSh.png", 60, 50,
+	Weapon::setShootPath(std::filesystem::current_path() / "Assets" / "photos and ttf" / "PistolSh.png", 
 				      { {SideOfChar::RIGHT, {0,1,2}} }, 50, 300);
-	Weapon::setReloadPath(std::filesystem::current_path() / "Assets" / "photos and ttf" / "PistolRel.png", 60, 90,
+	Weapon::setReloadPath(std::filesystem::current_path() / "Assets" / "photos and ttf" / "PistolRel.png",
 					   { {SideOfChar::RIGHT, {0,1,2,3,4,5,6,7,8,9,10,11,12}} }, 50, 220);
 	setAsASpecialWeapon();
 }

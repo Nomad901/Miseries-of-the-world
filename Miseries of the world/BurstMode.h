@@ -31,9 +31,9 @@ public:
 	
 	void setSparing(bool pSparing);
 	bool isSparing() const noexcept;
+	bool manageDelay() override;
 
 protected:
-	bool manageDelay() override;
 	bool managingBurst();
 
 	void manageReload(bool pWasReload);

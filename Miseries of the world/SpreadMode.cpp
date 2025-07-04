@@ -76,14 +76,16 @@ void SpreadMode::setRangeOfSpread(int32_t pRange)
 
 bool SpreadMode::manageDelay()
 {
-	if (mTimer.isRunning())
-	{
-		if (mTimer.getDeltaTime(false) >= getFireStat().mDelay)
-		{
-			mTimer.stopTimer();
-			return false;
+	if (mTimer.isRunning()) {
+		float delta = mTimer.getDeltaTime(false);
+
+		if (delta < getFireStat().mDelay) {
+			setDelayGoing(true);
+			return true;
 		}
-		return true;
+
+		mTimer.stopTimer();
+		setDelayGoing(false);
 	}
 	return false;
 }

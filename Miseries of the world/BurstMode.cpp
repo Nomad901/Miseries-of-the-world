@@ -172,15 +172,16 @@ bool BurstMode::isSparing() const noexcept
 
 bool BurstMode::manageDelay()
 {
-	if (mTimer.isRunning())
-	{
-		if (mTimer.getDeltaTime(false) >= 3000)
-		{
-			mShowReady = true;
-			mTimer.stopTimer();
-			return false;
+	if (mTimer.isRunning()) {
+		float delta = mTimer.getDeltaTime(false);
+
+		if (delta < getFireStat().mDelay) {
+			setDelayGoing(true);
+			return true;
 		}
-		return true;
+
+		mTimer.stopTimer();
+		setDelayGoing(false);
 	}
 	return false;
 }

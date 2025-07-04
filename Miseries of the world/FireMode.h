@@ -24,9 +24,11 @@ public:
 	void setShouldBreakWeapon(bool pShould);
 	void setWasDamage(bool pWas);
 	void setPos(const Vector2f& pPos);
+	void setDelayGoing(bool mIsGoing);
 
 	bool shouldBreakWeapon();
 	bool wasDamage();
+	bool delayIsGoing();
 	int32_t getQuantityBullets();
 	int32_t getOrigQuantityBullets();
 	int32_t getQuantitySets();
@@ -39,9 +41,8 @@ public:
 	virtual void shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload) = 0;
 	virtual void update(SDL_Renderer* pRenderer, const Vector2f& pPos) = 0;
 	virtual void setAsSpecial() = 0;
-protected:
 	virtual bool manageDelay() = 0;
-	
+protected:
 	FireStat& getFireStat();
 
 protected:
@@ -49,6 +50,7 @@ protected:
 private:
 	bool mShouldBreakWeapon{ false };
 	bool mWasDamage{ false };
+	bool mDelayIsGoing{ false };
 
 	struct FireStat {
 		int32_t mDelay{ 0 };

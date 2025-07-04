@@ -163,11 +163,11 @@ void Weapon::setPaths(const PATH& pStaticPath, const PATH& pBrokenPath)
 	if (std::filesystem::exists(pStaticPath))
 	{
 		mTextures.mStaticPath = pStaticPath;
-		TextureManager::getInstance().appendTexture(mRenderer, pStaticPath, 
+		TextureManager::getInstance().appendTextureWithoutBack(mRenderer, pStaticPath,
 			{ static_cast<int32_t>(mCharCollision.mWeapon.x),
 			  static_cast<int32_t>(mCharCollision.mWeapon.y),
 			  static_cast<int32_t>(mCharCollision.mWeapon.w),
-			  static_cast<int32_t>(mCharCollision.mWeapon.h) });
+			  static_cast<int32_t>(mCharCollision.mWeapon.h) }, { 34,177,76 });
 	}
 	if (std::filesystem::exists(pBrokenPath))
 	{
@@ -180,25 +180,25 @@ void Weapon::setPaths(const PATH& pStaticPath, const PATH& pBrokenPath)
 	}
 }
 
-void Weapon::setShootPath(const PATH& pShootPath, int32_t pW, int32_t pH,
+void Weapon::setShootPath(const PATH& pShootPath, 
 						  const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pIntensity)
 {
 	if (std::filesystem::exists(pShootPath))
 	{
 		mTextures.mShootingPath = pShootPath;
 		mAnimateStateMachine.pushStateW("ShootAnimWeapon", TypeWait::GENERAL, pShootPath, Weapon::getWeaponStats().mPos,
-										 pW, pH, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
+										 mCharCollision.mWeapon.w, mCharCollision.mWeapon.h, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
 	}
 }
 
-void Weapon::setReloadPath(const PATH& pReloadPath, int32_t pW, int32_t pH,
+void Weapon::setReloadPath(const PATH& pReloadPath,
 						   const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pIntensity)
 {
 	if (std::filesystem::exists(pReloadPath))
 	{
 		mTextures.mReloadingPath = pReloadPath;
 		mAnimateStateMachine.pushStateW("ReloadAnimWeapon", TypeWait::GENERAL, pReloadPath, Weapon::getWeaponStats().mPos,
-										 pW, pH, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
+										 mCharCollision.mWeapon.w, mCharCollision.mWeapon.h, HorVer::HORIZONTAL, pNumbers, pDelay, pIntensity);
 	}
 }
 

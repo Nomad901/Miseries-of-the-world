@@ -12,33 +12,31 @@ bool Gun::brokenChecker(SDL_Renderer* pRenderer)
 }
 
 bool Gun::manageShootState(SDL_Renderer* pRenderer)
-{
-	auto tmpAnimTexture = Weapon::getAnimatedStateMachine().getState("ShootAnimWeapon").value();
-	
-	if (Weapon::getWeaponStates().mShootingState &&
-		!Weapon::getWeaponStates().mIsFreezed)
-	{	
-		if (!tmpAnimTexture.get().isAnimating())
-		{
-			tmpAnimTexture.get().setCurrentSide(SideOfChar::RIGHT);
-			tmpAnimTexture.get().setActive(true);
-			tmpAnimTexture.get().runAnimationOnlyOnce();
+{	
+	auto& animTexture = Weapon::getAnimatedStateMachine().getState("ShootAnimWeapon").value().get();
+
+	if (!Weapon::getWeaponStates().mShootingState) {
+		if (animTexture.isAnimating()) {
+			animTexture.setActive(false);
+			animTexture.stopAnimation();
+			animTexture.nullTicks();
 		}
-		Weapon::getAnimatedStateMachine().render("ShootAnimWeapon", true, mRotateMachine.getAngle());
-		if (tmpAnimTexture.get().isEnded())
-		{
-			Weapon::makeShoot(false);
-			return false;
-		}
-		return true;
+		return false;
 	}
-	if (tmpAnimTexture.get().isAnimating())
-	{
-		tmpAnimTexture.get().setActive(false);
-		tmpAnimTexture.get().stopAnimation();
-		tmpAnimTexture.get().nullTicks();
+
+	if (!animTexture.isAnimating()) {
+		animTexture.setCurrentSide(SideOfChar::RIGHT);
+		animTexture.setActive(true);
+		animTexture.runAnimationOnlyOnce();  
 	}
-	return false;
+
+	Weapon::getAnimatedStateMachine().render("ShootAnimWeapon", true, mRotateMachine.getAngle());
+
+	if (animTexture.isEnded()) {
+		Weapon::makeShoot(false);
+		return false;
+	}
+	return true;
 }
 
 bool Gun::manageReloadState(SDL_Renderer* pRenderer)

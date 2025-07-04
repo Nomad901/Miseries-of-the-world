@@ -52,16 +52,19 @@ void SingleOrSequence::render()
 	mBulletsPool->update();
 }
 
-bool SingleOrSequence::manageDelay()
-{
-	if (!mTimer.isRunning())
-		mTimer.startTimer();
-	if (mTimer.getDeltaTime(false) >= getFireStat().mDelay)
-	{
+bool SingleOrSequence::manageDelay() {
+	if (mTimer.isRunning()) {
+		float delta = mTimer.getDeltaTime(false);
+
+		if (delta < getFireStat().mDelay) {
+			setDelayGoing(true);
+			return true; 
+		}
+
 		mTimer.stopTimer();
-		return false;
+		setDelayGoing(false);
 	}
-	return true;
+	return false; 
 }
 
 void SingleOrSequence::setAsSpecial()

@@ -76,9 +76,9 @@ public:
 	
 	void setPaths(const PATH& pStaticPath, const PATH& pBrokenPath);
 
-	void setShootPath(const PATH& pShootPath, int32_t pW, int32_t pH,
+	void setShootPath(const PATH& pShootPath,
 					  const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers,  int32_t pDelay, float pIntensity);
-	void setReloadPath(const PATH& pReloadPath, int32_t pW, int32_t pH,
+	void setReloadPath(const PATH& pReloadPath, 
 					   const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, int32_t pDelay, float pIntensity);
 	
 	int32_t wasDamage();

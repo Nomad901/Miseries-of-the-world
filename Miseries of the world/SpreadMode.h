@@ -18,9 +18,9 @@ public:
 	void setQuantityBulletsPerTime(int32_t pQuantityBullets);
 
 	void setRangeOfSpread(int32_t pRange);
+	bool manageDelay() override;
 
 protected:
-	bool manageDelay() override;
 
 	void manageReload(int32_t& pTmpBreakingWeapon, bool pWasReload);
 	void subtractionBullets(int32_t& pTmpBreakingWeapon);

@@ -49,7 +49,6 @@ public:
 	bool WeaponIsInView(SDL_Rect pCharCollision) override;
 	void render(SDL_Renderer* pRenderer) override;
 	void update(const Vector2f& pPos) override;
-
 	virtual void shoot() = 0;
 	virtual void reload() = 0;
 	virtual bool checkDamage(SDL_FRect pEnemyRect) = 0;
@@ -66,6 +65,7 @@ private:
 	bool manageBrokenState(SDL_Renderer* pRenderer);
 
 private:
+	bool mDelayIsGoing{ false };
 	float mCurrentRobustness{ Weapon::getWeaponStats().mScaleOfRobustness };
 
 	ReloadLogic mReloadLogic;

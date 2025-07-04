@@ -12,6 +12,7 @@
 #include "Pistol.h"
 #include "Knife.h"
 #include "Boulder.h"
+#include "Rifle.h"
 
 Handler::Handler(Game* pGame)
 	:mGame(pGame),
@@ -26,6 +27,7 @@ Handler::Handler(Game* pGame)
 	//mRandomizerX = std::make_unique<Randomizer>(0, WIN_WIDTH);
 	//mRandomizerY = std::make_unique<Randomizer>(0, WIN_HEIGHT);
 	mPistol = std::make_unique<Pistol>();
+	mRifle = std::make_unique<Rifle>();
 }
 
 Handler::~Handler()
@@ -40,8 +42,9 @@ void Handler::loopBack()
 {
 	mFactoryObjects->appendObject("Character", { 600,600, 100,100 }, { 255,255,255,255 });
 	mFactoryObjects->appendObject("Enemy", { 800, 600, 100,100 }, { 0,0,0,255 });
-
-	mPistol->initPistolAutomaticaly(mGame->getRenderer(), PistolType::FAST, mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
+	
+	mRifle->initRifleAutomaticaly(mGame->getRenderer(), RifleType::IRREGULAR, mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
+	//mPistol->initPistolAutomaticaly(mGame->getRenderer(), PistolType::FAST, mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
 }
 
 void Handler::actions()
@@ -55,20 +58,19 @@ void Handler::actions()
 
 		if (InputManager::getInstance().isMouseHeld(MouseButton::LEFT))
 		{
-			if (mPistol->getWeaponStates().mIsFreezed)
+			if (mRifle->getWeaponStates().mIsFreezed)
 			{
-				if (mPistol->WeaponIsInView(mFactoryObjects->getRect("Character")))
-					mPistol->makeFreezed(false);
+				if (mRifle->WeaponIsInView(mFactoryObjects->getRect("Character")))
+					mRifle->makeFreezed(false);
 			}
 			else
-				mPistol->shoot();
-			
+				mRifle->shoot();
 		}
 		if (InputManager::getInstance().isMousePressed(MouseButton::RIGHT))
-			mPistol->reload();
+			mRifle->reload();
 		if (InputManager::getInstance().isPressed(SDL_SCANCODE_T))
 		{
-			mPistol->makeFreezed(true);
+			mRifle->makeFreezed(true);
 		}
 
 		if (InputManager::getInstance().isHeld(SDL_SCANCODE_W))
@@ -83,7 +85,6 @@ void Handler::actions()
 
 		InputManager::getInstance().updatePrevStates();
 	}
-
 }
 
 void Handler::outro()
@@ -95,14 +96,13 @@ void Handler::outro()
 	mFactoryObjects->render("Character", mGame->getRenderer(), false);
 	mFactoryObjects->render("Enemy", mGame->getRenderer(), false);
 	
-	auto tmpValue = mPistol->manageDamage(mFactoryObjects->convertRect(mFactoryObjects->getRect("Enemy")));
+	auto tmpValue = mRifle->manageDamage(mFactoryObjects->convertRect(mFactoryObjects->getRect("Enemy")));
 	if (tmpValue.second)
 		tmpNumber -= tmpValue.first;
-	std::cout << std::format("HP: {}\n", tmpNumber);
 
-	mPistol->render(mGame->getRenderer());
-	mPistol->update(mFactoryObjects->getPos("Character"));
-	mPistol->updateBullets(mGame->getRenderer());
+	mRifle->render(mGame->getRenderer());
+	mRifle->update(mFactoryObjects->getPos("Character"));
+	mRifle->updateBullets(mGame->getRenderer());
 
 	mTimer.setProperFPS(1);
 }

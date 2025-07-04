@@ -22,8 +22,8 @@ public:
 
 	void render() override;
 	void update(SDL_Renderer* pRenderer, const Vector2f& pPos) override;
-protected:
 	bool manageDelay() override;
+protected:
 	bool manageDelaySequence();
 
 	void manageReload(int32_t& pTmpBreakingWeapon, bool pWasReload);

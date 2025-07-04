@@ -24,6 +24,7 @@ class Pistol;
 class Knife;
 class Boulder;
 class Pistol;
+class Rifle;
 
 using PATH = std::filesystem::path;
 
@@ -74,6 +75,7 @@ private:
 	RotateMachine mRotate;
 
 	std::unique_ptr<Pistol> mPistol;
+	std::unique_ptr<Rifle> mRifle;
 
 	bool mLost{ false };
 

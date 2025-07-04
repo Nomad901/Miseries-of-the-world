@@ -54,6 +54,11 @@ void FireMode::setPos(const Vector2f& pPos)
 	mFireStat.mPos = pPos;
 }
 
+void FireMode::setDelayGoing(bool mIsGoing)
+{
+	mDelayIsGoing = mIsGoing;
+}
+
 bool FireMode::shouldBreakWeapon()
 {
 	return mShouldBreakWeapon;
@@ -62,6 +67,11 @@ bool FireMode::shouldBreakWeapon()
 bool FireMode::wasDamage()
 {
 	return mWasDamage;
+}
+
+bool FireMode::delayIsGoing()
+{
+	return mDelayIsGoing;
 }
 
 int32_t FireMode::getQuantityBullets()
