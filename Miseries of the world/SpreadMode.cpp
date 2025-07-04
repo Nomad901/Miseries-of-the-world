@@ -26,7 +26,7 @@ void SpreadMode::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload
 			mBulletsPool->manageLastBulletInside()->shootBullet({ tmpPos.mX + getFireStat().mW - 40, tmpPos.mY + tmpCounter }, InputManager::getInstance().getMousePos(),
 																  pWeaponRect, mRotateMachine.getAngle(), { static_cast<float>(pWeaponRect.w / 2 - 10),-5 },
 																  pCharRect.w, pCharRect.h);
-			tmpCounter += 20;
+			tmpCounter += mMultiplier;
 			mRotateMachine.calculateRadians(FireMode::getPos(), InputManager::getInstance().getMousePos());
 		}
 		if (getFireStat().mQuantityBullets <= tmpBreakingWeapon)
@@ -71,7 +71,7 @@ void SpreadMode::setQuantityBulletsPerTime(int32_t pQuantityBullets)
 
 void SpreadMode::setRangeOfSpread(int32_t pRange)
 {
-	mRandomizer.setEnd(pRange);
+	mMultiplier = pRange;
 }
 
 bool SpreadMode::manageDelay()

@@ -39,7 +39,7 @@ public:
 	bool checkDamage(SDL_FRect pEnemyRect) override;
 	void setAsASpecialWeapon() override;
 private:
-	void seterModes() override;
+	void seterModes();
 
 private:
 	bool mWasReload{ false };

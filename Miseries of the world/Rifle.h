@@ -41,7 +41,7 @@ public:
 	bool checkDamage(SDL_FRect pEnemyRect) override;
 	void setAsASpecialWeapon() override;
 private:
-	void seterModes() override;
+	void seterModes();
 
 	void makeUsualRifle(SDL_Renderer* pRenderer, SDL_FRect pCharRect);
 	void makeSniperRifle(SDL_Renderer* pRenderer, SDL_FRect pCharRect);

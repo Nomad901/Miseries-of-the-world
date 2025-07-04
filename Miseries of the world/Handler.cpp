@@ -13,6 +13,7 @@
 #include "Knife.h"
 #include "Boulder.h"
 #include "Rifle.h"
+#include "Shotgun.h"
 
 Handler::Handler(Game* pGame)
 	:mGame(pGame),
@@ -28,6 +29,7 @@ Handler::Handler(Game* pGame)
 	//mRandomizerY = std::make_unique<Randomizer>(0, WIN_HEIGHT);
 	mPistol = std::make_unique<Pistol>();
 	mRifle = std::make_unique<Rifle>();
+	mShotgun = std::make_unique<Shotgun>();
 }
 
 Handler::~Handler()
@@ -43,7 +45,8 @@ void Handler::loopBack()
 	mFactoryObjects->appendObject("Character", { 600,600, 100,100 }, { 255,255,255,255 });
 	mFactoryObjects->appendObject("Enemy", { 800, 600, 100,100 }, { 0,0,0,255 });
 	
-	mRifle->initRifleAutomaticaly(mGame->getRenderer(), RifleType::IRREGULAR, mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
+	mShotgun->initShotgunAutomaticaly(mGame->getRenderer(), mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
+	//mRifle->initRifleAutomaticaly(mGame->getRenderer(), RifleType::IRREGULAR, mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
 	//mPistol->initPistolAutomaticaly(mGame->getRenderer(), PistolType::FAST, mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
 }
 
@@ -58,19 +61,19 @@ void Handler::actions()
 
 		if (InputManager::getInstance().isMouseHeld(MouseButton::LEFT))
 		{
-			if (mRifle->getWeaponStates().mIsFreezed)
+			if (mShotgun->getWeaponStates().mIsFreezed)
 			{
-				if (mRifle->WeaponIsInView(mFactoryObjects->getRect("Character")))
-					mRifle->makeFreezed(false);
+				if (mShotgun->WeaponIsInView(mFactoryObjects->getRect("Character")))
+					mShotgun->makeFreezed(false);
 			}
 			else
-				mRifle->shoot();
+				mShotgun->shoot();
 		}
 		if (InputManager::getInstance().isMousePressed(MouseButton::RIGHT))
-			mRifle->reload();
+			mShotgun->reload();
 		if (InputManager::getInstance().isPressed(SDL_SCANCODE_T))
 		{
-			mRifle->makeFreezed(true);
+			mShotgun->makeFreezed(true);
 		}
 
 		if (InputManager::getInstance().isHeld(SDL_SCANCODE_W))
@@ -96,13 +99,13 @@ void Handler::outro()
 	mFactoryObjects->render("Character", mGame->getRenderer(), false);
 	mFactoryObjects->render("Enemy", mGame->getRenderer(), false);
 	
-	auto tmpValue = mRifle->manageDamage(mFactoryObjects->convertRect(mFactoryObjects->getRect("Enemy")));
+	auto tmpValue = mShotgun->manageDamage(mFactoryObjects->convertRect(mFactoryObjects->getRect("Enemy")));
 	if (tmpValue.second)
 		tmpNumber -= tmpValue.first;
 
-	mRifle->render(mGame->getRenderer());
-	mRifle->update(mFactoryObjects->getPos("Character"));
-	mRifle->updateBullets(mGame->getRenderer());
+	mShotgun->render(mGame->getRenderer());
+	mShotgun->update(mFactoryObjects->getPos("Character"));
+	mShotgun->updateBullets(mGame->getRenderer());
 
 	mTimer.setProperFPS(1);
 }

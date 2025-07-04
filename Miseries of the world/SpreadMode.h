@@ -16,7 +16,6 @@ public:
 
 	void setAsSpecial() override;
 	void setQuantityBulletsPerTime(int32_t pQuantityBullets);
-
 	void setRangeOfSpread(int32_t pRange);
 	bool manageDelay() override;
 
@@ -26,9 +25,9 @@ protected:
 	void subtractionBullets(int32_t& pTmpBreakingWeapon);
 
 private:
-	int32_t mQuantityBulletsPerTime{ 0 };
-	
-	Randomizer mRandomizer{ 10,100 };
+	int32_t mQuantityBulletsPerTime{};
+	int32_t mMultiplier{20};
+
 	RotateMachine mRotateMachine;
 	Timer mTimer;
 };

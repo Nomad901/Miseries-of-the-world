@@ -45,6 +45,7 @@ public:
 	void initGun(SDL_Renderer* pRenderer, const Config::ReloadConfig& pReloadConfig, SDL_FRect pCharRect);
 	void manageRobustness();
 	float getCurrentRobustness() const noexcept;
+	void setReloadAnimationEndless(bool pEndlessAnim);
 
 	bool WeaponIsInView(SDL_Rect pCharCollision) override;
 	void render(SDL_Renderer* pRenderer) override;
@@ -53,19 +54,19 @@ public:
 	virtual void reload() = 0;
 	virtual bool checkDamage(SDL_FRect pEnemyRect) = 0;
 	virtual void setAsASpecialWeapon() = 0;
-	
+
 protected:
 	bool brokenChecker(SDL_Renderer* pRenderer);
 	void manageRotateAround(const Vector2f& pPos);
 
 private:
-	virtual void seterModes() = 0;
 	bool manageShootState(SDL_Renderer* pRenderer);
 	bool manageReloadState(SDL_Renderer* pRenderer);
 	bool manageBrokenState(SDL_Renderer* pRenderer);
 
 private:
 	bool mDelayIsGoing{ false };
+	bool mEndlessAnim{ false };
 	float mCurrentRobustness{ Weapon::getWeaponStats().mScaleOfRobustness };
 
 	ReloadLogic mReloadLogic;

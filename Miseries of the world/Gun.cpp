@@ -50,7 +50,10 @@ bool Gun::manageReloadState(SDL_Renderer* pRenderer)
 		{
 			tmpAnimTexture.get().setCurrentSide(SideOfChar::RIGHT);
 			tmpAnimTexture.get().setActive(true);
-			tmpAnimTexture.get().runAnimationOnlyOnce();
+			if(mEndlessAnim)
+				tmpAnimTexture.get().runAnimation();
+			else
+				tmpAnimTexture.get().runAnimationOnlyOnce();
 			mReloadLogic.startReloading();
 		}
 		Weapon::getAnimatedStateMachine().render("ReloadAnimWeapon", true, mRotateMachine.getAngle());
@@ -111,6 +114,11 @@ void Gun::manageRobustness()
 float Gun::getCurrentRobustness() const noexcept
 {
 	return mCurrentRobustness;
+}
+
+void Gun::setReloadAnimationEndless(bool pEndlessAnim)
+{
+	mEndlessAnim = pEndlessAnim;
 }
 
 bool Gun::WeaponIsInView(SDL_Rect pCharCollision)
