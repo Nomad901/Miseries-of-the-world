@@ -20,13 +20,6 @@ class Pistol : public Gun
 public:
 	Pistol() = default;
 
-	/*
-	* init Weapon - FireMode - Gun classes at once
-	struct WeaponConfig { float mRobustness{}; int16_t mWeight{}; std::pair<int32_t, int32_t> mPower{}; int32_t mW{}, mH{}; Vector2f mPosWeapon{ 0.0f,0.0f }; }
-	struct BulletsConfig { int32_t mCapacityBullets{}; PATH mPathBullets = std::filesystem::current_path(); int32_t mDelayBullets{};
-						   int32_t mQuantityBullets{}; int32_t mQuantitySetsBullets{}; int32_t mW{}, mH{}; int32_t mSpeedBullets{}; Vector2f mPosBullets{ 0.0f,0.0f }; }
-	struct ReloadConfig { bool mShowReloadingQuote{ false }; int16_t mReloadingTime{}; int32_t mSizeNumbersReload{ 25 }; SDL_Color mColorNumbersReload{ 255,255,255,255 };}
-	*/
 	void initPistol(SDL_Renderer* pRenderer, PistolType pType, SDL_FRect pCharRect, const Config::ReloadConfig& pReloadConfig,
 				    const Config::BulletsConfig& pBulletsConfig, const Config::WeaponConfig& pWeaponConfig);
 	void initPistolAutomaticaly(SDL_Renderer* pRenderer, PistolType pType, SDL_FRect pCharRect);

@@ -116,6 +116,11 @@ float Gun::getCurrentRobustness() const noexcept
 	return mCurrentRobustness;
 }
 
+float Gun::getAngleOfWeapon() const noexcept
+{
+	return mRotateMachine.getAngle();
+}
+
 void Gun::setReloadAnimationEndless(bool pEndlessAnim)
 {
 	mEndlessAnim = pEndlessAnim;

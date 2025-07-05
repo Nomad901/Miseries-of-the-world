@@ -22,7 +22,7 @@ void BurstMode::shootChargedBullets(SDL_Rect pCharRect, SDL_Rect pWeaponRect)
 		mBulletsPool->manageLastBulletInside()->shootBullet({ tmpPos.mX + getFireStat().mW - 40, tmpPos.mY + tmpCounter }, InputManager::getInstance().getMousePos(),
 															  pWeaponRect, mRotateMachine.getAngle(), { static_cast<float>(pWeaponRect.w / 2 - 10),-5 },
 															  pCharRect.w, pCharRect.h);
-		tmpCounter += 20;
+		tmpCounter += mMultiplier;
 	}
 	if (getFireStat().mQuantityBullets-1 <= mMeasureBreakingWeapon)
 	{
@@ -66,7 +66,7 @@ void BurstMode::update(SDL_Renderer* pRenderer, const Vector2f& pPos)
 	if (mBulletsPool->getSizeBullets() <= 0)
 	{
 		mBulletsPool->init(getFireStat().mCapacity, pRenderer, getFireStat().mPath, pPos,
-			getFireStat().mW, getFireStat().mH, getFireStat().mSpeed);
+						   getFireStat().mW, getFireStat().mH, getFireStat().mSpeed);
 	}
 	FireMode::getFireStat().mPos = pPos;
 
@@ -119,16 +119,19 @@ void BurstMode::render()
 	}
 }
 
-void BurstMode::loadAnim(SDL_Renderer* pRenderer, const Vector2f pWeaponPos, 
-						 const PATH& pChargeAnim, const PATH& pChargeDoneAnim)
+void BurstMode::loadAnim(SDL_Renderer* pRenderer, const Vector2f pWeaponPos, int32_t pW, int32_t pH, 
+						 const PATH& pChargeAnim, const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, 
+						 int32_t pDelay, float pItensity,
+						 const PATH& pChargeDoneAnim, const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers2, 
+						 int32_t pDelay2, float pItensity2)
 {
 	mAnimatedStateMachine.init(pRenderer);
 	mAnimatedStateMachine.pushStateW("ChargingAnim", TypeWait::GENERAL, pChargeAnim, { pWeaponPos.mX + 20.0f, pWeaponPos.mY - 20.0f },
-									  50, 50, HorVer::HORIZONTAL, { {SideOfChar::UP, {0,1,2,3,4,5,6,7} } },
-									  10, static_cast<float>(mDelayStoraging));
+									  pW, pH, HorVer::HORIZONTAL, pNumbers,
+									  pDelay, pItensity);
 	mAnimatedStateMachine.pushStateW("ChargingAnim", TypeWait::WAIT, pChargeDoneAnim, { pWeaponPos.mX + 20.0f, pWeaponPos.mY - 20.0f },
-									  50, 50, HorVer::HORIZONTAL, { {SideOfChar::UP, {0,1,2,3,4} } },
-									  10, static_cast<float>(mDelayStoraging));
+									  pW, pH, HorVer::HORIZONTAL, pNumbers2,
+									  pDelay2, pItensity2);
 	mAnimatedStateMachine.getState("ChargingAnim").value().get().waitWithAnim(true);
 }
 
@@ -152,7 +155,7 @@ void BurstMode::setQuantityBulletsPerTime(int32_t pQuantityBullets)
 
 void BurstMode::setRangeOfSpread(int32_t pRange)
 {
-	mRandomizer.setEnd(pRange);
+	mMultiplier = pRange;
 }
 
 void BurstMode::setDelayOfStoraging(int32_t pDelay)

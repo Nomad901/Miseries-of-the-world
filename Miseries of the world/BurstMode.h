@@ -18,8 +18,11 @@ public:
 	void update(SDL_Renderer* pRenderer, const Vector2f& pPos) override;
 	void render() override;
 
- 	void loadAnim(SDL_Renderer* pRenderer, const Vector2f pWeaponPos,
-				  const PATH& pChargeAnim, const PATH& pChargeDoneAnim);
+ 	void loadAnim(SDL_Renderer* pRenderer, const Vector2f pWeaponPos, int32_t pW, int32_t pH,
+				  const PATH& pChargeAnim, const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers,
+				  int32_t pDelay, float pItensity,
+				  const PATH& pChargeDoneAnim, const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers2,
+				  int32_t pDelay2, float pItensity2);
 
 	void setAsSpecial() override;
 	void setQuantityBulletsPerTime(int32_t pQuantityBullets);
@@ -47,10 +50,10 @@ private:
 	int32_t mCurrentQuantityBullets{ 1 };
 	int32_t mQuantityBulletsPerTime{};
 	int32_t mMeasureBreakingWeapon{};
+	int32_t mMultiplier{20};
 
 	SDL_Rect mCharRect{};
 
-	Randomizer mRandomizer{ 10,100 };
 	RotateMachine mRotateMachine;
 	Timer mTimer;
 	Timer mBurstTimer;

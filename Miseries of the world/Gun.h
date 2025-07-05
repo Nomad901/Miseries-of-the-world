@@ -44,8 +44,9 @@ public:
 
 	void initGun(SDL_Renderer* pRenderer, const Config::ReloadConfig& pReloadConfig, SDL_FRect pCharRect);
 	void manageRobustness();
-	float getCurrentRobustness() const noexcept;
 	void setReloadAnimationEndless(bool pEndlessAnim);
+	float getCurrentRobustness() const noexcept;
+	float getAngleOfWeapon() const noexcept;
 
 	bool WeaponIsInView(SDL_Rect pCharCollision) override;
 	void render(SDL_Renderer* pRenderer) override;

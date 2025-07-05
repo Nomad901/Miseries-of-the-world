@@ -14,6 +14,7 @@
 #include "Boulder.h"
 #include "Rifle.h"
 #include "Shotgun.h"
+#include "Tango.h"
 
 Handler::Handler(Game* pGame)
 	:mGame(pGame),
@@ -30,6 +31,7 @@ Handler::Handler(Game* pGame)
 	mPistol = std::make_unique<Pistol>();
 	mRifle = std::make_unique<Rifle>();
 	mShotgun = std::make_unique<Shotgun>();
+	mTango = std::make_unique<Tango>();
 }
 
 Handler::~Handler()
@@ -45,7 +47,8 @@ void Handler::loopBack()
 	mFactoryObjects->appendObject("Character", { 600,600, 100,100 }, { 255,255,255,255 });
 	mFactoryObjects->appendObject("Enemy", { 800, 600, 100,100 }, { 0,0,0,255 });
 	
-	mShotgun->initShotgunAutomaticaly(mGame->getRenderer(), mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
+	mTango->initTangoAutomaticaly(mGame->getRenderer(), mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
+	//mShotgun->initShotgunAutomaticaly(mGame->getRenderer(), mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
 	//mRifle->initRifleAutomaticaly(mGame->getRenderer(), RifleType::IRREGULAR, mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
 	//mPistol->initPistolAutomaticaly(mGame->getRenderer(), PistolType::FAST, mFactoryObjects->convertRect(mFactoryObjects->getRect("Character")));
 }
@@ -59,21 +62,35 @@ void Handler::actions()
 	{
 		InputManager::getInstance().update(mGame, events);
 
-		if (InputManager::getInstance().isMouseHeld(MouseButton::LEFT))
+		if (InputManager::getInstance().isMouseHeld(MouseButton::LEFT) ||
+			InputManager::getInstance().isMousePressed(MouseButton::LEFT))
 		{
-			if (mShotgun->getWeaponStates().mIsFreezed)
+			if (mTango->getWeaponStates().mIsFreezed)
 			{
-				if (mShotgun->WeaponIsInView(mFactoryObjects->getRect("Character")))
-					mShotgun->makeFreezed(false);
+				if (mTango->WeaponIsInView(mFactoryObjects->getRect("Character")))
+					mTango->makeFreezed(false);
 			}
 			else
-				mShotgun->shoot();
+			{
+				mTango->getFireMode().setSparing(true);
+				mTango->getFireMode().shoot(mFactoryObjects->getRect("Character"),
+											mFactoryObjects->convertFRect(mTango->getCharCollisions().mWeapon), 
+											mTango->getWeaponStates().mRealodingState);
+			}
+		}
+		if (InputManager::getInstance().isMouseReleased(MouseButton::LEFT))
+		{
+			if (!mTango->getWeaponStates().mIsFreezed)
+			{
+				mTango->shoot();
+				mTango->getFireMode().setSparing(false);
+			}
 		}
 		if (InputManager::getInstance().isMousePressed(MouseButton::RIGHT))
-			mShotgun->reload();
+			mTango->reload();
 		if (InputManager::getInstance().isPressed(SDL_SCANCODE_T))
 		{
-			mShotgun->makeFreezed(true);
+			mTango->makeFreezed(true);
 		}
 
 		if (InputManager::getInstance().isHeld(SDL_SCANCODE_W))
@@ -99,13 +116,14 @@ void Handler::outro()
 	mFactoryObjects->render("Character", mGame->getRenderer(), false);
 	mFactoryObjects->render("Enemy", mGame->getRenderer(), false);
 	
-	auto tmpValue = mShotgun->manageDamage(mFactoryObjects->convertRect(mFactoryObjects->getRect("Enemy")));
+	auto tmpValue = mTango->manageDamage(mFactoryObjects->convertRect(mFactoryObjects->getRect("Enemy")));
 	if (tmpValue.second)
 		tmpNumber -= tmpValue.first;
 
-	mShotgun->render(mGame->getRenderer());
-	mShotgun->update(mFactoryObjects->getPos("Character"));
-	mShotgun->updateBullets(mGame->getRenderer());
+	mTango->render(mGame->getRenderer());
+	mTango->update(mFactoryObjects->getPos("Character"));
+	mTango->updateBullets(mGame->getRenderer());
+	mTango->renderCharge(mGame->getRenderer());
 
 	mTimer.setProperFPS(1);
 }
