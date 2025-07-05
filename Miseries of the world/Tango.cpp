@@ -3,23 +3,40 @@
 void Tango::initTango(SDL_Renderer* pRenderer, SDL_FRect pCharRect, const Config::ReloadConfig& pReloadConfig, 
 					  const Config::BulletsConfig& pBulletsConfig, const Config::WeaponConfig& pWeaponConfig)
 {
+	mTimer.setDimensionOfTime(Dimension::MILISECONDS);
+
 	Weapon::setAllParameteres(pWeaponConfig.mPosWeapon, pWeaponConfig.mW, pWeaponConfig.mH,
-		pWeaponConfig.mRobustness, pWeaponConfig.mPower, pWeaponConfig.mWeight);
+							  pWeaponConfig.mRobustness, pWeaponConfig.mPower, pWeaponConfig.mWeight);
 	Gun::initGun(pRenderer, pReloadConfig, pCharRect);
 
 	mFireModeFactory.appendMode("SpreadMode", std::make_unique<BurstMode>(pRenderer));
+	setAsASpecialWeapon();
+	mFireModeFactory.getExactMode<BurstMode>()->get().manageAnim(pRenderer, Weapon::getWeaponStats().mPos);
 	auto tmpMode = mFireModeFactory.getExactMode<BurstMode>().value();
 	tmpMode.get().init(pRenderer, pBulletsConfig.mCapacityBullets, pBulletsConfig.mPathBullets, pBulletsConfig.mDelayBullets,
 					   pBulletsConfig.mQuantityBullets, pBulletsConfig.mQuantitySetsBullets, pBulletsConfig.mPosBullets,
 					   pBulletsConfig.mW, pBulletsConfig.mH, pBulletsConfig.mSpeedBullets);
+
+	mAnimateStateMachine.init(pRenderer);
+	mAnimateStateMachine.pushStateW("ChargingTango", TypeWait::GENERAL,
+									std::filesystem::current_path() / "Assets" / "photos and ttf" / "chargingTango.png",
+									Weapon::getWeaponStats().mPos, Weapon::getWeaponStats().mW, Weapon::getWeaponStats().mH,
+									HorVer::HORIZONTAL, { {SideOfChar::RIGHT, {0,1,2,3,4,5,6,7,8,9}} }, 10, tmpMode.get().getItensisty());
+	mAnimateStateMachine.pushStateW("ChargingTango", TypeWait::WAIT,
+									std::filesystem::current_path() / "Assets" / "photos and ttf" / "chargedTango.png",
+									Weapon::getWeaponStats().mPos, Weapon::getWeaponStats().mW, Weapon::getWeaponStats().mH,
+									HorVer::HORIZONTAL, { {SideOfChar::RIGHT, {0,1,2,3}} }, 10, tmpMode.get().getItensisty());
+	mAnimateStateMachine.getState("ChargingTango")->get().waitWithAnim(true);
+	mAnimateStateMachine.getState("ChargingTango")->get().setCurrentSide(SideOfChar::RIGHT);
 }
 
 void Tango::initTangoAutomaticaly(SDL_Renderer* pRenderer, SDL_FRect pCharRect)
 {
+
 	initTango(pRenderer, pCharRect,
 			  Gun::Config::ReloadConfig{ false, 6, 25, {255,255,255,255} },
 			  Gun::Config::BulletsConfig{ 500, std::filesystem::current_path() / "Assets" / "photos and ttf" / "tangoBullet.png", 100,
-			  							60,6,30,30,3,getWeaponStats().mPos },
+			  							  60,6,30,30,3,getWeaponStats().mPos },
 			  Gun::Config::WeaponConfig{ 100,20, std::make_pair(3, 5),100,100, getWeaponStats().mPos });
 	Weapon::setPaths(std::filesystem::current_path() / "Assets" / "photos and ttf" / "tango.png",
 					 std::filesystem::current_path() / "Assets" / "photos and ttf" / "brokenTango.png");
@@ -27,14 +44,7 @@ void Tango::initTangoAutomaticaly(SDL_Renderer* pRenderer, SDL_FRect pCharRect)
 						{ {SideOfChar::RIGHT, {0,1,2}} }, 50, 100);
 	Weapon::setReloadPath(std::filesystem::current_path() / "Assets" / "photos and ttf" / "reloadTango.png",
 						 { {SideOfChar::RIGHT, {0,1,2,3}} }, 10, 200);
-	mFireModeFactory.getExactMode<BurstMode>()->get().loadAnim(pRenderer, Weapon::getWeaponStats().mPos, Weapon::getWeaponStats().mW, Weapon::getWeaponStats().mH,
-															   std::filesystem::current_path() / "Assets" / "photos and ttf" / "chargingTango.png",
-															   { {SideOfChar::RIGHT, {0,1,2,3,4,5,6,7,8,9}} }, 10, 300,
-															   std::filesystem::current_path() / "Assets" / "photos and ttf" / "chargedTango.png",
-															   { {SideOfChar::RIGHT, {0,1,2,3}} }, 5, 300);
-
 	Gun::setReloadAnimationEndless(true);
-	setAsASpecialWeapon();
 }
 
 void Tango::updateBullets(SDL_Renderer* pRenderer)
@@ -70,10 +80,16 @@ BurstMode& Tango::getFireMode()
 void Tango::shoot()
 {
 	auto tmpFireMode = mFireModeFactory.getExactMode<BurstMode>().value();
+	if (tmpFireMode.get().manageDelay())
+	{
+		setTangoIsWaiting(true);
+		return;
+	}
 	if (!Weapon::getWeaponStates().mRealodingState &&
 		!Weapon::getWeaponStates().mIsBroken &&
 		!Weapon::getWeaponStates().mIsFreezed)
 	{
+		setTangoIsWaiting(false);
 		tmpFireMode.get().shootChargedBullets(mFactoryObjects.convertFRect(Weapon::getCharCollisions().mChar),
 											  mFactoryObjects.convertFRect(Weapon::getCharCollisions().mWeapon));
 		Weapon::makeShoot(true);
@@ -139,7 +155,43 @@ void Tango::setDelayOfStoraging(int32_t pDelay)
 void Tango::renderCharge(SDL_Renderer* pRenderer)
 {
 	mFireModeFactory.getExactMode<BurstMode>()->get().render();
-	mFireModeFactory.getExactMode<BurstMode>()->get().update(pRenderer, 
+	mFireModeFactory.getExactMode<BurstMode>()->get().update(pRenderer,
 															 Weapon::getWeaponStats().mPos);
+
+	mAnimateStateMachine.getState("ChargingTango")->get().setPosition(Weapon::getWeaponStats().mPos);
+	if (mFireModeFactory.getExactMode<BurstMode>()->get().isSparing())
+	{
+		setTangoIsCharging(true);
+		if (mFireModeFactory.getExactMode<BurstMode>()->get().manageDelay())
+			return;
+
+		mAnimateStateMachine.setCurrentState("ChargingTango");
+		auto& tmpAnimState = mAnimateStateMachine.getState().value().get();
+		if (mFireModeFactory.getExactMode<BurstMode>()->get().isSparing() &&
+			mFireModeFactory.getExactMode<BurstMode>()->get().getQuantityBullets() > 0)
+		{
+			tmpAnimState.setActive(true);
+			if (tmpAnimState.isEnded())
+			{
+				tmpAnimState.setActive(false);
+				tmpAnimState.enableWaitAnim(true);
+				tmpAnimState.runAnimation();
+			}
+			if (!tmpAnimState.isAnimating())
+			{
+				tmpAnimState.enableWaitAnim(false);
+				tmpAnimState.runAnimationOnlyOnce();
+			}
+			mAnimateStateMachine.render("ChargingTango", true, getAngleOfWeapon() * 180 / M_PI);
+		}
+		else
+		{
+			tmpAnimState.nullTicks();
+			tmpAnimState.setActive(false);
+			tmpAnimState.enableWaitAnim(false);
+		}
+	}
+	else
+		setTangoIsCharging(false);
 }
 

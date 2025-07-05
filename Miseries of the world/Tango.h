@@ -2,6 +2,7 @@
 #include "Gun.h"
 #include "AnimateStateMachine.h"
 #include "BurstMode.h"
+#include "Timer.h"
 
 /*
 	This is the secret weapon of the game. Project TANGO
@@ -31,11 +32,13 @@ public:
 	void setDelayOfStoraging(int32_t pDelay);
 
 	void renderCharge(SDL_Renderer* pRenderer);
-	
 private:
+	bool mShowReady{ false };
 	bool mWasReload{ false };
 
+	Timer mTimer;
 	FireModeFactory mFireModeFactory;
 	FactoryObjects mFactoryObjects;
+	AnimateStateMachine mAnimateStateMachine;
 };
 

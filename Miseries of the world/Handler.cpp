@@ -73,17 +73,19 @@ void Handler::actions()
 			else
 			{
 				mTango->getFireMode().setSparing(true);
+				mTango->setTangoIsCharging(true);
 				mTango->getFireMode().shoot(mFactoryObjects->getRect("Character"),
-											mFactoryObjects->convertFRect(mTango->getCharCollisions().mWeapon), 
+											mFactoryObjects->convertFRect(mTango->getCharCollisions().mWeapon),
 											mTango->getWeaponStates().mRealodingState);
 			}
 		}
-		if (InputManager::getInstance().isMouseReleased(MouseButton::LEFT))
+		else if (InputManager::getInstance().isMouseReleased(MouseButton::LEFT))
 		{
 			if (!mTango->getWeaponStates().mIsFreezed)
 			{
 				mTango->shoot();
 				mTango->getFireMode().setSparing(false);
+				mTango->setTangoIsCharging(false);
 			}
 		}
 		if (InputManager::getInstance().isMousePressed(MouseButton::RIGHT))
@@ -104,6 +106,30 @@ void Handler::actions()
 
 
 		InputManager::getInstance().updatePrevStates();
+	}
+	if (InputManager::getInstance().isMouseHeld(MouseButton::LEFT) ||
+		InputManager::getInstance().isMousePressed(MouseButton::LEFT))
+	{
+		if (mTango->getWeaponStates().mIsFreezed)
+		{
+			if (mTango->WeaponIsInView(mFactoryObjects->getRect("Character")))
+				mTango->makeFreezed(false);
+		}
+		else
+		{
+			mTango->getFireMode().setSparing(true);
+			mTango->getFireMode().shoot(mFactoryObjects->getRect("Character"),
+				mFactoryObjects->convertFRect(mTango->getCharCollisions().mWeapon),
+				mTango->getWeaponStates().mRealodingState);
+		}
+	}
+	else if (InputManager::getInstance().isMouseReleased(MouseButton::LEFT))
+	{
+		if (!mTango->getWeaponStates().mIsFreezed)
+		{
+			mTango->shoot();
+			mTango->getFireMode().setSparing(false);
+		}
 	}
 }
 

@@ -126,6 +126,21 @@ void Gun::setReloadAnimationEndless(bool pEndlessAnim)
 	mEndlessAnim = pEndlessAnim;
 }
 
+void Gun::setTangoIsCharging(bool pTangoIsCharging)
+{
+	mTangoIsCharging = pTangoIsCharging;
+}
+
+void Gun::setTangoIsWaiting(bool pTangoIsWaiting)
+{
+	mTangoIsWaiting = pTangoIsWaiting;
+}
+
+bool Gun::getTangoIsWaiting() const noexcept
+{
+	return mTangoIsWaiting;
+}
+
 bool Gun::WeaponIsInView(SDL_Rect pCharCollision)
 {
 	SDL_Rect tmpRect = pCharCollision;
@@ -140,9 +155,10 @@ void Gun::render(SDL_Renderer* pRenderer)
 {
 	mRotateMachine.calculateDegrees(Weapon::getWeaponStats().mPos, InputManager::getInstance().getMousePos());
 
-	if (!manageBrokenState(pRenderer))
+	if (!manageBrokenState(pRenderer) && 
+		!mTangoIsCharging)
 	{
-		if (!manageShootState(pRenderer) &&
+		if (!manageShootState(pRenderer) && 
 			!manageReloadState(pRenderer))
 		{
 			if (Weapon::getWeaponStates().mIsFreezed)
@@ -155,6 +171,7 @@ void Gun::render(SDL_Renderer* pRenderer)
 								  SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
 		}
 	}
+
 }
 
 void Gun::update(const Vector2f& pPos)

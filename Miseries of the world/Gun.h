@@ -45,6 +45,9 @@ public:
 	void initGun(SDL_Renderer* pRenderer, const Config::ReloadConfig& pReloadConfig, SDL_FRect pCharRect);
 	void manageRobustness();
 	void setReloadAnimationEndless(bool pEndlessAnim);
+	void setTangoIsCharging(bool pTangoIsCharging);
+	void setTangoIsWaiting(bool pTangoIsWaiting);
+	bool getTangoIsWaiting() const noexcept;
 	float getCurrentRobustness() const noexcept;
 	float getAngleOfWeapon() const noexcept;
 
@@ -66,6 +69,8 @@ private:
 	bool manageBrokenState(SDL_Renderer* pRenderer);
 
 private:
+	bool mTangoIsWaiting{ false };
+	bool mTangoIsCharging{ false };
 	bool mDelayIsGoing{ false };
 	bool mEndlessAnim{ false };
 	float mCurrentRobustness{ Weapon::getWeaponStats().mScaleOfRobustness };

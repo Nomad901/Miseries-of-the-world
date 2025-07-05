@@ -2,10 +2,10 @@
 
 BurstMode::BurstMode(SDL_Renderer* pRenderer)
 {
-	mTimer.setDimensionOfTime(Dimension::MILISECONDS);	
+	mTimer.setDimensionOfTime(Dimension::MILISECONDS);
 	mBurstTimer.setDimensionOfTime(Dimension::MILISECONDS);
 	FactoryOfFonts::getInstance().appendNewFonts(pRenderer, std::filesystem::current_path() / "Assets" / "photos and ttf" / "Arial.ttf",
-												{ {"Ready!"}, {"Waiting..."} },{255,255,255,255}, 25);
+												{ {"Ready!"}, {"Waiting..."} }, { 255,255,255,255 }, 25);
 }
 
 void BurstMode::shootChargedBullets(SDL_Rect pCharRect, SDL_Rect pWeaponRect)
@@ -20,11 +20,11 @@ void BurstMode::shootChargedBullets(SDL_Rect pCharRect, SDL_Rect pWeaponRect)
 		mBulletsPool->manageLastBulletInside()->setSpeed(static_cast<float>(getFireStat().mSpeed));
 		Vector2f tmpPos = { static_cast<float>(pCharRect.x), static_cast<float>(pCharRect.y) };
 		mBulletsPool->manageLastBulletInside()->shootBullet({ tmpPos.mX + getFireStat().mW - 40, tmpPos.mY + tmpCounter }, InputManager::getInstance().getMousePos(),
-															  pWeaponRect, mRotateMachine.getAngle(), { static_cast<float>(pWeaponRect.w / 2 - 10),-5 },
-															  pCharRect.w, pCharRect.h);
+															pWeaponRect, mRotateMachine.getAngle(), { static_cast<float>(pWeaponRect.w / 2 - 10),-5 },
+															pCharRect.w, pCharRect.h);
 		tmpCounter += mMultiplier;
 	}
-	if (getFireStat().mQuantityBullets-1 <= mMeasureBreakingWeapon)
+	if (getFireStat().mQuantityBullets - 1 <= mMeasureBreakingWeapon)
 	{
 		setShouldBreakWeapon(true);
 		subtractionBullets();
@@ -40,7 +40,7 @@ void BurstMode::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload)
 
 	if (manageDelay())
 		return;
-	
+
 	mShowReady = false;
 	mCharRect = pCharRect;
 	if (getFireStat().mQuantitySets != 0 && getFireStat().mQuantityBullets != 0)
@@ -55,7 +55,7 @@ void BurstMode::shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload)
 					setQuantityBullets(getFireStat().mQuantityBullets - 1);
 				}
 			}
-			if(!mBurstTimer.isRunning())
+			if (!mBurstTimer.isRunning())
 				mBurstTimer.startTimer();
 		}
 	}
@@ -66,12 +66,12 @@ void BurstMode::update(SDL_Renderer* pRenderer, const Vector2f& pPos)
 	if (mBulletsPool->getSizeBullets() <= 0)
 	{
 		mBulletsPool->init(getFireStat().mCapacity, pRenderer, getFireStat().mPath, pPos,
-						   getFireStat().mW, getFireStat().mH, getFireStat().mSpeed);
+			getFireStat().mW, getFireStat().mH, getFireStat().mSpeed);
 	}
 	FireMode::getFireStat().mPos = pPos;
 
 	mAnimatedStateMachine.getState("ChargingAnim").value().get().setPosition({ pPos.mX + mCharRect.w,
-																   pPos.mY - mCharRect.h / 2.0f });
+																			   pPos.mY - mCharRect.h / 2.0f });
 	if (mShowReady)
 	{
 		FactoryOfFonts::getInstance().render("Ready!", pRenderer, { static_cast<int>(pPos.mX),
@@ -82,7 +82,7 @@ void BurstMode::update(SDL_Renderer* pRenderer, const Vector2f& pPos)
 	{
 		FactoryOfFonts::getInstance().render("Waiting...", pRenderer, { static_cast<int>(pPos.mX),
 																		static_cast<int>(pPos.mY - mCharRect.h / 2),
-																	    80,50 });
+																		80,50 });
 	}
 }
 
@@ -119,29 +119,28 @@ void BurstMode::render()
 	}
 }
 
-void BurstMode::loadAnim(SDL_Renderer* pRenderer, const Vector2f pWeaponPos, int32_t pW, int32_t pH, 
-						 const PATH& pChargeAnim, const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers, 
-						 int32_t pDelay, float pItensity,
-						 const PATH& pChargeDoneAnim, const std::unordered_map<SideOfChar, std::vector<uint32_t>>& pNumbers2, 
-						 int32_t pDelay2, float pItensity2)
+void BurstMode::manageAnim(SDL_Renderer* pRenderer, const Vector2f pWeaponPos)
 {
 	mAnimatedStateMachine.init(pRenderer);
-	mAnimatedStateMachine.pushStateW("ChargingAnim", TypeWait::GENERAL, pChargeAnim, { pWeaponPos.mX + 20.0f, pWeaponPos.mY - 20.0f },
-									  pW, pH, HorVer::HORIZONTAL, pNumbers,
-									  pDelay, pItensity);
-	mAnimatedStateMachine.pushStateW("ChargingAnim", TypeWait::WAIT, pChargeDoneAnim, { pWeaponPos.mX + 20.0f, pWeaponPos.mY - 20.0f },
-									  pW, pH, HorVer::HORIZONTAL, pNumbers2,
-									  pDelay2, pItensity2);
+	mAnimatedStateMachine.pushStateW("ChargingAnim", TypeWait::GENERAL, 
+									  std::filesystem::current_path() / "Assets" / "photos and ttf" / "BurstCharging.png",
+									  { pWeaponPos.mX + 20.0f, pWeaponPos.mY - 20.0f },
+									  50, 50, HorVer::HORIZONTAL, { {SideOfChar::UP, {0,1,2,3,4,5,6,7} } },
+									  0, static_cast<float>(mDelayStoraging));
+	mAnimatedStateMachine.pushStateW("ChargingAnim", TypeWait::WAIT, 
+									  std::filesystem::current_path() / "Assets" / "photos and ttf" / "BurstDone.png",
+									  { pWeaponPos.mX + 20.0f, pWeaponPos.mY - 20.0f },
+									  50, 50, HorVer::HORIZONTAL, { {SideOfChar::UP, {0,1,2,3,4} } },
+									  0, static_cast<float>(mDelayStoraging));
 	mAnimatedStateMachine.getState("ChargingAnim").value().get().waitWithAnim(true);
 }
 
-void BurstMode::setAsSpecial() 
+void BurstMode::setAsSpecial()
 {
 	setDelay(500);
 	setQuantityBullets(60);
 	setOrigQuantityBullets(60);
 	setQuantitySets(6);
-	setRangeOfSpread(500);
 	mDelayStoraging = 500;
 	mQuantityBulletsPerTime = 8;
 	mMeasureBreakingWeapon = getFireStat().mOriginalQuantityBullets - mQuantityBulletsPerTime;
@@ -173,18 +172,22 @@ bool BurstMode::isSparing() const noexcept
 	return mSparing;
 }
 
+int32_t BurstMode::getItensisty() const noexcept
+{
+	return mDelayStoraging;
+}
+
 bool BurstMode::manageDelay()
 {
-	if (mTimer.isRunning()) {
-		float delta = mTimer.getDeltaTime(false);
-
-		if (delta < getFireStat().mDelay) {
-			setDelayGoing(true);
+	if (mTimer.isRunning())
+	{
+		auto delta = mTimer.getDeltaTime(false);
+		
+		if (delta < 3000)
 			return true;
-		}
 
+		mShowReady = true;
 		mTimer.stopTimer();
-		setDelayGoing(false);
 	}
 	return false;
 }
@@ -193,12 +196,12 @@ bool BurstMode::managingBurst()
 {
 	if (mBurstTimer.isRunning())
 	{
-		if (mBurstTimer.getDeltaTime(false) > mDelayStoraging)
-		{
-			mBurstTimer.stopTimer();
-			return false;
-		}
-		return true;
+		auto delta = mBurstTimer.getDeltaTime(false);
+
+		if (delta < mDelayStoraging)
+			return true;
+
+		mBurstTimer.stopTimer();
 	}
 	return false;
 }
