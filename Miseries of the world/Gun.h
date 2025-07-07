@@ -7,7 +7,7 @@
 
 class Gun : public Weapon
 {
-public:
+protected:
 	struct Config
 	{
 		struct WeaponConfig

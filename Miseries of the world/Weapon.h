@@ -58,7 +58,8 @@ public:
 	void setActive(bool pActive);
 	void setAvailable(bool pAvailable);
 	void setWasDamage(bool pWasDamage);
-	
+	void enableBroken(bool pBrokenEnabled);
+
 	void makeFreezed(bool pFreezed);
 	void makeBroken(bool pBroken);
 	void makeShoot(bool pShoot);
@@ -97,6 +98,8 @@ public:
 protected:
 	struct WeaponStates
 	{
+		bool mBrokenEnabled{ true };
+
 		bool mShootingState{ false };
 		bool mRealodingState{ false };
 

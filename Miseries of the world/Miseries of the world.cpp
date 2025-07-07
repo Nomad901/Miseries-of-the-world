@@ -28,11 +28,7 @@ int main(int argc, char* argv[])
 
 
 /*	
-	// plan:
-	
-	somehow i need to merge an edge of the weapon with spawning of bullets
-
-
+	TODO: correct bugs in Tango
 
 
 

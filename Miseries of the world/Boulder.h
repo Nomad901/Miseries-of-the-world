@@ -1,54 +1,28 @@
-//#pragma once
-//#include <SDL.h>
-//
-//#include "Weapon.h"
-//#include "AnimatedTexture.h"
-//#include "FactoryOfFonts.h"
-//#include "FactoryObjects.h"
-//#include "RotateMachine.h"
-//
-//class Timer;
-//class BulletsPool;
-//
-//class Boulder : public Weapon
-//{
-//public:
-//	Boulder(SDL_Renderer* pRenderer,
-//			const Vector2f& pPos, int pW, int pH, std::pair<int32_t, int32_t> pPower, int32_t pDelay,
-//			const PATH& pStaticPath, SDL_Rect pChar);
-//
-//	bool WeaponIsInView(SDL_Rect pCharCollision) override;
-//
-//	void shoot() override;
-//
-//	void render(SDL_Renderer* pRenderer) override;
-//	void update() override;
-//
-//	void setAsADefaultWeapon() override;
-//	void setAsASpecialWeapon() override;
-//
-//	std::vector<int> isShot(const std::vector<SDL_Rect>& pRects) override;
-//	bool checkRobustness() override;
-//	int32_t checkDamage() override;
-//
-//	int32_t getSpeedOfChar(int32_t pHisSpeed) override;
-//
-//	void manageRotate();
-//
-//private:
-//	bool manageDelay();
-//	void defaultParametersBoulder();
-//
-//	void reload() override;
-//
-//private:
-//	SDL_Renderer* mRenderer{ nullptr };
-//
-//	RotateMachine mRotateMachine;
-//	FactoryObjects mFactoryObjects;
-//	Timer mTimer;
-//
-//	std::unique_ptr<BulletsPool> mBullets{ nullptr };
-//
-//};
-//
+#pragma once
+#include "Throwable.h"
+#include "FireModeFactory.h"
+
+class SingleOrSequence;
+
+class Boulder : public Throwable
+{
+public:
+	Boulder() = default;
+
+	void initBoulder(SDL_Renderer* pRenderer, const Config::WeaponConfig& pWeaponConfig,
+					 SDL_FRect pRect);
+	void initBoulderAutomatically(SDL_Renderer* pRenderer, SDL_FRect pRect);
+
+	void updateBullets(SDL_Renderer* pRenderer);
+	std::pair<int32_t, bool> manageDamage(SDL_FRect pEnemyRect);
+
+	void shoot() override;
+	bool checkDamage(SDL_FRect pEnemyRect) override;
+	void setAsASpecialWeapon() override;
+
+private:
+	FireModeFactory mFireModeFactory;
+	BulletsPool mBulletsPool;
+	FactoryObjects mFactoryObjects;
+
+};

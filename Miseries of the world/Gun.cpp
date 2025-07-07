@@ -15,8 +15,10 @@ bool Gun::manageShootState(SDL_Renderer* pRenderer)
 {	
 	auto& animTexture = Weapon::getAnimatedStateMachine().getState("ShootAnimWeapon").value().get();
 
-	if (!Weapon::getWeaponStates().mShootingState) {
-		if (animTexture.isAnimating()) {
+	if (!Weapon::getWeaponStates().mShootingState) 
+	{
+		if (animTexture.isAnimating()) 
+		{
 			animTexture.setActive(false);
 			animTexture.stopAnimation();
 			animTexture.nullTicks();
@@ -24,15 +26,16 @@ bool Gun::manageShootState(SDL_Renderer* pRenderer)
 		return false;
 	}
 
-	if (!animTexture.isAnimating()) {
+	if (!animTexture.isAnimating()) 
+	{
 		animTexture.setCurrentSide(SideOfChar::RIGHT);
 		animTexture.setActive(true);
 		animTexture.runAnimationOnlyOnce();  
 	}
-
 	Weapon::getAnimatedStateMachine().render("ShootAnimWeapon", true, mRotateMachine.getAngle());
 
-	if (animTexture.isEnded()) {
+	if (animTexture.isEnded()) 
+	{
 		Weapon::makeShoot(false);
 		return false;
 	}

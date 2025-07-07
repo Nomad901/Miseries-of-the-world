@@ -74,6 +74,11 @@ void Weapon::setWasDamage(bool pWasDamage)
 	mWeaponStates.mWasDamage = pWasDamage;
 }
 
+void Weapon::enableBroken(bool pBrokenEnabled)
+{
+	mWeaponStates.mBrokenEnabled = pBrokenEnabled;
+}
+
 void Weapon::makeFreezed(bool pFreezed)
 {
 	mWeaponStates.mIsFreezed = pFreezed;
@@ -169,7 +174,7 @@ void Weapon::setPaths(const PATH& pStaticPath, const PATH& pBrokenPath)
 			  static_cast<int32_t>(mCharCollision.mWeapon.w),
 			  static_cast<int32_t>(mCharCollision.mWeapon.h) }, { 34,177,76 });
 	}
-	if (std::filesystem::exists(pBrokenPath))
+	if (std::filesystem::exists(pBrokenPath) && mWeaponStates.mBrokenEnabled)
 	{
 		mTextures.mBrokenWeapon = pBrokenPath;
 		TextureManager::getInstance().appendTexture(mRenderer, pBrokenPath,

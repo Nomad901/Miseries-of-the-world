@@ -27,6 +27,7 @@ class Pistol;
 class Rifle;
 class Shotgun;
 class Tango;
+class Boulder;
 
 using PATH = std::filesystem::path;
 
@@ -80,7 +81,7 @@ private:
 	std::unique_ptr<Rifle> mRifle;
 	std::unique_ptr<Shotgun> mShotgun;
 	std::unique_ptr<Tango> mTango;
-
+	std::unique_ptr<Boulder> mBoulder;
 	bool mLost{ false };
 
 };

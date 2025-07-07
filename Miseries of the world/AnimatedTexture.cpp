@@ -376,7 +376,7 @@ void AnimatedTexture::renderWithRotate(SDL_Renderer* pRenderer, double pAngle, c
 					if (!mConditionals.mOnceAnim)
 						mCounter = 0;
 					else
-						SDL_RenderCopyExF(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter -1]].first, nullptr, &mDstRect, pAngle, NULL,
+						SDL_RenderCopyExF(pRenderer, mStorageFrames[mSteps[mCurrentSide][mCounter - 1]].first, nullptr, &mDstRect, pAngle, NULL,
 										  pMousePos.mX >= getPosition().mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
 				}
 				else
