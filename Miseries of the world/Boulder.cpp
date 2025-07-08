@@ -13,15 +13,15 @@ void Boulder::initBoulder(SDL_Renderer* pRenderer, const Config::WeaponConfig& p
 					pWeaponConfig.mDelayBullets, 500, 500, pWeaponConfig.mPosWeapon,
 					pWeaponConfig.mW, pWeaponConfig.mH, 3);
 	mode.get().setMode(Mode::SINGLE);
+	mode.get().getBulletsPoolInstance().makeBulletsCirclingAround(true, 0.1f);
 }
 
 void Boulder::initBoulderAutomatically(SDL_Renderer* pRenderer, SDL_FRect pRect)
 {
 	Weapon::enableBroken(false);
-	setRotateFlying(true, 5);
 	initBoulder(pRenderer,
 				Throwable::Config::WeaponConfig{ std::filesystem::current_path() / "Assets" / "photos and ttf" / "boulder.png",
-												 std::make_pair(1, 3),100,100, 400, 3, Weapon::getWeaponStats().mPos }, Weapon::getCharCollisions().mWeapon);
+												 std::make_pair(1, 3),100,100, 400, 3, Weapon::getWeaponStats().mPos }, pRect);
 	Weapon::setPaths(std::filesystem::current_path() / "Assets" / "photos and ttf" / "boulder.png",
 					 std::filesystem::current_path());
 	setAsASpecialWeapon();

@@ -59,6 +59,11 @@ void FireMode::setDelayGoing(bool mIsGoing)
 	mDelayIsGoing = mIsGoing;
 }
 
+bool FireMode::activeBulletsExist()
+{
+	return mBulletsPool->getSizeActiveBullets() != 0 ? true : false;
+}
+
 bool FireMode::shouldBreakWeapon()
 {
 	return mShouldBreakWeapon;

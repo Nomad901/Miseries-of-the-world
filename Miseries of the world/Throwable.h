@@ -25,10 +25,6 @@ public:
 	void initThrowable(SDL_Renderer* pRenderer, const Config::WeaponConfig& pWeaponConfig,
 					   SDL_FRect pCharRect);
 	void setTexture(const PATH& pPath);
-	// will be just circling while flying 
-	void setRotateFlying(bool pRotateFlying, float pMultiplier);
-	void setInFlying(bool pInFlying);
-	bool isInFlying() const noexcept;
 
 	bool WeaponIsInView(SDL_Rect pCharCollision) override;
 	void render(SDL_Renderer* pRenderer) override;
@@ -42,10 +38,6 @@ protected:
 	void manageRotateAround(const Vector2f& pPos);
 
 private:
-	bool mRotateFlying{ false };
-	bool mInFlying{ false };
-	float mMultiplierRotate{5.0f};
-
 	SDL_Renderer* mRenderer{};
 	RotateMachine mRotateMachine;
 	FactoryObjects mFactoryObjects;

@@ -14,22 +14,6 @@ void Throwable::setTexture(const PATH& pPath)
 	mConfig.mWeaponConfig.mPathBullets = pPath;
 }
 
-void Throwable::setRotateFlying(bool pRotateFlying, float pMultiplier)
-{
-	mRotateFlying = pRotateFlying;
-	mMultiplierRotate = pMultiplier;
-}
-
-void Throwable::setInFlying(bool pInFlying)
-{
-	mInFlying = pInFlying;
-}
-
-bool Throwable::isInFlying() const noexcept
-{
-	return mInFlying;
-}
-
 bool Throwable::WeaponIsInView(SDL_Rect pCharCollision)
 {
 	SDL_Rect tmpRect = pCharCollision;
@@ -42,26 +26,9 @@ bool Throwable::WeaponIsInView(SDL_Rect pCharCollision)
 
 void Throwable::render(SDL_Renderer* pRenderer)
 {
-	if (!mInFlying)
-	{
-		SDL_RenderCopyExF(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath),
-						  nullptr, &Weapon::getCharCollisions().mWeapon, mRotateMachine.getAngle(), nullptr, SDL_FLIP_NONE);
-	}
-	else
-	{
-		if (mRotateFlying)
-		{
-			static float tmpAngle = mRotateMachine.getAngle();
-			SDL_RenderCopyExF(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath),
-							  nullptr, &Weapon::getCharCollisions().mWeapon, tmpAngle + mMultiplierRotate, 
-							  nullptr, SDL_FLIP_NONE);
-		}
-		else
-		{
-			SDL_RenderCopyF(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath), nullptr,
-						    &Weapon::getCharCollisions().mWeapon);
-		}
-	}
+	SDL_RenderCopyExF(pRenderer, TextureManager::getInstance().getTexture(Weapon::getTextures().mStaticPath),
+					  nullptr, &Weapon::getCharCollisions().mWeapon, mRotateMachine.getAngle(), nullptr, SDL_FLIP_NONE);
+	
 }
 
 void Throwable::update(const Vector2f& pPos)

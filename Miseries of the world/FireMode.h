@@ -26,6 +26,7 @@ public:
 	void setPos(const Vector2f& pPos);
 	void setDelayGoing(bool mIsGoing);
 
+	bool activeBulletsExist();
 	bool shouldBreakWeapon();
 	bool wasDamage();
 	bool delayIsGoing();
@@ -44,7 +45,6 @@ public:
 	virtual bool manageDelay() = 0;
 protected:
 	FireStat& getFireStat();
-
 protected:
 	std::unique_ptr<BulletsPool> mBulletsPool;
 private:

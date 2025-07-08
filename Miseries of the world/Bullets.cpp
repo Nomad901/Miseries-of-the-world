@@ -34,6 +34,12 @@ void Bullets::shootBullet(const Vector2f& pPlayerPos, const Vector2f& pMousePos,
 	}
 }
 
+void Bullets::makeBulletCirclingAround(bool pCircling, float pMultiplier)
+{
+	mCircling = pCircling;
+	mMultiplier = pMultiplier;
+}
+
 bool Bullets::isColliding(SDL_Rect pRect)
 {
 	SDL_FRect tmpRect = { static_cast<float>(pRect.x + 20),static_cast<float>(pRect.y + 20),
@@ -106,8 +112,19 @@ void Bullets::render()
 							     static_cast<int>(mRect.w),static_cast<int>(mRect.h) };
 			TextureManager::getInstance().appendTextureWithoutBack(mRenderer, mPath, tmpRect, { 34,177,76,255 });
 		}
-		SDL_RenderCopyExF(mRenderer, TextureManager::getInstance().getTexture(mPath), nullptr, &mRect, mRotateMachine.getAngle() * 180 / M_PI, nullptr,
-						  InputManager::getInstance().getMousePos().mX >= mPos.mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
+		if (!mCircling)
+		{
+			SDL_RenderCopyExF(mRenderer, TextureManager::getInstance().getTexture(mPath), nullptr, &mRect, mRotateMachine.getAngle() * 180 / M_PI, nullptr,
+							  InputManager::getInstance().getMousePos().mX >= mPos.mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
+		}
+		else
+		{
+			static float tmpAngle = mRotateMachine.getAngle();
+			SDL_RenderCopyExF(mRenderer, TextureManager::getInstance().getTexture(mPath), nullptr, &mRect, (tmpAngle += mMultiplier) * 180 / M_PI, nullptr,
+				InputManager::getInstance().getMousePos().mX >= mPos.mX ? SDL_FLIP_NONE : SDL_FLIP_VERTICAL);
+			if (tmpAngle >= 180.0f)
+				tmpAngle = -180.0f;
+		}
 	}
 }
 

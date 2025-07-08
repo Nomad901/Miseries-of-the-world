@@ -99,9 +99,16 @@ void BulletsPool::returnActiveBullet(std::unique_ptr<Bullets> pActiveBullet)
 	mStorageActiveBullets.push_back(std::move(pActiveBullet));
 }
 
+void BulletsPool::makeBulletsCirclingAround(bool pCircling, float pMultiplier)
+{
+	mCircling = pCircling;
+	mMultiplier = pMultiplier;
+}
+
 void BulletsPool::makeBulletActive()
 {
 	mStorageActiveBullets.push_back(std::move(mStorageBullets.back()));
+	mStorageActiveBullets.back()->makeBulletCirclingAround(mCircling, mMultiplier);
 	mStorageBullets.pop_back();
 }
 

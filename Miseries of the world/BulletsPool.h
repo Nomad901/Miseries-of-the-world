@@ -23,6 +23,7 @@ public:
 
 	void returnActiveBullet(std::unique_ptr<Bullets> pActiveBullet);
 
+	void makeBulletsCirclingAround(bool pCircling, float pMultiplier);
 	void makeBulletActive();
 	void destroyBullet(size_t pIndex);
 	void destroyBullet(std::unique_ptr<Bullets> pIndex);
@@ -39,6 +40,9 @@ private:
 	void clearBulletsOurOfBorder(const std::vector<int>& pStorage);
 
 private:
+	bool mCircling{ false };
+	float mMultiplier{ 10.0f };
+
 	size_t mCapacity{ 0 };
 	SDL_Renderer* mRenderer{ nullptr };
 

@@ -13,6 +13,7 @@ public:
 
     void shootBullet(const Vector2f& pPlayerPos, const Vector2f& pMousePos, SDL_Rect pWeaponRect,
                      double pAngle, const Vector2f& pOffset, int32_t pW, int32_t pH);
+    void makeBulletCirclingAround(bool pCircling, float pMultiplier);
 
     bool isColliding(SDL_Rect pRect);
     bool isActive();
@@ -39,12 +40,14 @@ private:
     void updateAttachedRect(SDL_Rect pWeaponRect);
 
 private:
+    bool mCircling{ false };
     bool mActive{ false };
 
     RotateMachine mRotateMachine;
 
+    float mMultiplier{ 10.0f };
     float mAttachedAngle{ 0.0f };
-    float mSpeed{ 0 };
+    float mSpeed{ 0.0f };
     Vector2f mAttachedOffset{ 0.0f, 0.0f };
 	Vector2f mPos{ 0.0f, 0.0f };
     PATH mPath;
