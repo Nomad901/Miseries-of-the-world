@@ -9,25 +9,14 @@
 #include "../FactoryObjects.h"
 #include "RotateMachine.h"
 #include "FactoryOfFonts.h"
+#include "WeaponManager.h"
 
-// THIS CLASS IS FOR TESTING FOR NOW, DONT LOOK AT THIS DIRTY CODE
-
-class Bullets;
-class BulletsPool;
 class Timer;
 class InputManager;
 class AnimatedTexture;
 class GameStates;
 class Menu;
 class InGame;
-class Pistol;
-class Knife;
-class Boulder;
-class Pistol;
-class Rifle;
-class Shotgun;
-class Tango;
-class Boulder;
 
 using PATH = std::filesystem::path;
 
@@ -72,17 +61,10 @@ private:
 	Timer mTimer;
 	Timer mTimerForBullets;
 
-	std::unique_ptr<Bullets> mBullets;
-	std::unique_ptr<BulletsPool> mBulletsPool;
-
 	RotateMachine mRotate;
 
-	std::unique_ptr<Pistol> mPistol;
-	std::unique_ptr<Rifle> mRifle;
-	std::unique_ptr<Shotgun> mShotgun;
-	std::unique_ptr<Tango> mTango;
-	std::unique_ptr<Boulder> mBoulder;
-	bool mLost{ false };
+	WeaponManager mWeaponManager;
 
+	bool mLost{ false };
 };
 

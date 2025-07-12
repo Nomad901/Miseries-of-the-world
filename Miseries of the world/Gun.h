@@ -54,13 +54,14 @@ public:
 	bool WeaponIsInView(SDL_Rect pCharCollision) override;
 	void render(SDL_Renderer* pRenderer) override;
 	void update(const Vector2f& pPos) override;
+
 	virtual void shoot() = 0;
 	virtual void reload() = 0;
 	virtual bool checkDamage(SDL_FRect pEnemyRect) = 0;
 	virtual void setAsASpecialWeapon() = 0;
 
 protected:
-	bool brokenChecker(SDL_Renderer* pRenderer);
+	bool brokenChecker();
 	void manageRotateAround(const Vector2f& pPos);
 
 private:

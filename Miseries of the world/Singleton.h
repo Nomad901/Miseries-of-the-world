@@ -5,8 +5,7 @@ class Singleton
 {
 public:
 	static void init() {
-		if (mInstance != nullptr)
-			shutDown();
+		shutDown();
 		mInstance = new T();
 	}
 	static T& getInstance()

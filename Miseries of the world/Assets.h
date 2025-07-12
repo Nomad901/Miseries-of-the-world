@@ -21,22 +21,21 @@ class Assets : public Singleton<Assets>
 {
 public:
 	~Assets() override;
-	inline void setRenderer(SDL_Renderer* pRenderer)
-	{
-		mRenderer = pRenderer;
-	}
-
+	auto setRenderer(SDL_Renderer* pRenderer) -> void;
+	
+	//
 	//if wanna download at once all of this
-	void load();
+	//
+	auto load() -> void;
 
-	auto getAnimation(const PATH& pPath) -> std::unordered_map<int, std::pair<SDL_Texture*, SDL_Rect>>;
-	SDL_Texture* getTexture(const PATH& pPath);
-	SDL_Surface* getSurface(const PATH& pPath);
-	TTF_Font* getFonts(std::string_view pAlias);
-	SDL_Texture* getTextureFont(std::string_view pAlias);
-	Mix_Chunk* getSound(const PATH& pPath);
-	Mix_Music* getMusic(const PATH& pPath);
-	PATH getScene(std::string_view pScene);
+	auto getAnimation(const PATH& pPath)		 -> std::unordered_map<int, std::pair<SDL_Texture*, SDL_Rect>>;
+	auto getTexture(const PATH& pPath)			 -> SDL_Texture*;
+	auto getSurface(const PATH& pPath)			 -> SDL_Surface*;
+	auto getFonts(std::string_view pAlias)		 -> TTF_Font*;
+	auto getTextureFont(std::string_view pAlias) -> SDL_Texture*;
+	auto getSound(const PATH& pPath)			 -> Mix_Chunk*;
+	auto getMusic(const PATH& pPath)			 -> Mix_Music*;
+	auto getScene(std::string_view pScene)		 -> PATH;
 
 protected:
 

@@ -8,7 +8,6 @@ class SpreadMode : public FireMode
 {
 public:
 	SpreadMode();
-	~SpreadMode() override = default;
 
 	void shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload) override;
 	void update(SDL_Renderer* pRenderer, const Vector2f& pPos) override;

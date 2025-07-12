@@ -13,7 +13,7 @@ auto Assets::getAnimation(const PATH& pPath) -> std::unordered_map<int, std::pai
     return mAnimation[pPath];
 }
 
-SDL_Texture* Assets::getTexture(const PATH& pPath)
+auto Assets::getTexture(const PATH& pPath) -> SDL_Texture*
 {
     if (mTextures.find(pPath) == mTextures.end())
     {
@@ -23,8 +23,8 @@ SDL_Texture* Assets::getTexture(const PATH& pPath)
 
     return mTextures[pPath].first.second;
 }
-
-SDL_Surface* Assets::getSurface(const PATH& pPath)
+ 
+auto Assets::getSurface(const PATH& pPath) -> SDL_Surface*
 {
     if (mTextures.find(pPath) == mTextures.end())
     {
@@ -37,7 +37,7 @@ SDL_Surface* Assets::getSurface(const PATH& pPath)
     return mTextures[pPath].first.first;
 }
 
-TTF_Font* Assets::getFonts(std::string_view pAlias)
+auto Assets::getFonts(std::string_view pAlias) -> TTF_Font*
 {
     if (mFonts.find(std::string(pAlias)) != mFonts.end())
     {
@@ -49,7 +49,7 @@ TTF_Font* Assets::getFonts(std::string_view pAlias)
     return nullptr;
 }
 
-SDL_Texture* Assets::getTextureFont(std::string_view pAlias)
+auto Assets::getTextureFont(std::string_view pAlias) -> SDL_Texture*
 {
     if (mFonts.find(std::string(pAlias)) != mFonts.end())
     {
@@ -59,7 +59,7 @@ SDL_Texture* Assets::getTextureFont(std::string_view pAlias)
     return nullptr;
 }
 
-Mix_Chunk* Assets::getSound(const PATH& pPath)
+auto Assets::getSound(const PATH& pPath) -> Mix_Chunk*
 {
     if (mSounds.find(pPath) == mSounds.end())
     {
@@ -71,7 +71,7 @@ Mix_Chunk* Assets::getSound(const PATH& pPath)
     return mSounds[pPath];
 }
 
-Mix_Music* Assets::getMusic(const PATH& pPath)
+auto Assets::getMusic(const PATH& pPath) -> Mix_Music*
 {
     if (mMusic.find(pPath) == mMusic.end())
     {
@@ -83,7 +83,7 @@ Mix_Music* Assets::getMusic(const PATH& pPath)
     return mMusic[pPath];
 }
 
-PATH Assets::getScene(std::string_view pScene)
+auto Assets::getScene(std::string_view pScene) -> PATH
 {
     if (!mScenes.contains(std::string(pScene)))
     {
@@ -119,4 +119,9 @@ Assets::~Assets()
     mFonts.clear();
 
     SDL_DestroyRenderer(mRenderer);
+}
+
+void Assets::setRenderer(SDL_Renderer* pRenderer)
+{
+    mRenderer = pRenderer;
 }

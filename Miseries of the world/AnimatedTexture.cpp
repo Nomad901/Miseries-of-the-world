@@ -229,8 +229,7 @@ void AnimatedTexture::setPosition(const Vector2f& pPos)
 
 void AnimatedTexture::setPositionRotate(SDL_FRect pBaseRect, float pAngle, const Vector2f& pOffset)
 {
-	mRotateMachine.rotateAttachedRect(mDstRect, pBaseRect, pAngle,
-									{ static_cast<float>(pBaseRect.w / 2 - 10),-5 });
+	mRotateMachine.rotateAttachedRect(mDstRect, pBaseRect, pAngle, pOffset);
 }
 
 bool AnimatedTexture::isEnded() const

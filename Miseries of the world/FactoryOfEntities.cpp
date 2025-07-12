@@ -5,12 +5,7 @@
 
 FactoryOfEntities::FactoryOfEntities()
 {
-	WeaponManager::init();
-}
-
-FactoryOfEntities::~FactoryOfEntities()
-{
-	WeaponManager::shutDown();
+	mWeaponManager = std::make_unique<WeaponManager>();
 }
 
 void FactoryOfEntities::setName(std::string_view pName)
@@ -35,7 +30,7 @@ bool FactoryOfEntities::isVisible() const noexcept
 
 bool FactoryOfEntities::isGripping(std::string_view pName)
 {
-	return WeaponManager::getInstance().getWeapon(pName) != nullptr;
+	return mWeaponManager->getWeapon(pName)->getWeaponStates().mIsFreezed;
 }
 
 bool FactoryOfEntities::isGripping(std::unique_ptr<FactoryObjects> pObject)
@@ -115,12 +110,4 @@ void FactoryOfEntities::takeObject(std::unique_ptr<FactoryObjects> pObject)
 		mIsGripping = true;
 		mObject = std::move(pObject);	
 	}
-}
-void FactoryOfEntities::takeWeapon(std::unique_ptr<Weapon> pWeapon)
-{
-	std::string tmpName = "Weapon1";
-	WeaponManager::getInstance().appendWeapon(std::move(pWeapon), tmpName);
-	int lastNumber = stoi(std::to_string(tmpName[tmpName.size() - 1]))+1;
-	tmpName.erase(tmpName.size() - 1);
-	tmpName += std::to_string(lastNumber);
 }

@@ -1,6 +1,6 @@
 #include "Gun.h"
 
-bool Gun::brokenChecker(SDL_Renderer* pRenderer)
+bool Gun::brokenChecker()
 {
 	if (mCurrentRobustness <= 0)
 	{
@@ -80,7 +80,7 @@ bool Gun::manageReloadState(SDL_Renderer* pRenderer)
 
 bool Gun::manageBrokenState(SDL_Renderer* pRenderer)
 {
-	brokenChecker(pRenderer);
+	brokenChecker();
 	if (Weapon::getWeaponStates().mIsBroken)
 	{
 		if (!Weapon::getWeaponStates().mIsFreezed)

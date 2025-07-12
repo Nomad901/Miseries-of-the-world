@@ -51,11 +51,6 @@ auto FireModeFactory::getExactMode(std::string_view pName) -> std::expected<std:
 		FireMode* baseClass = it->second.get();
 		if (T* derivedPtr = dynamic_cast<T*>(baseClass))
 			return std::ref(*derivedPtr);
-		else
-		{
-			LOG("Incorrect mode type!");
-			return std::unexpected("Incorrect mode type!");
-		}
 	}
 	LOG("There is no such a name!");
 	return std::unexpected("There is no such a name!");
@@ -71,11 +66,6 @@ auto FireModeFactory::getExactMode() -> std::expected<std::reference_wrapper<T>,
 		FireMode* baseClass = it->second.get();
 		if (T* derivedPtr = dynamic_cast<T*>(baseClass))
 			return std::ref(*derivedPtr);
-		else
-		{
-			LOG("Incorrect mode type!");
-			return std::unexpected("Incorrect mode type!");
-		}
 	}
 	LOG("There is no such a name!");
 	return std::unexpected("There is no such a name!");

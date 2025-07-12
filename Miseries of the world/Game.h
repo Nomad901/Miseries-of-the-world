@@ -63,6 +63,5 @@ private:
 	Uint32 mDelay;
 	
 	std::unordered_map<Type, std::function<void(void)>> mMapOfFunc;
-
 };
 

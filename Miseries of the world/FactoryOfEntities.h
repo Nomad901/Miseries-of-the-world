@@ -6,15 +6,15 @@
 #include "Vector2f.h"
 #include "FactoryObjects.h"
 
+class WeaponManager;
 class Weapon;
-class WeaponManager; 
 class FactoryObjects;
 
 class FactoryOfEntities
 {
 public:
 	FactoryOfEntities();
-	virtual ~FactoryOfEntities();
+	virtual ~FactoryOfEntities() = default;
 
 	void setName(std::string_view pName);
 	inline std::string getName() const noexcept;
@@ -45,7 +45,7 @@ public:
 	//the object will be frozen on the same spot where the character
 	void makeParent(std::unique_ptr<FactoryOfEntities> pParent);
 	void takeObject(std::unique_ptr<FactoryObjects> pObject);
-	void takeWeapon(std::unique_ptr<Weapon> pWeapon);
+	//void takeWeapon(std::unique_ptr<Weapon> pWeapon);
 	
 	virtual void render() = 0;
 	virtual void update() = 0;
@@ -64,7 +64,9 @@ private:
 
 	std::unique_ptr<FactoryOfEntities> mParent{ nullptr };
 	std::unique_ptr<FactoryObjects> mObject{ nullptr };
-	
+
+	std::unique_ptr<WeaponManager> mWeaponManager;
+
 	Vector2f mPosition{ 0.0f, 0.0f };
 };
 

@@ -11,7 +11,6 @@ class SingleOrSequence : public FireMode
 {
 public:
 	SingleOrSequence() = default;
-	~SingleOrSequence() override = default;
 
 	void setMode(Mode pMode);
 

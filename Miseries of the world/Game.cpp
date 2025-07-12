@@ -5,6 +5,7 @@ Game::Game(const int pFlags, const std::string& pNameOfWindow, Uint32 pX, Uint32
 	  mWindowsY{ pY }
 {
 	seter();
+	mMapOfFunc.reserve(3);
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 		LOG("Couldn't initialize SDL video / audio: " + std::string(SDL_GetError()));
@@ -24,10 +25,7 @@ Game::Game(const int pFlags, const std::string& pNameOfWindow, Uint32 pX, Uint32
 
 void Game::setActions(Type pType, std::function<void(void)> pFunc)
 {
-	auto it = mMapOfFunc.find(pType);
-	if (it == mMapOfFunc.end())
-		mMapOfFunc[pType] = nullptr;
-	mMapOfFunc[pType] = pFunc;
+	mMapOfFunc.insert_or_assign(pType, pFunc);
 }
 
 void Game::startLoop()

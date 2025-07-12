@@ -2,45 +2,72 @@
 #include <vector>
 #include <string>
 
-#include "Singleton.h"
 #include "Bullets.h"
+#include "FactoryObjects.h"
+#include "Rifle.h"
+#include "Pistol.h"
+#include "Boulder.h"
+#include "Knife.h"
+#include "Shotgun.h"
+#include "Tango.h"
 
 class Weapon;
 
-class WeaponManager : public Singleton<WeaponManager>
+template<typename T>
+concept properWeapon = std::is_base_of_v<Weapon, T>;
+
+class WeaponManager 
 {
 public:
-	void appendWeapon(std::unique_ptr<Weapon> pWeapon, std::string_view pName);
-	void appendRangeOfWeapon(std::vector<std::pair<std::string, std::unique_ptr<Weapon>>>& pRange);
-	void removeWeapon(std::string_view pName);
+	WeaponManager() = default;
+	
+	auto initWeapons(SDL_Renderer* pRenderer, SDL_FRect pCharRect) -> void;
+	auto appendWeapon(std::unique_ptr<Weapon> pWeapon, std::string_view pName) -> void;
+	template<typename T, typename... Args>
+		requires properWeapon<T>
+	auto createWeapon(std::string_view pName, Args&&... pArgs) -> void;
+	auto removeWeapon(std::string_view pName) -> void;
 
-	Weapon* getWeapon(std::string_view pName);
+	auto getWeapon(std::string_view pName) -> Weapon*;
+	template<typename T>
+		requires properWeapon<T>
+	auto getExactWeapon(std::string_view pName) -> std::expected<std::reference_wrapper<T>, std::string_view>;
 
-	void assignBullets(std::string_view pName, std::unique_ptr<Bullets> pBullets);
-	Bullets* getBullets(std::string_view pName);
+	auto assignBullets(std::string_view pName, std::unique_ptr<Bullets> pBullets) -> void;
+	auto getBullets(std::string_view pName) -> Bullets*;
 
-	void throwWeapon();
-	void takeWeapon(SDL_Rect pCharCollision);
+	auto throwWeapon(std::string_view pName) -> void;
+	auto takeWeapon(std::string_view pName) -> void;
 
 private:
 	struct WeaponRelationship
 	{
 		std::unique_ptr<Weapon> mWeapon;
 		std::unique_ptr<Bullets> mBullets;
-
-		WeaponRelationship() = default;
-		~WeaponRelationship() = default;
-
-		WeaponRelationship(const WeaponRelationship&) = delete;
-		WeaponRelationship& operator=(const WeaponRelationship&) = delete;
-
-		WeaponRelationship(WeaponRelationship&&) = default;
-		WeaponRelationship& operator=(WeaponRelationship&&) = default;
-
 	} mWR;
 
 	std::unordered_map<std::string, WeaponRelationship> mStorageWeapons;
-
-	friend class Singleton<WeaponManager>;
+	FactoryObjects mFactoryObjects;
 };
 
+template<typename T, typename ...Args>
+	requires properWeapon<T>
+inline void WeaponManager::createWeapon(std::string_view pName, Args&&... pArgs)
+{
+	appendWeapon(std::make_unique<T>(std::forward<Args>(pArgs)...), pName);
+}
+
+template<typename T>
+	requires properWeapon<T>
+inline auto WeaponManager::getExactWeapon(std::string_view pName) -> std::expected<std::reference_wrapper<T>, std::string_view>
+{
+	auto it = mStorageWeapons.find(std::string(pName));
+	if (it != mStorageWeapons.end())
+	{
+		Weapon* tmpWeapon = it->second.mWeapon.get();
+		if (T* exactWeapon = dynamic_cast<T*>(tmpWeapon))
+			return std::ref(*exactWeapon);
+	}
+	LOG("There is no such a name!\n");
+	return std::unexpected("Smth is wrong!");
+}

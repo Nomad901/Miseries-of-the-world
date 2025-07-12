@@ -12,7 +12,6 @@ class Irregular : public FireMode
 {
 public:
 	Irregular();
-	~Irregular() override = default;
 
 	void shoot(SDL_Rect pCharRect, SDL_Rect pWeaponRect, bool pWasReload) override;
 	
